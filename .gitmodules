@@ -1,0 +1,6 @@
+[submodule "phplib/wellrested"]
+	path = phplib/wellrested
+	url = git@github.com:pjdietz/WellRESTed.git
+[submodule "phplib/NthMySQLDatabase"]
+	path = phplib/NthMySQLDatabase
+	url = git@github.com:americanreading/NthMySQLDatabase.git
