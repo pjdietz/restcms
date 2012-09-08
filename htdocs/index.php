@@ -2,15 +2,6 @@
 
 require_once('wellrested/Router.inc.php');
 
-/*
-\wellrested\Route::newFromTemplate('/cat/{catId}/mouse/{mouseId}/', array(
-    'catId' => \wellrested\Route::RE_NUM
-));
-
-exit;
-*/
-
-
 class MyRouter extends \wellrested\Router {
 
     public function __construct() {
@@ -27,10 +18,10 @@ class MyRouter extends \wellrested\Router {
 
 }
 
-
 $router = new MyRouter();
 $handler = $router->getRequestHandler();
 $response = $handler->getResponse();
 $response->respond();
+exit;
 
 ?>
