@@ -30,6 +30,7 @@ class MyRouter extends \wellrested\Router {
 
 $router = new MyRouter();
 $handler = $router->getRequestHandler();
-$handler->respond();
+$response = $handler->getResponse();
+$response->respond();
 
 ?>
