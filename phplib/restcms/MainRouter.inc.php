@@ -8,6 +8,8 @@ class MainRouter extends \wellrested\Router {
 
         parent::__construct();
 
+        $this->addTemplate('/articles/', '\restcms\handlers\ArticleCollectionHandler');
+
         $this->addRoute(new \wellrested\Route('/^\/cat\/$/', 'CatHandler', 'restcms/handlers/CatHandler.inc.php'));
 
         $this->addRoute(\wellrested\Route::newFromUriTemplate(
