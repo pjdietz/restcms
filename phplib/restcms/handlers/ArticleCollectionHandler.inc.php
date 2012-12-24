@@ -2,9 +2,9 @@
 
 namespace restcms\handlers;
 
-require_once('wellrested/Handler.inc.php');
+require_once(dirname(__FILE__) . '/RestCmsBaseHandler.inc.php');
 
-abstract class ArticleCollectionHandler extends \wellrested\Handler {
+class ArticleCollectionHandler extends RestCmsBaseHandler {
 
     protected function get() {
 

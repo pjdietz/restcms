@@ -1,5 +1,7 @@
 <?php
 
+namespace restcms;
+
 require_once('wellrested/Router.inc.php');
 
 class MainRouter extends \wellrested\Router {
@@ -8,25 +10,16 @@ class MainRouter extends \wellrested\Router {
 
         parent::__construct();
 
-        $this->addTemplate('/articles/', '\restcms\handlers\ArticleCollectionHandler');
-
-        $this->addRoute(new \wellrested\Route('/^\/cat\/$/', 'CatHandler', 'restcms/handlers/CatHandler.inc.php'));
-
-        $this->addRoute(\wellrested\Route::newFromUriTemplate(
-            '/cat/{catId}',
-            'CatHandler',
-            'restcms/handlers/CatHandler.inc.php',
-            array('catId' => \wellrested\Route::RE_NUM)));
-
-        $this->addTemplate('/mouse/', 'MouseHandler');
-        $this->addTemplate('/mouse/{mouseId}', 'MouseHandler', array('mouseId' => \wellrested\Route::RE_NUM));
+        $this->addTemplate('/articles/', 'ArticleCollectionHandler');
+        $this->addTemplate('/articles/{articleId}', 'ArticleItemHandler',  array('mouseId' => \wellrested\Route::RE_NUM));
+        $this->addTemplate('/articles/{slug}',  'ArticleItemHandler',  array('mouseId' => \wellrested\Route::RE_NUM));
 
     }
 
     protected function addTemplate($template, $handler, $variables=null) {
         $this->addRoute(\wellrested\Route::newFromUriTemplate(
             $template,
-            $handler,
+            '\\restcms\\handlers\\' . $handler,
             'restcms/handlers/' . $handler . '.inc.php',
             $variables
         ));

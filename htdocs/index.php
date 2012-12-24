@@ -2,7 +2,7 @@
 
 require_once('restcms/MainRouter.inc.php');
 
-$router = new MainRouter();
+$router = new \restcms\MainRouter();
 $response = $router->getResponse();
 $response->respond();
 exit;
