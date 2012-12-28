@@ -15,6 +15,8 @@ class ArticleCollectionHandler extends RestCmsBaseHandler {
 
     protected function post() {
 
+        $this->readUser(true);
+
         $this->response->statusCode = 201;
         $this->response->body = 'You added an article.';
 
