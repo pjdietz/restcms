@@ -3,13 +3,39 @@
 namespace restcms\handlers;
 
 require_once(dirname(__FILE__) . '/RestCmsBaseHandler.inc.php');
+require_once('restcms/controllers/ArticleItemController.inc.php');
 
 class ArticleItemHandler extends RestCmsBaseHandler {
 
     protected function get() {
 
-        $this->response->statusCode = 200;
-        $this->response->body = 'A single article';
+        if (isset($this->args['articleId'])) {
+            $article = \restcms\controllers\ArticleItemController::newFromArticleId($this->args['articleId']);
+
+            if ($article) {
+                $this->response->statusCode = 200;
+                $this->response->setHeader('Content-Type', 'application/json');
+                $this->response->body = json_encode($article->data);
+            } else {
+                $this->response->statusCode = 404;
+                $this->response->body = 'No article with articleId ' . $this->args['articleId'];
+            }
+
+        } elseif (isset($this->args['slug'])) {
+            $article = \restcms\controllers\ArticleItemController::newFromSlug($this->args['slug']);
+
+            if ($article) {
+                $this->response->statusCode = 200;
+                $this->response->setHeader('Content-Type', 'application/json');
+                $this->response->body = json_encode($article->data);
+            } else {
+                $this->response->statusCode = 404;
+                $this->response->body = 'No article with slug ' . $this->args['slug'];
+            }
+
+        } else {
+            $this->response->statusCode = 400;
+        }
 
     }
 

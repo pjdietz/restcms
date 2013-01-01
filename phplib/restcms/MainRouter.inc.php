@@ -11,8 +11,8 @@ class MainRouter extends \wellrested\Router {
         parent::__construct();
 
         $this->addTemplate('/articles/', 'ArticleCollectionHandler');
-        $this->addTemplate('/articles/{articleId}', 'ArticleItemHandler',  array('mouseId' => \wellrested\Route::RE_NUM));
-        $this->addTemplate('/articles/{slug}',  'ArticleItemHandler',  array('mouseId' => \wellrested\Route::RE_NUM));
+        $this->addTemplate('/articles/{articleId}', 'ArticleItemHandler',  array('articleId' => \wellrested\Route::RE_NUM));
+        $this->addTemplate('/articles/{slug}',  'ArticleItemHandler',  array('slug' => \wellrested\Route::RE_SLUG));
 
     }
 

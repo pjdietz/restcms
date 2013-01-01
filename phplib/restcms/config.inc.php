@@ -18,6 +18,6 @@ const MYSQL_DATABASE = 'restcms';
 // requests. This is simpler, but less secure as a request could be sniffed,
 // altered, and replayed.
 //
-const AUTH_USE_REQUEST_HASH = true;
+const AUTH_USE_REQUEST_HASH = false;
 
 ?>
