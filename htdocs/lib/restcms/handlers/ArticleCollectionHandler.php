@@ -2,9 +2,6 @@
 
 namespace restcms\handlers;
 
-require_once(dirname(__FILE__) . '/RestCmsBaseHandler.inc.php');
-require_once('restcms/controllers/ArticleCollectionController.inc.php');
-
 class ArticleCollectionHandler extends RestCmsBaseHandler {
 
     protected function get() {

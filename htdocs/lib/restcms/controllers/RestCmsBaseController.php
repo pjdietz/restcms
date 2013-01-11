@@ -2,8 +2,6 @@
 
 namespace restcms\controllers;
 
-require_once('restcms/config.inc.php');
-
 abstract class RestCmsBaseController {
 
     /**

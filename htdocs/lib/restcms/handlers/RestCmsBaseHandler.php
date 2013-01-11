@@ -2,10 +2,7 @@
 
 namespace restcms\handlers;
 
-require_once('wellrested/Handler.inc.php');
-require_once('restcms/controllers/UserController.inc.php');
-
-abstract class RestCmsBaseHandler extends \wellrested\Handler {
+abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler {
 
     protected $user;
 
@@ -115,7 +112,7 @@ abstract class RestCmsBaseHandler extends \wellrested\Handler {
         $str .= $this->request->method;
         $str .= $this->request->body;
         return hash('sha256', $str);
-        
+
     }
 
     protected function respondWithAuthenticationError() {

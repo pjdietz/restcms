@@ -2,8 +2,6 @@
 
 namespace restcms\controllers;
 
-require_once(dirname(__FILE__) . '/RestCmsBaseController.inc.php');
-
 class ArticleItemController extends RestCmsBaseController {
 
     /**

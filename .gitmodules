@@ -1,3 +1,0 @@
-[submodule "phplib/wellrested"]
-	path = phplib/wellrested
-	url = git@github.com:pjdietz/WellRESTed.git

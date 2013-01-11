@@ -1,0 +1,16 @@
+{
+    "name":"pjdietz/restcms",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/pjdietz/WellRESTed"
+        }
+    ],
+    "require": {
+        "pjdietz/WellRESTed": "dev-master",
+        "justinrainbow/json-schema": "1.2.*"
+    },
+    "autoload": {
+        "psr-0": { "restcms": "lib/" }
+    }
+}

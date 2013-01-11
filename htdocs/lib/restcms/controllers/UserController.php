@@ -2,8 +2,6 @@
 
 namespace restcms\controllers;
 
-require_once(dirname(__FILE__) . '/RestCmsBaseController.inc.php');
-
 class UserController extends RestCmsBaseController {
 
     public static function newFromUsername($username) {

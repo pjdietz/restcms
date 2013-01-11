@@ -1,6 +1,7 @@
 <?php
 
-require_once('restcms/MainRouter.inc.php');
+require_once('vendor/autoload.php');
+require_once('lib/restcms/config.php');
 
 $router = new \restcms\MainRouter();
 $response = $router->getResponse();
