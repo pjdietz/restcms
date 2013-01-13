@@ -2,13 +2,50 @@
 
 namespace restcms\controllers;
 
-class ArticleItemController extends RestCmsBaseController {
+class ArticleItemController extends RestCmsBaseController
+{
+
+    /**
+     * Validate and construct a new instance from a JSON string.
+     *
+     * @param string $jsonString
+     * @param \JsonSchema\Validator $validator
+     * @return ArticleItemController|null
+     */
+    public static function newFromJson($jsonString, &$validator)
+    {
+        $schema = $_SERVER['DOCUMENT_ROOT'] . '/schema/article.json';
+        $schema = file_get_contents($schema);
+
+        $jsonData = json_decode($jsonString);
+
+        $validator = new \JsonSchema\Validator();
+        $validator->check($jsonData, json_decode($schema));
+
+        if ($validator->isValid()) {
+
+            // Passed JSON is valid.
+            // Create and return the instance.
+            $klass = __CLASS__;
+            $article = new $klass();
+            $article->data = $jsonData;
+            return $article;
+
+        } else {
+
+            // JSON failed validation.
+            return null;
+
+        }
+
+    }
 
     /**
      * @param string $articleId
      * @return ArticleItemController|bool
      */
-    public static function newFromArticleId($articleId) {
+    public static function newFromArticleId($articleId)
+    {
 
         $query = "
 SELECT
@@ -46,7 +83,8 @@ LIMIT 1;";
      * @param string $slug
      * @return ArticleItemController|bool
      */
-    public static function newFromSlug($slug) {
+    public static function newFromSlug($slug)
+    {
 
         $query = "
 SELECT
