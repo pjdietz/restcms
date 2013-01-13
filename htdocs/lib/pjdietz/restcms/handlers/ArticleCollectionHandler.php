@@ -1,6 +1,8 @@
 <?php
 
-namespace restcms\handlers;
+namespace pjdietz\restcms\handlers;
+
+use pjdietz\restcms\controllers\ArticleCollectionController;
 
 class ArticleCollectionHandler extends RestCmsBaseHandler {
 
@@ -10,7 +12,7 @@ class ArticleCollectionHandler extends RestCmsBaseHandler {
 
         // TODO Once I have users linked to articles and articles marked as public, etc. restrict this list if the user is not an admin.
 
-        $articles = new \restcms\controllers\ArticleCollectionController();
+        $articles = new ArticleCollectionController();
 
         $this->response->statusCode = 200;
         $this->response->setHeader('Content-Type', 'application/json');
@@ -28,5 +30,3 @@ class ArticleCollectionHandler extends RestCmsBaseHandler {
     }
 
 }
-
-?>

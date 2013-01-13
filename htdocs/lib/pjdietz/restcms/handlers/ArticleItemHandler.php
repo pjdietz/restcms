@@ -1,8 +1,8 @@
 <?php
 
-namespace restcms\handlers;
+namespace pjdietz\restcms\handlers;
 
-use \restcms\controllers\ArticleItemController;
+use \pjdietz\restcms\controllers\ArticleItemController;
 
 class ArticleItemHandler extends RestCmsBaseHandler
 {
@@ -11,8 +11,7 @@ class ArticleItemHandler extends RestCmsBaseHandler
     {
 
         if (isset($this->args['articleId'])) {
-            $article = \restcms\controllers\ArticleItemController::newFromArticleId(
-                $this->args['articleId']);
+            $article = ArticleItemController::newFromArticleId($this->args['articleId']);
 
             if ($article) {
                 $this->response->statusCode = 200;
@@ -24,8 +23,7 @@ class ArticleItemHandler extends RestCmsBaseHandler
             }
 
         } elseif (isset($this->args['slug'])) {
-            $article = \restcms\controllers\ArticleItemController::newFromSlug(
-                $this->args['slug']);
+            $article = ArticleItemController::newFromSlug($this->args['slug']);
 
             if ($article) {
                 $this->response->statusCode = 200;
@@ -71,7 +69,7 @@ class ArticleItemHandler extends RestCmsBaseHandler
         }
 
         // TODO Write to database
-        
+
         $this->response->statusCode = 200;
         $this->response->setHeader('Content-type', 'application/json');
         $this->response->body = json_encode($article->data);
@@ -85,5 +83,3 @@ class ArticleItemHandler extends RestCmsBaseHandler
     }
 
 }
-
-?>

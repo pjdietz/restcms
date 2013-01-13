@@ -1,6 +1,6 @@
 <?php
 
-namespace restcms\controllers;
+namespace pjdietz\restcms\controllers;
 
 class ArticleItemController extends RestCmsBaseController
 {
@@ -119,5 +119,3 @@ LIMIT 1;";
     }
 
 }
-
-?>

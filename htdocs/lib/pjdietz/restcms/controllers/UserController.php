@@ -1,10 +1,12 @@
 <?php
 
-namespace restcms\controllers;
+namespace pjdietz\restcms\controllers;
 
-class UserController extends RestCmsBaseController {
+class UserController extends RestCmsBaseController
+{
 
-    public static function newFromUsername($username) {
+    public static function newFromUsername($username)
+    {
 
         $db = self::getDatabaseConnection();
 
@@ -26,5 +28,3 @@ class UserController extends RestCmsBaseController {
     }
 
 }
-
-?>

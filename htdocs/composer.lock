@@ -1,5 +1,5 @@
 {
-    "hash": "072b0020da08f4dfa15b04fb3ebf1991",
+    "hash": "f7f1d4aaabf139c71e57ff3d60ccfdaf",
     "packages": [
         {
             "name": "justinrainbow/json-schema",
@@ -62,18 +62,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pjdietz/WellRESTed",
-                "reference": "331bdae7ecb31f5ebef3f6b80bf830cf2d55a244"
+                "reference": "3ff2371edda5e4584ca49a772b52f7db28df9091"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pjdietz/WellRESTed/zipball/331bdae7ecb31f5ebef3f6b80bf830cf2d55a244",
-                "reference": "331bdae7ecb31f5ebef3f6b80bf830cf2d55a244",
+                "url": "https://api.github.com/repos/pjdietz/WellRESTed/zipball/3ff2371edda5e4584ca49a772b52f7db28df9091",
+                "reference": "3ff2371edda5e4584ca49a772b52f7db28df9091",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2013-01-11 01:54:22",
+            "time": "2013-01-11 02:21:57",
             "type": "library",
             "autoload": {
                 "psr-0": {

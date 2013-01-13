@@ -1,16 +1,17 @@
 <?php
 
-namespace restcms\controllers;
+namespace pjdietz\restcms\controllers;
 
-class ArticleCollectionController extends RestCmsBaseController {
+class ArticleCollectionController extends RestCmsBaseController
+{
 
-    public function __construct($options=null) {
-
+    public function __construct($options = null)
+    {
         $this->readFromDatabase();
-
     }
 
-    protected function readFromDatabase() {
+    protected function readFromDatabase()
+    {
 
         $db = self::getDatabaseConnection();
 
@@ -27,12 +28,9 @@ ORDER BY
     dateCreated;";
 
         $stmt = $db->query($query);
-        $rows =  $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         $this->data = $rows;
 
     }
 
-
 }
-
-?>

@@ -1,16 +1,19 @@
 <?php
 
-namespace restcms\handlers;
+namespace pjdietz\restcms\handlers;
 
-abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler {
+abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
+{
 
     protected $user;
 
-    public function __construct($request, $args=null) {
+    public function __construct($request, $args = null)
+    {
         parent::__construct($request, $args);
     }
 
-    protected function readUser($requireUser=false) {
+    protected function readUser($requireUser = false)
+    {
 
         // No Authorization header
         if ($this->request->getHeader('Authorization') !== 'restcms') {
@@ -45,7 +48,8 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler {
 
     }
 
-    protected function authenticateUserWithPasswordHash($authFields) {
+    protected function authenticateUserWithPasswordHash($authFields)
+    {
 
         if (isset($authFields['username']) && $authFields['username'] !== '') {
             $username = $authFields['username'];
@@ -75,7 +79,8 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler {
 
     }
 
-    protected function authenticateUserWithRequestHash($authFields) {
+    protected function authenticateUserWithRequestHash($authFields)
+    {
 
         if (isset($authFields['requestHash']) && $authFields['requestHash'] !== '') {
             $requestHash = $authFields['requestHash'];
@@ -104,7 +109,8 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler {
 
     }
 
-    protected function buildRequestHash() {
+    protected function buildRequestHash()
+    {
 
         $str = $this->user->data['username'];
         $str .= $this->user->data['passwordHash'];
@@ -115,7 +121,8 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler {
 
     }
 
-    protected function respondWithAuthenticationError() {
+    protected function respondWithAuthenticationError()
+    {
 
         // TODO Additional message
         $this->response->statusCode = 401;
@@ -139,7 +146,9 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler {
 
     }
 
-    public static function parsePairs($str, $pairDelimiter=';', $kvDelimiter='=') {
+    public static function parsePairs(
+        $str, $pairDelimiter = ';', $kvDelimiter = '='
+    ) {
 
         $rtn = array();
 
@@ -160,5 +169,3 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler {
     }
 
 }
-
-?>

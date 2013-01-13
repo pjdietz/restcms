@@ -1,6 +1,6 @@
 <?php
 
-namespace restcms\config;
+namespace pjdietz\restcms\config;
 
 // Provide settings for MySQL.
 const MYSQL_HOSTNAME = 'localhost';
@@ -19,5 +19,3 @@ const MYSQL_DATABASE = 'restcms';
 // altered, and replayed.
 //
 const AUTH_USE_REQUEST_HASH = false;
-
-?>

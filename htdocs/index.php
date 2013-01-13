@@ -1,11 +1,9 @@
 <?php
 
 require_once('vendor/autoload.php');
-require_once('lib/restcms/config.php');
+require_once('lib/pjdietz/restcms/config.php');
 
-$router = new \restcms\MainRouter();
+$router = new \pjdietz\restcms\MainRouter();
 $response = $router->getResponse();
 $response->respond();
 exit;
-
-?>
