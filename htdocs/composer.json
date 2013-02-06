@@ -3,11 +3,12 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/pjdietz/WellRESTed"
+            "url": "https://github.com/pjdietz/CliApp"
         }
     ],
     "require": {
-        "pjdietz/WellRESTed": "dev-master",
+        "pjdietz/cliapp": "dev-master",
+        "pjdietz/wellrested": "dev-master",
         "justinrainbow/json-schema": "1.2.*"
     },
     "autoload": {

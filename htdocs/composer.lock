@@ -1,31 +1,31 @@
 {
-    "hash": "f7f1d4aaabf139c71e57ff3d60ccfdaf",
+    "hash": "f2b56fad413a7c5e062ed78e4bf6b7d6",
     "packages": [
         {
             "name": "justinrainbow/json-schema",
-            "version": "1.2.1",
+            "version": "1.2.4",
             "source": {
                 "type": "git",
                 "url": "git://github.com/justinrainbow/json-schema.git",
-                "reference": "1.2.1"
+                "reference": "1.2.4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/justinrainbow/json-schema/zipball/1.2.1",
-                "reference": "1.2.1",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/1.2.4",
+                "reference": "1.2.4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2012-08-18 14:19:10",
+            "time": "2013-01-31 14:27:55",
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "JsonSchema": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "notification-url": "http://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -57,29 +57,49 @@
             ]
         },
         {
-            "name": "pjdietz/WellRESTed",
+            "name": "pjdietz/cliapp",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pjdietz/WellRESTed",
-                "reference": "3ff2371edda5e4584ca49a772b52f7db28df9091"
+                "url": "https://github.com/pjdietz/CliApp",
+                "reference": "7518b048e222e2f0167edc96e88067c1efe63776"
+            },
+            "time": "2013-02-06 00:18:42",
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "pjdietz\\CliApp": "src/"
+                }
+            }
+        },
+        {
+            "name": "pjdietz/wellrested",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pjdietz/wellrested",
+                "reference": "b0133d9173e277f2fee47eb070563c2b44ca37a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pjdietz/WellRESTed/zipball/3ff2371edda5e4584ca49a772b52f7db28df9091",
-                "reference": "3ff2371edda5e4584ca49a772b52f7db28df9091",
+                "url": "https://api.github.com/repos/pjdietz/wellrested/zipball/b0133d9173e277f2fee47eb070563c2b44ca37a5",
+                "reference": "b0133d9173e277f2fee47eb070563c2b44ca37a5",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2013-01-11 02:21:57",
+            "time": "2013-02-02 15:24:05",
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "pjdietz\\WellRESTed": "src/"
                 }
             },
+            "notification-url": "http://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
                     "name": "PJ Dietz",
@@ -87,17 +107,14 @@
                 }
             ],
             "description": "Simple PHP Library for RESTful APIs",
-            "homepage": "https://github.com/pjdietz/WellRESTed",
+            "homepage": "https://github.com/pjdietz/wellrested",
             "keywords": [
-                "php",
+                "curl",
+                "http",
                 "rest",
-                "restful",
-                "api"
-            ],
-            "support": {
-                "source": "https://github.com/pjdietz/WellRESTed/tree/master",
-                "issues": "https://github.com/pjdietz/WellRESTed/issues"
-            }
+                "api",
+                "restful"
+            ]
         }
     ],
     "packages-dev": null,
@@ -106,6 +123,7 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "pjdietz/cliapp": 20,
         "pjdietz/wellrested": 20
     }
 }

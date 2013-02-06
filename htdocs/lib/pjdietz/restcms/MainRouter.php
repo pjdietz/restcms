@@ -21,7 +21,6 @@ class MainRouter extends Router
         $this->addRoute(Route::newFromUriTemplate(
                 $template,
                 __NAMESPACE__ . '\\handlers\\' . $handler,
-                null,
                 $variables));
     }
 
