@@ -15,16 +15,8 @@ abstract class RestCmsBaseController
      */
     protected $data;
 
-    /**
-     * Shared PDO singleton instance.
-     *
-     * @var \PDO
-     */
-    protected static $databaseConnection;
-
-
     // -------------------------------------------------------------------------
-    // !Accessors
+    // Accessors
 
     /**
      * @param string $name
@@ -47,33 +39,5 @@ abstract class RestCmsBaseController
     }
 
 
-    // -------------------------------------------------------------------------
-    // Connections
-
-    protected static function getDatabaseConnection()
-    {
-
-        if (!isset(self::$databaseConnection)) {
-
-            // Create a new instance of the database and store it statically.
-            $dsn = sprintf(
-                'mysql:host=%s;dbname=%s;charset=utf8',
-                config\MYSQL_HOSTNAME,
-                config\MYSQL_DATABASE);
-
-            self::$databaseConnection = new PDO($dsn,
-                config\MYSQL_USERNAME,
-                config\MYSQL_PASSWORD);
-
-            self::$databaseConnection->setAttribute(
-                PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            self::$databaseConnection->setAttribute(
-                PDO::ATTR_EMULATE_PREPARES, false);
-
-        }
-
-        return self::$databaseConnection;
-
-    }
 
 }

@@ -4,8 +4,8 @@ namespace pjdietz\restcms\config;
 
 // Provide settings for MySQL.
 const MYSQL_HOSTNAME = 'localhost';
-const MYSQL_USERNAME = 'localuser';
-const MYSQL_PASSWORD = 'maxPower';
+const MYSQL_USERNAME = 'restcms';
+const MYSQL_PASSWORD = 'restcms';
 const MYSQL_DATABASE = 'restcms';
 
 // Authentication sheme:
@@ -19,3 +19,6 @@ const MYSQL_DATABASE = 'restcms';
 // altered, and replayed.
 //
 const AUTH_USE_REQUEST_HASH = false;
+
+// Path to queries directory
+const QUERIES_DIR = '/home/pjdietz/restcms/htdocs/lib/queries/';

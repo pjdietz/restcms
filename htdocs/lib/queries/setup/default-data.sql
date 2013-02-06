@@ -13,5 +13,3 @@ INSERT INTO user (
     'Administrator',
     1
 );
-
-INSERT INTO article
