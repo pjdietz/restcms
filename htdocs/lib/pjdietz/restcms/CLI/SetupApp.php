@@ -5,6 +5,7 @@ namespace pjdietz\restcms\CLI;
 use pjdietz\CliApp\CliApp;
 use pjdietz\CliApp\CLIAppException;
 use pjdietz\restcms\Connections\Database;
+use pjdietz\restcms\config;
 
 class SetupApp extends CliApp
 {
@@ -39,7 +40,11 @@ class SetupApp extends CliApp
 
     protected function main()
     {
-        $this->buildSqlTables();
+        $db = Database::getDatabaseConnection(false);
+        $query = 'DROP DATABASE ' . config\MYSQL_DATABASE;
+        $rslt = $db->exec($query);
+
+        $this->createDatabase();
         return 0;
     }
 
@@ -48,29 +53,33 @@ class SetupApp extends CliApp
         $this->messageWrite("This is the help message.\n");
     }
 
-    protected function buildSqlTables()
+    protected function createDatabase()
     {
-        $db = Database::getDatabaseConnection();
+        $db = Database::getDatabaseConnection(false);
 
-        // TODO Create database if needed.
-        // TODO Drop database if requested.
-        // TODO Drop tables if requested.
-        // TODO Merge custom names into queries.
+        // Create database.
+        $this->message("Creating database...");
+        $query = Database::getQuery('setup/create-database');
+        $db->exec($query);
+        $this->message("OK\n");
 
-        $queries = array(
+        // Create tables.
+        $this->message("Building tables...");
+
+        $queryNames = array(
             'setup/tables/article',
             'setup/tables/articleVersion',
             'setup/tables/user',
             'setup/default-data'
         );
 
-        $this->message("Building tables...\n");
-
-        foreach ($queries as $query) {
-            $db->exec(Database::getQuery($query));
-            $this->message("  " . $query . "\n", self::VERBOSITY_VERBOSE);
+        foreach ($queryNames as $queryName) {
+            $query = Database::getQuery($queryName);
+            $db->exec($query);
         }
 
+        $this->message("OK\n");
     }
+
 
 }
