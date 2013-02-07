@@ -1,9 +1,9 @@
 <?php
 
-namespace pjdietz\restcms\Connections;
+namespace pjdietz\RestCms\Connections;
 
-use pjdietz\restcms\Util;
-use pjdietz\restcms\config;
+use pjdietz\RestCms\Util;
+use pjdietz\RestCms\config;
 use PDO;
 use InvalidArgumentException;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\restcms\controllers;
+namespace pjdietz\RestCms\Controllers;
 
 class UserController extends RestCmsBaseController
 {

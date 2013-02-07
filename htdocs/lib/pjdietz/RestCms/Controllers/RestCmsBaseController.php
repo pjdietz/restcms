@@ -1,9 +1,9 @@
 <?php
 
-namespace pjdietz\restcms\controllers;
+namespace pjdietz\RestCms\Controllers;
 
-use \pjdietz\restcms\config;
-use PDO;
+use pjdietz\RestCms\config;
+use pjdietz\RestCms\Connections\Database;
 
 abstract class RestCmsBaseController
 {
@@ -37,7 +37,5 @@ abstract class RestCmsBaseController
     {
         return $this->data;
     }
-
-
 
 }

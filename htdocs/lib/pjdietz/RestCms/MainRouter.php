@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\restcms;
+namespace pjdietz\RestCms;
 
 use \pjdietz\WellRESTed\Router;
 use \pjdietz\WellRESTed\Route;
@@ -20,7 +20,7 @@ class MainRouter extends Router
     {
         $this->addRoute(Route::newFromUriTemplate(
                 $template,
-                __NAMESPACE__ . '\\handlers\\' . $handler,
+                'pjdietz\\RestCms\\Handlers\\' . $handler,
                 $variables));
     }
 

@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__) . '/../config/config.php');
 require_once(dirname(__FILE__) . '/../vendor/autoload.php');
 
-use pjdietz\restcms\CLI\SetupApp;
+use pjdietz\RestCms\CLI\SetupApp;
 use pjdietz\CliApp\CliAppException;
 
 // -----------------------------------------------------------------------------

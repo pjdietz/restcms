@@ -1,8 +1,8 @@
 <?php
 
-namespace pjdietz\restcms\handlers;
+namespace pjdietz\RestCms\Handlers;
 
-use \pjdietz\restcms\controllers\ArticleItemController;
+use \pjdietz\RestCms\Controllers\ArticleItemController;
 
 class ArticleItemHandler extends RestCmsBaseHandler
 {

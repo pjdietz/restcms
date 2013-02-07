@@ -1,6 +1,9 @@
 <?php
 
-namespace pjdietz\restcms\handlers;
+namespace pjdietz\RestCms\Handlers;
+
+use pjdietz\RestCms\config;
+use pjdietz\RestCms\Controllers\UserController;
 
 abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
 {
@@ -40,7 +43,7 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
         $authFields = self::parsePairs($auth);
 
         // Use the type of authentication determined by the configuration.
-        if (\restcms\config\AUTH_USE_REQUEST_HASH) {
+        if (config\AUTH_USE_REQUEST_HASH) {
             $this->authenticateUserWithRequestHash($authFields);
         } else {
             $this->authenticateUserWithPasswordHash($authFields);
@@ -58,7 +61,7 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
             exit;
         }
 
-        $user = \restcms\controllers\UserController::newFromUsername($username);
+        $user = UserController::newFromUsername($username);
         if ($user === false) {
             $this->respondWithAuthenticationError();
         } else {
@@ -96,7 +99,7 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
             exit;
         }
 
-        $user = \restcms\controllers\UserController::newFromUsername($username);
+        $user = UserController::newFromUsername($username);
         if ($user === false) {
             $this->respondWithAuthenticationError();
         } else {
@@ -111,14 +114,12 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
 
     protected function buildRequestHash()
     {
-
         $str = $this->user->data['username'];
         $str .= $this->user->data['passwordHash'];
         $str .= $_SERVER['REQUEST_URI'];
         $str .= $this->request->method;
         $str .= $this->request->body;
         return hash('sha256', $str);
-
     }
 
     protected function respondWithAuthenticationError()
@@ -130,7 +131,7 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
 
         $this->response->body = "Please provide proper credentials for the request in the form of a X-restcms-auth header with a value in the following format:\n";
 
-        if (\restcms\config\AUTH_USE_REQUEST_HASH) {
+        if (config\AUTH_USE_REQUEST_HASH) {
 
             $this->response->body .= "username={your username}; requestHash={this request's hash}\n\n";
             $this->response->body .= "To make the request hash, concatenate the following and SHA256 the result: username, passwordHash, request URI, request method, request body.\n\n";
@@ -145,10 +146,7 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
         exit;
 
     }
-
-    public static function parsePairs(
-        $str, $pairDelimiter = ';', $kvDelimiter = '='
-    ) {
+    public static function parsePairs( $str, $pairDelimiter = ';', $kvDelimiter = '=') {
 
         $rtn = array();
 

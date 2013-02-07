@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\restcms\config;
+namespace pjdietz\RestCms\config;
 
 // Provide settings for MySQL.
 const MYSQL_HOSTNAME = 'localhost';

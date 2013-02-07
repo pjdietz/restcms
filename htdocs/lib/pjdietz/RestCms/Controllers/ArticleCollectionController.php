@@ -1,6 +1,8 @@
 <?php
 
-namespace pjdietz\restcms\controllers;
+namespace pjdietz\RestCms\Controllers;
+
+use pjdietz\RestCms\Connections\Database;
 
 class ArticleCollectionController extends RestCmsBaseController
 {
@@ -12,8 +14,7 @@ class ArticleCollectionController extends RestCmsBaseController
 
     protected function readFromDatabase()
     {
-
-        $db = self::getDatabaseConnection();
+        $db = Database::getDatabaseConnection();
 
         $query = "
 SELECT

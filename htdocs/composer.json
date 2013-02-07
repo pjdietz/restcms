@@ -12,6 +12,6 @@
         "justinrainbow/json-schema": "1.2.*"
     },
     "autoload": {
-        "psr-0": { "pjdietz\\restcms": "lib/" }
+        "psr-0": { "pjdietz\\RestCms": "lib/" }
     }
 }

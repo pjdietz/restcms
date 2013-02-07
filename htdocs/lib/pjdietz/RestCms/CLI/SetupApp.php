@@ -1,11 +1,11 @@
 <?php
 
-namespace pjdietz\restcms\CLI;
+namespace pjdietz\RestCms\CLI;
 
 use pjdietz\CliApp\CliApp;
 use pjdietz\CliApp\CLIAppException;
-use pjdietz\restcms\Connections\Database;
-use pjdietz\restcms\config;
+use pjdietz\RestCms\Connections\Database;
+use pjdietz\RestCms\config;
 
 class SetupApp extends CliApp
 {

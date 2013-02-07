@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\restcms\Util;
+namespace pjdietz\RestCms\Util;
 
 Class Template
 {
