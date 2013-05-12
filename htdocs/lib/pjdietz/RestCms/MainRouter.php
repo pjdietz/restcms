@@ -17,9 +17,8 @@ class MainRouter extends Router
         $this->addTemplate('/articles/{slug}/content', 'ArticleContentItemHandler', array('slug' => Route::RE_SLUG));
         $this->addTemplate('/articles/{articleId}/versions/', 'ArticleVersionCollectionHandler', array('articleId' => Route::RE_NUM));
         $this->addTemplate('/articles/{slug}/versions/', 'ArticleVersionCollectionHandler', array('slug' => Route::RE_SLUG));
-
-//        $this->addTemplate('/article/{articleId}/version/{articleVersionId}', 'ArticleContentItemHandler', array('articleId' => Route::RE_NUM));
-//        $this->addTemplate('/article/{slug}/version/{articleVersionId}', 'ArticleContentItemHandler', array('slug' => Route::RE_SLUG));
+        $this->addTemplate('/articles/{articleId}/versions/{articleVersionId}', 'ArticleVersionItemHandler', array('articleId' => Route::RE_NUM));
+        $this->addTemplate('/articles/{slug}/versions/{articleVersionId}', 'ArticleVersionItemHandler', array('slug' => Route::RE_SLUG));
     }
 
     protected function addTemplate($template, $handler, $variables = null)

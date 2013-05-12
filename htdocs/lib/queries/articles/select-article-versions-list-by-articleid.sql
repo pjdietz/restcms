@@ -4,6 +4,6 @@ SELECT
 FROM
     article a
     JOIN articleVersion av
-        ON a.currentArticleVersionId = av.articleVersionId
+        ON a.articleId = av.parentArticleId
 WHERE 1 = 1
     AND a.articleId = ?;
