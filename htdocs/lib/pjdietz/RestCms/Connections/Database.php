@@ -9,9 +9,11 @@ use InvalidArgumentException;
 
 class Database
 {
-    const QUERY_SELECT_ARTICLES_LIST = 'articles/select-articles-list';
+    const QUERY_SELECT_ARTICLES_COLLECTION = 'articles/select-articles-list';
     const QUERY_SELECT_ARTICLE_ITEM_BY_ARTICLE_ID = 'articles/select-article-item-by-articleid';
     const QUERY_SELECT_ARTICLE_ITEM_BY_SLUG = 'articles/select-article-item-by-slug';
+    const QUERY_SELECT_ARTICLE_VERSIONS_COLLECTION_BY_ARTICLE_ID = 'articles/select-article-versions-list-by-articleid';
+    const QUERY_SELECT_ARTICLE_VERSIONS_COLLECTION_BY_SLUG = 'articles/select-article-versions-list-by-slug';
 
     /**
      * Shared PDO singleton instance.

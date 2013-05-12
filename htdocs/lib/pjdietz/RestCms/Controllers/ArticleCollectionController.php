@@ -13,7 +13,7 @@ class ArticleCollectionController extends RestCmsBaseController
 
     protected function readFromDatabase()
     {
-        $stmt = Database::getStatement(Database::QUERY_SELECT_ARTICLES_LIST);
+        $stmt = Database::getStatement(Database::QUERY_SELECT_ARTICLES_COLLECTION);
         $stmt->execute();
         $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
         $this->data = $rows;
