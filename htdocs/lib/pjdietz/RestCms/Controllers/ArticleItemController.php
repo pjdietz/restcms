@@ -2,6 +2,9 @@
 
 namespace pjdietz\RestCms\Controllers;
 
+use JsonSchema\Validator;
+use pjdietz\RestCms\Connections\Database;
+
 class ArticleItemController extends RestCmsBaseController
 {
 
@@ -9,8 +12,8 @@ class ArticleItemController extends RestCmsBaseController
      * Validate and construct a new instance from a JSON string.
      *
      * @param string $jsonString
-     * @param \JsonSchema\Validator $validator
-     * @return ArticleItemController|null
+     * @param Validator $validator
+     * @return ArticleItemController
      */
     public static function newFromJson($jsonString, &$validator)
     {
@@ -19,7 +22,7 @@ class ArticleItemController extends RestCmsBaseController
 
         $jsonData = json_decode($jsonString);
 
-        $validator = new \JsonSchema\Validator();
+        $validator = new Validator();
         $validator->check($jsonData, json_decode($schema));
 
         if ($validator->isValid()) {
@@ -42,31 +45,14 @@ class ArticleItemController extends RestCmsBaseController
 
     /**
      * @param string $articleId
-     * @return ArticleItemController|bool
+     * @return ArticleItemController
      */
     public static function newFromArticleId($articleId)
     {
-
-        $query = "
-SELECT
-    articleId,
-	dateCreated,
-	dateModified,
-    slug,
-    title
-FROM
-    article
-WHERE 1 = 1
-    AND articleId=?
-ORDER BY
-    dateCreated
-LIMIT 1;";
-
-        $db = self::getDatabaseConnection();
-        $stmt = $db->prepare($query);
+        $stmt = Database::getStatement(Database::QUERY_SELECT_ARTICLE_ITEM_BY_ARTICLE_ID);
         $stmt->bindValue(1, $articleId, \PDO::PARAM_INT);
         $stmt->execute();
-        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
 
         if ($rows && count($rows) === 1) {
             $klass = __CLASS__;
@@ -74,38 +60,20 @@ LIMIT 1;";
             $article->data = $rows[0];
             return $article;
         } else {
-            return false;
+            return null;
         }
-
     }
 
     /**
      * @param string $slug
-     * @return ArticleItemController|bool
+     * @return ArticleItemController
      */
     public static function newFromSlug($slug)
     {
-
-        $query = "
-SELECT
-    articleId,
-	dateCreated,
-	dateModified,
-    slug,
-    title
-FROM
-    article
-WHERE 1 = 1
-    AND slug=?
-ORDER BY
-    dateCreated
-LIMIT 1;";
-
-        $db = self::getDatabaseConnection();
-        $stmt = $db->prepare($query);
+        $stmt = Database::getStatement(Database::QUERY_SELECT_ARTICLE_ITEM_BY_SLUG);
         $stmt->bindValue(1, $slug, \PDO::PARAM_STR);
         $stmt->execute();
-        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
 
         if ($rows && count($rows) === 1) {
             $klass = __CLASS__;
@@ -113,9 +81,8 @@ LIMIT 1;";
             $article->data = $rows[0];
             return $article;
         } else {
-            return false;
+            return null;
         }
-
     }
 
 }

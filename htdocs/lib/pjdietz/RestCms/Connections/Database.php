@@ -9,6 +9,10 @@ use InvalidArgumentException;
 
 class Database
 {
+    const QUERY_SELECT_ARTICLES_LIST = 'articles/select-articles-list';
+    const QUERY_SELECT_ARTICLE_ITEM_BY_ARTICLE_ID = 'articles/select-article-item-by-articleid';
+    const QUERY_SELECT_ARTICLE_ITEM_BY_SLUG = 'articles/select-article-item-by-slug';
+
     /**
      * Shared PDO singleton instance.
      *
@@ -49,10 +53,30 @@ class Database
         return self::$databaseConnection;
     }
 
-    public static function getQuery($query)
+    /**
+     * Return a prepared statment for the query stored in the queries directory
+     *
+     * @param string @queryName
+     * @throws \InvalidArgumentException
+     * @return \PDOStatement
+     */
+    public static function getStatement($queryName) {
+        $db = Database::getDatabaseConnection();
+        $query = Database::getQuery($queryName);
+        return $db->prepare($query);
+    }
+
+    /**
+     * Return the query from the query directory with the given name
+     *
+     * @param string $queryName
+     * @throws \InvalidArgumentException
+     * @return string
+     */
+    public static function getQuery($queryName)
     {
         // Read the query.
-        $pathToQuery = config\QUERIES_DIR . $query . '.sql';
+        $pathToQuery = config\QUERIES_DIR . $queryName . '.sql';
         if (!file_exists($pathToQuery)) {
             throw new InvalidArgumentException('file does not exist: ' . $pathToQuery);
         }

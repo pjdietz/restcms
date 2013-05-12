@@ -7,13 +7,14 @@ use \pjdietz\WellRESTed\Route;
 
 class MainRouter extends Router
 {
-
     public function __construct()
     {
         parent::__construct();
         $this->addTemplate('/articles/', 'ArticleCollectionHandler');
         $this->addTemplate('/articles/{articleId}', 'ArticleItemHandler', array('articleId' => Route::RE_NUM));
         $this->addTemplate('/articles/{slug}', 'ArticleItemHandler', array('slug' => Route::RE_SLUG));
+        $this->addTemplate('/articles/{articleId}/content', 'ArticleContentItemHandler', array('articleId' => Route::RE_NUM));
+        $this->addTemplate('/articles/{slug}/content', 'ArticleContentItemHandler', array('slug' => Route::RE_SLUG));
     }
 
     protected function addTemplate($template, $handler, $variables = null)
@@ -23,5 +24,4 @@ class MainRouter extends Router
                 'pjdietz\\RestCms\\Handlers\\' . $handler,
                 $variables));
     }
-
 }

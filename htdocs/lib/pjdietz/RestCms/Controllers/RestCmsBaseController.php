@@ -5,13 +5,18 @@ namespace pjdietz\RestCms\Controllers;
 use pjdietz\RestCms\config;
 use pjdietz\RestCms\Connections\Database;
 
+/**
+ * Controller base class for all REST CMS controllers.
+ *
+ * @property mixed $data
+ */
 abstract class RestCmsBaseController
 {
 
     /**
      * The instance's main data store.
      *
-     * @var array
+     * @var mixed
      */
     protected $data;
 

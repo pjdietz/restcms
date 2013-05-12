@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS article (
 	dateCreated DATETIME NOT NULL DEFAULT '0000-00-00',
 	dateModified DATETIME NOT NULL DEFAULT '0000-00-00',
     slug VARCHAR(255) NOT NULL COMMENT '[Required] Unique, URL-safe name for the article.',
-    title VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Title of the article',
-    notes VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Internal use; notes about the article.',
+    contentType VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Mime type for the article',
+    status VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Status of the article. Will be normalized to lut later.',
     currentArticleVersionId INT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Link to articleVersion record',
     UNIQUE INDEX idxArticleSlug (slug)
 )

@@ -6,7 +6,6 @@ use pjdietz\RestCms\Connections\Database;
 
 class ArticleCollectionController extends RestCmsBaseController
 {
-
     public function __construct($options = null)
     {
         $this->readFromDatabase();
@@ -14,24 +13,9 @@ class ArticleCollectionController extends RestCmsBaseController
 
     protected function readFromDatabase()
     {
-        $db = Database::getDatabaseConnection();
-
-        $query = "
-SELECT
-    articleId,
-	dateCreated,
-	dateModified,
-    slug,
-    title
-FROM
-    article
-ORDER BY
-    dateCreated;";
-
-        $stmt = $db->query($query);
-        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt = Database::getStatement(Database::QUERY_SELECT_ARTICLES_LIST);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
         $this->data = $rows;
-
     }
-
 }

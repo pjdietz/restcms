@@ -3,7 +3,6 @@
 namespace pjdietz\RestCms\CLI;
 
 use pjdietz\CliApp\CliApp;
-use pjdietz\CliApp\CLIAppException;
 use pjdietz\RestCms\Connections\Database;
 use pjdietz\RestCms\config;
 

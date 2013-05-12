@@ -6,10 +6,8 @@ use \pjdietz\RestCms\Controllers\ArticleItemController;
 
 class ArticleItemHandler extends RestCmsBaseHandler
 {
-
     protected function get()
     {
-
         if (isset($this->args['articleId'])) {
             $article = ArticleItemController::newFromArticleId($this->args['articleId']);
 
@@ -37,7 +35,6 @@ class ArticleItemHandler extends RestCmsBaseHandler
         } else {
             $this->response->statusCode = 400;
         }
-
     }
 
     protected function put()
@@ -78,6 +75,8 @@ class ArticleItemHandler extends RestCmsBaseHandler
 
     protected function delete()
     {
+        // TODO Write to database
+
         $this->response->statusCode = 200;
         $this->response->body = 'You deleted this article.';
     }
