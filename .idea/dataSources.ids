@@ -1023,7 +1023,7 @@
       <column name="dateModified" sqlType="DATETIME" length="19" precision="0" nullable="false" jdbcType="93" def="JzAwMDAtMDAtMDAgMDA6MDA6MDAn"/>
       <column name="slug" sqlType="VARCHAR" length="255" precision="0" nullable="false" jdbcType="12" remarks="W1JlcXVpcmVkXSBVbmlxdWUsIFVSTC1zYWZlIG5hbWUgZm9yIHRoZSBhcnRpY2xlLg=="/>
       <column name="contentType" sqlType="VARCHAR" length="255" precision="0" nullable="false" jdbcType="12" def="Jyc=" remarks="TWltZSB0eXBlIGZvciB0aGUgYXJ0aWNsZQ=="/>
-      <column name="status" sqlType="VARCHAR" length="255" precision="0" nullable="false" jdbcType="12" def="Jyc=" remarks="U3RhdHVzIG9mIHRoZSBhcnRpY2xlLiBXaWxsIGJlIG5vcm1hbGl6ZWQgdG8gbHV0IGxhdGVyLg=="/>
+      <column name="statusId" sqlType="TINYINT UNSIGNED" length="3" precision="0" nullable="false" jdbcType="-6" remarks="U3RhdHVzIG9mIHRoZSBhcnRpY2xlLg=="/>
       <column name="currentArticleVersionId" sqlType="INT UNSIGNED" length="10" precision="0" nullable="false" jdbcType="4" def="MA==" remarks="TGluayB0byBhcnRpY2xlVmVyc2lvbiByZWNvcmQ="/>
       <primary-key name="PRIMARY" columns="articleId"/>
       <index name="idxArticleSlug" unique="true" columns="slug"/>
@@ -1040,6 +1040,11 @@
       <column name="notes" sqlType="VARCHAR" length="255" precision="0" nullable="false" jdbcType="12" def="Jyc=" remarks="SW50ZXJuYWwgdXNlOyBub3RlcyBhYm91dCB0aGUgYXJ0aWNsZS4="/>
       <primary-key name="PRIMARY" columns="articleVersionId"/>
       <index name="contentSearchable" unique="false" columns="contentSearchable"/>
+    </table>
+    <table name="status" schema="" catalog="restcms" type="TABLE">
+      <column name="statusId" sqlType="TINYINT UNSIGNED" length="3" precision="0" nullable="false" jdbcType="-6" autoIncrement="true"/>
+      <column name="statusName" sqlType="VARCHAR" length="255" precision="0" nullable="false" jdbcType="12" def="Jyc=" remarks="U3RhdHVzIG9mIHRoZSBhcnRpY2xlLiBXaWxsIGJlIG5vcm1hbGl6ZWQgdG8gbHV0IGxhdGVyLg=="/>
+      <primary-key name="PRIMARY" columns="statusId"/>
     </table>
     <table name="user" schema="" catalog="restcms" type="TABLE">
       <column name="userId" sqlType="INT UNSIGNED" length="10" precision="0" nullable="false" jdbcType="4" autoIncrement="true"/>
