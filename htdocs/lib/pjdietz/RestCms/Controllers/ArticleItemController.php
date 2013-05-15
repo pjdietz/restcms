@@ -4,9 +4,53 @@ namespace pjdietz\RestCms\Controllers;
 
 use JsonSchema\Validator;
 use pjdietz\RestCms\Connections\Database;
+use PDO;
 
-class ArticleItemController extends RestCmsBaseController
+class ArticleItemController extends ArticleController
 {
+    /**
+     * Create a new controller and read the article from the database
+     * indentified by the on the options array.
+     *
+     * @param array $options
+     * @return ArticleItemController|null
+     */
+    public static function newFromOptions($options)
+    {
+        $controller = new ArticleItemController();
+        $controller->readFromDatabase($options);
+        return $controller;
+    }
+
+    /**
+     * Create a new controller and read the article from the database
+     * indentified by articleId
+     *
+     * @param string $articleId
+     * @return ArticleItemController
+     */
+    public static function newFromArticleId($articleId)
+    {
+        $options = array(
+            'articleId' => $articleId
+        );
+        return self::newFromOptions($options);
+    }
+
+    /**
+     * Create a new controller and read the article from the database
+     * indentified by slug
+     *
+     * @param string $slug
+     * @return ArticleItemController
+     */
+    public static function newFromSlug($slug)
+    {
+        $options = array(
+            'slug' => $slug
+        );
+        return self::newFromOptions($options);
+    }
 
     /**
      * Validate and construct a new instance from a JSON string.
@@ -40,49 +84,44 @@ class ArticleItemController extends RestCmsBaseController
             return null;
 
         }
-
     }
 
-    /**
-     * @param string $articleId
-     * @return ArticleItemController
-     */
-    public static function newFromArticleId($articleId)
+    private function readFromDatabase($options)
     {
-        $stmt = Database::getStatement(Database::QUERY_SELECT_ARTICLE_ITEM_BY_ARTICLE_ID);
-        $stmt->bindValue(1, $articleId, \PDO::PARAM_INT);
-        $stmt->execute();
-        $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
-
-        if ($rows && count($rows) === 1) {
-            $klass = __CLASS__;
-            $article = new $klass();
-            $article->data = $rows[0];
-            return $article;
-        } else {
+        $useTmpArticleId = $this->createTmpArticleId($options);
+        if ($useTmpArticleId === false) {
             return null;
         }
-    }
 
-    /**
-     * @param string $slug
-     * @return ArticleItemController
-     */
-    public static function newFromSlug($slug)
-    {
-        $stmt = Database::getStatement(Database::QUERY_SELECT_ARTICLE_ITEM_BY_SLUG);
-        $stmt->bindValue(1, $slug, \PDO::PARAM_STR);
+        $query = <<<'SQL'
+SELECT
+    a.articleId,
+    a.slug,
+    a.contentType,
+    s.statusName as status,
+    av.title,
+    av.content,
+    av.excerpt,
+    av.notes
+FROM
+    article a
+    JOIN articleVersion av
+        ON a.currentArticleVersionId = av.articleVersionId
+    JOIN status s
+        ON a.statusId = s.statusId
+    JOIN tmpArticleId ta
+        ON a.articleId = ta.articleId
+LIMIT 1;
+
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
         $stmt->execute();
-        $rows = $stmt->fetchAll(\PDO::FETCH_OBJ);
+        $this->data = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-        if ($rows && count($rows) === 1) {
-            $klass = __CLASS__;
-            $article = new $klass();
-            $article->data = $rows[0];
-            return $article;
-        } else {
-            return null;
-        }
+        // Drop temporary tables.
+        $this->dropTmpArticleId();
     }
 
 }

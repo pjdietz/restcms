@@ -30,6 +30,9 @@ class ArticleCollectionController extends ArticleController
 
     private function readFromDatabase($options)
     {
+        $useTmpArticleId = $this->createTmpArticleId($options);
+        $useTmpStatus = $this->createTmpStatus($options);
+
         $query = <<<'SQL'
 SELECT
     a.articleId,
@@ -47,7 +50,15 @@ FROM
 
 SQL;
 
-        if ($this->createTmpStatus($options)) {
+        if ($useTmpArticleId) {
+            $query .= <<<'QUERY'
+    JOIN tmpArticleId ta
+        ON a.articleId = ta.articleId
+
+QUERY;
+        }
+
+        if ($useTmpStatus) {
             $query .= <<<'QUERY'
     JOIN tmpStatus ts
         ON a.statusId = ts.statusId
@@ -59,5 +70,14 @@ QUERY;
         $stmt = $db->prepare($query);
         $stmt->execute();
         $this->data = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        // Drop temporary tables.
+        if ($useTmpArticleId) {
+            $this->dropTmpArticleId();
+        }
+        if ($useTmpStatus) {
+            $this->dropTmpStatus();
+        }
+
     }
 }
