@@ -1,0 +1,11 @@
+{
+    "apiVersion": "0.1",
+    "swaggerVersion": "1.1",
+    "basePath": "http://restcms.home.local",
+    "apis": [
+        {
+            "path": "/docs/articles.{format}",
+            "description": "A list of articles"
+        }
+    ]
+}

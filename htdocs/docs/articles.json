@@ -1,0 +1,106 @@
+{
+    "apiVersion": "0.0.4542.22887",
+    "swaggerVersion": "1.0",
+    "basePath": "http://restcms.home.local",
+    "resourcePath": "/articles",
+    "apis": [
+        {
+            "path": "/articles/",
+            "description": "Articles",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Get a collection of articles",
+                    "nickname": "getArticles",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "Filter by articleId",
+                            "dataType": "int",
+                            "required": false,
+                            "allowMultiple": true,
+                            "paramType": "query"
+                        },
+                        {
+                            "name": "slug",
+                            "description": "Filter by slug",
+                            "dataType": "string",
+                            "required": false,
+                            "allowMultiple": true,
+                            "paramType": "query"
+                        },
+                        {
+                            "name": "status",
+                            "description": "Filter by status",
+                            "dataType": "string",
+                            "required": false,
+                            "allowMultiple": true,
+                            "paramType": "query"
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "POST",
+                    "summary": "Add a new article",
+                    "notes": "Not implemented yet",
+                    "nickname": "postArticles"
+                }
+            ]
+        },
+        {
+            "path": "/articles/{articleId}",
+            "description": "Article",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "getArticleById",
+                    "summary": "Get an article.",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/articles/{slug}",
+            "description": "Article",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "notes": "Get a collection of articles",
+                    "nickname": "getArticleBySlug",
+                    "summary": "Get an article.",
+                    "parameters": [
+                        {
+                            "name": "slug",
+                            "description": "The articleId",
+                            "dataType": "string",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
