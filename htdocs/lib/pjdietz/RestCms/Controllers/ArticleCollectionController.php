@@ -10,25 +10,13 @@ use PDO;
  */
 class ArticleCollectionController extends ArticleController
 {
-    public function __construct($options = null)
-    {
-        $this->readFromDatabase($options);
-    }
-
     /**
      * Create a collection of Articles filtered by the given options array.
      *
      * @param array $options
-     * @return ArticleCollectionController|null
+     * @return array|null
      */
-    public static function newFromOptions($options)
-    {
-        $controller = new ArticleCollectionController();
-        $controller->readFromDatabase($options);
-        return $controller;
-    }
-
-    private function readFromDatabase($options)
+    public function readFromOptions($options)
     {
         $useTmpArticleId = $this->createTmpArticleId($options);
         $useTmpStatus = $this->createTmpStatus($options);
@@ -79,5 +67,6 @@ QUERY;
             $this->dropTmpStatus();
         }
 
+        return $this->data;
     }
 }

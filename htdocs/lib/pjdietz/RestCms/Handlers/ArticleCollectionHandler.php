@@ -12,7 +12,8 @@ class ArticleCollectionHandler extends RestCmsBaseHandler {
 
         // TODO Once I have users linked to articles and articles marked as public, etc. restrict this list if the user is not an admin.
 
-        $controller = new ArticleCollectionController($this->request->query);
+        $controller = new ArticleCollectionController();
+        $controller->readFromOptions($this->request->query);
 
         $this->response->statusCode = 200;
         $this->response->setHeader('Content-Type', 'application/json');

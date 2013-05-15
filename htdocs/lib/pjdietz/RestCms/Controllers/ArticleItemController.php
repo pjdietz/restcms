@@ -9,50 +9,6 @@ use PDO;
 class ArticleItemController extends ArticleController
 {
     /**
-     * Create a new controller and read the article from the database
-     * indentified by the on the options array.
-     *
-     * @param array $options
-     * @return ArticleItemController|null
-     */
-    public static function newFromOptions($options)
-    {
-        $controller = new ArticleItemController();
-        $controller->readFromDatabase($options);
-        return $controller;
-    }
-
-    /**
-     * Create a new controller and read the article from the database
-     * indentified by articleId
-     *
-     * @param string $articleId
-     * @return ArticleItemController
-     */
-    public static function newFromArticleId($articleId)
-    {
-        $options = array(
-            'articleId' => $articleId
-        );
-        return self::newFromOptions($options);
-    }
-
-    /**
-     * Create a new controller and read the article from the database
-     * indentified by slug
-     *
-     * @param string $slug
-     * @return ArticleItemController
-     */
-    public static function newFromSlug($slug)
-    {
-        $options = array(
-            'slug' => $slug
-        );
-        return self::newFromOptions($options);
-    }
-
-    /**
      * Validate and construct a new instance from a JSON string.
      *
      * @param string $jsonString
@@ -86,7 +42,13 @@ class ArticleItemController extends ArticleController
         }
     }
 
-    private function readFromDatabase($options)
+    /**
+     * Read the article from the database indentified by the options array.
+     *
+     * @param array $options
+     * @return object|null
+     */
+    public function readFromOptions($options)
     {
         $useTmpArticleId = $this->createTmpArticleId($options);
         if ($useTmpArticleId === false) {
@@ -122,6 +84,8 @@ SQL;
 
         // Drop temporary tables.
         $this->dropTmpArticleId();
+
+        return $this->data;
     }
 
 }

@@ -8,32 +8,20 @@ class ArticleItemHandler extends RestCmsBaseHandler
 {
     protected function get()
     {
-        if (isset($this->args['articleId'])) {
-            $article = ArticleItemController::newFromArticleId($this->args['articleId']);
+        $controller = new ArticleItemController();
+        $article = $controller->readFromOptions($this->args);
 
-            if ($article) {
-                $this->response->statusCode = 200;
-                $this->response->setHeader('Content-Type', 'application/json');
-                $this->response->body = json_encode($article->data);
-            } else {
-                $this->response->statusCode = 404;
+        if ($article) {
+            $this->response->statusCode = 200;
+            $this->response->setHeader('Content-Type', 'application/json');
+            $this->response->body = json_encode($article);
+        } else {
+            $this->response->statusCode = 404;
+            if (isset($this->args['articleId'])) {
                 $this->response->body = 'No article with articleId ' . $this->args['articleId'];
-            }
-
-        } elseif (isset($this->args['slug'])) {
-            $article = ArticleItemController::newFromSlug($this->args['slug']);
-
-            if ($article) {
-                $this->response->statusCode = 200;
-                $this->response->setHeader('Content-Type', 'application/json');
-                $this->response->body = json_encode($article->data);
-            } else {
-                $this->response->statusCode = 404;
+            } elseif (isset($this->args['slug'])) {
                 $this->response->body = 'No article with slug ' . $this->args['slug'];
             }
-
-        } else {
-            $this->response->statusCode = 400;
         }
     }
 
