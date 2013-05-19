@@ -65,7 +65,12 @@ QUERY;
         $db = Database::getDatabaseConnection();
         $stmt = $db->prepare($query);
         $stmt->execute();
-        $this->data = $stmt->fetch(PDO::FETCH_OBJ);
+
+        if ($stmt->rowCount() === 0) {
+            $this->data = null;
+        } else {
+            $this->data = $stmt->fetch(PDO::FETCH_OBJ);
+        }
 
         // Drop temporary tables.
         if ($useTmpStatus) {

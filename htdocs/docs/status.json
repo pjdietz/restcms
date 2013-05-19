@@ -22,12 +22,6 @@
                             "paramType": "query"
                         }
                     ]
-                },
-                {
-                    "httpMethod": "POST",
-                    "summary": "Add a new status",
-                    "notes": "Not implemented yet",
-                    "nickname": "postStatus"
                 }
             ]
         },

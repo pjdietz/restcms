@@ -3,8 +3,10 @@
 namespace pjdietz\RestCms\Controllers;
 
 use JsonSchema\Validator;
-use pjdietz\RestCms\Connections\Database;
 use PDO;
+use PDOException;
+use pjdietz\RestCms\Connections\Database;
+use pjdietz\RestCms\Exceptions\DatabaseException;
 
 class ArticleItemController extends RestCmsBaseController
 {
@@ -73,6 +75,89 @@ SQL;
         $this->dropTmpArticleId();
 
         return $this->data;
+    }
+
+    public function insert()
+    {
+        // Find the statusId.
+        $statusCtrl = new StatusController();
+        $status = $statusCtrl->readItem(array('status' => $this->data->status));
+
+        if (!$status) {
+            throw new DatabaseException('Status ' . $this->data->status . ' is invalid');
+        }
+
+        $statusId = $status->statusId;
+        unset($status);
+
+        // TODO Throw exceptions on slug collision or other problem writing.
+
+        // Insert the article.
+        $query = <<<'SQL'
+INSERT INTO article (
+    dateCreated,
+    dateModified,
+    slug,
+    contentType,
+    statusId
+) VALUES (
+    NOW(),
+    NOW(),
+    :slug,
+    :contentType,
+    :statusId
+);
+
+SQL;
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':slug', $this->data->slug, PDO::PARAM_STR);
+        $stmt->bindValue(':contentType', $this->data->contentType, PDO::PARAM_STR);
+        $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+        } catch (PDOException $e) {
+            throw new DatabaseException('Unable to store article. Make sure the slug is unique.');
+        }
+        $articleId = $db->lastInsertId();
+
+        // Insert the articleVersion.
+        $query = <<<'SQL'
+INSERT INTO articleVersion (
+    dateCreated,
+    dateModified,
+    title,
+    parentArticleId
+) VALUES (
+    NOW(),
+    NOW(),
+    :title,
+    :parentArticleId
+);
+
+SQL;
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':title', $this->data->title, PDO::PARAM_STR);
+        $stmt->bindValue(':parentArticleId', $articleId, PDO::PARAM_INT);
+        $stmt->execute();
+        $articleVersionid = $db->lastInsertId();
+
+        // Set the version as current.
+        $query = <<<'SQL'
+UPDATE
+    article
+SET
+    currentArticleVersionId = :currentArticleVersionId
+WHERE 1 = 1
+    AND articleId = :articleId;
+
+SQL;
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':currentArticleVersionId', $articleVersionid,  PDO::PARAM_INT);
+        $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $this->readFromOptions(array('articleId' => $articleId));
     }
 
     /**
