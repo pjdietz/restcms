@@ -2,8 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/phplib/NthMySQLDatabase" vcs="" />
-    <mapping directory="$PROJECT_DIR$/phplib/wellrested" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/htdocs/vendor/pjdietz/cliapp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/htdocs/vendor/pjdietz/wellrested" vcs="Git" />
   </component>
 </project>
 

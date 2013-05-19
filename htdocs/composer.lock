@@ -1,4 +1,8 @@
 {
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
+    ],
     "hash": "ea3e73445601eb55a5be938b22991c74",
     "packages": [
         {
@@ -18,7 +22,6 @@
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2013-01-31 14:27:55",
             "type": "library",
             "autoload": {
                 "psr-0": {
@@ -54,49 +57,59 @@
             "keywords": [
                 "json",
                 "schema"
-            ]
+            ],
+            "time": "2013-01-31 14:27:55"
         },
         {
             "name": "pjdietz/cliapp",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pjdietz/CliApp",
+                "url": "https://github.com/pjdietz/CliApp.git",
                 "reference": "7518b048e222e2f0167edc96e88067c1efe63776"
             },
-            "time": "2013-02-06 00:18:42",
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pjdietz/CliApp/zipball/7518b048e222e2f0167edc96e88067c1efe63776",
+                "reference": "7518b048e222e2f0167edc96e88067c1efe63776",
+                "shasum": ""
+            },
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "pjdietz\\CliApp": "src/"
                 }
-            }
+            },
+            "support": {
+                "source": "https://github.com/pjdietz/CliApp/tree/master",
+                "issues": "https://github.com/pjdietz/CliApp/issues"
+            },
+            "time": "2013-02-06 00:18:42"
         },
         {
             "name": "pjdietz/wellrested",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pjdietz/wellrested",
-                "reference": "b0133d9173e277f2fee47eb070563c2b44ca37a5"
+                "url": "https://github.com/pjdietz/wellrested.git",
+                "reference": "47ec8f5f9647eac9ad898d798f7637cdb0e34ec6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pjdietz/wellrested/zipball/b0133d9173e277f2fee47eb070563c2b44ca37a5",
-                "reference": "b0133d9173e277f2fee47eb070563c2b44ca37a5",
+                "url": "https://api.github.com/repos/pjdietz/wellrested/zipball/47ec8f5f9647eac9ad898d798f7637cdb0e34ec6",
+                "reference": "47ec8f5f9647eac9ad898d798f7637cdb0e34ec6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
-            "time": "2013-02-02 15:24:05",
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "pjdietz\\WellRESTed": "src/"
                 }
             },
-            "notification-url": "http://packagist.org/downloads/",
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -109,15 +122,18 @@
             "description": "Simple PHP Library for RESTful APIs",
             "homepage": "https://github.com/pjdietz/wellrested",
             "keywords": [
+                "api",
                 "curl",
                 "http",
                 "rest",
-                "api",
                 "restful"
-            ]
+            ],
+            "time": "2013-05-19 16:59:57"
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [
+
+    ],
     "aliases": [
 
     ],
@@ -125,5 +141,11 @@
     "stability-flags": {
         "pjdietz/cliapp": 20,
         "pjdietz/wellrested": 20
-    }
+    },
+    "platform": [
+
+    ],
+    "platform-dev": [
+
+    ]
 }

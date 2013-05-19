@@ -146,6 +146,7 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
         exit;
 
     }
+
     public static function parsePairs( $str, $pairDelimiter = ';', $kvDelimiter = '=') {
 
         $rtn = array();
@@ -164,6 +165,25 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
 
         return $rtn;
 
+    }
+
+    /**
+     * @param object $validator
+     * @param string $schemaUrl
+     */
+    protected function respondWithInvalidJsonError($validator, $schemaUrl)
+    {
+        // The request body was malformed or did not adhere to the schema.
+        $this->response->statusCode = 400;
+        $this->response->setHeader('Content-type', 'text/plain');
+        $this->response->body = "The request body was malformed or did not adhere to the schema.\n";
+        $this->response->body .= "Schema for validation: " . $schemaUrl . "\n\n";
+        $this->response->body .= "Violations:\n";
+        foreach ($validator->getErrors() as $error) {
+            $this->response->body .= sprintf("[%s] %s\n",$error['property'], $error['message']);
+        }
+        $this->response->respond();
+        exit;
     }
 
 }
