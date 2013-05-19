@@ -1,0 +1,62 @@
+{
+    "apiVersion": "0.0.1",
+    "swaggerVersion": "1.0",
+    "basePath": "http://restcms.home.local",
+    "resourcePath": "/status",
+    "apis": [
+        {
+            "path": "/status/",
+            "description": "Statuses",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Get a collection of available statuses",
+                    "nickname": "getStatuses",
+                    "parameters": [
+                        {
+                            "name": "status",
+                            "description": "Filter by status name",
+                            "dataType": "string",
+                            "required": false,
+                            "allowMultiple": true,
+                            "paramType": "query"
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "POST",
+                    "summary": "Add a new status",
+                    "notes": "Not implemented yet",
+                    "nickname": "postStatus"
+                }
+            ]
+        },
+        {
+            "path": "/status/{status}",
+            "description": "One specific status",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "getStatus",
+                    "summary": "View details on a specific status.",
+                    "parameters": [
+                        {
+                            "name": "status",
+                            "description": "The URI-friendly name of the status",
+                            "dataType": "string",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 404,
+                            "reason": "Status does not exist"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

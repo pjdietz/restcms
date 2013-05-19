@@ -5,7 +5,11 @@
     "apis": [
         {
             "path": "/docs/articles.{format}",
-            "description": "A list of articles"
+            "description": "The individual content items"
+        },
+        {
+            "path": "/docs/status.{format}",
+            "description": "Statuses for the articles"
         }
     ]
 }

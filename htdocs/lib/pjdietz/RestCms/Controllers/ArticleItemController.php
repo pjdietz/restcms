@@ -6,7 +6,7 @@ use JsonSchema\Validator;
 use pjdietz\RestCms\Connections\Database;
 use PDO;
 
-class ArticleItemController extends ArticleController
+class ArticleItemController extends RestCmsBaseController
 {
     const PATH_TO_SCHEMA = '/schema/article.json';
 

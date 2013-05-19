@@ -8,7 +8,7 @@ use PDO;
 /**
  * Class for reading and writing Article and performing database interactions.
  */
-class ArticleCollectionController extends ArticleController
+class ArticleCollectionController extends RestCmsBaseController
 {
     /**
      * Create a collection of Articles filtered by the given options array.
