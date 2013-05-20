@@ -43,7 +43,26 @@
                     "httpMethod": "POST",
                     "summary": "Add a new article",
                     "notes": "Not implemented yet",
-                    "nickname": "postArticles"
+                    "nickname": "postArticle",
+                    "parameters": [
+                        {
+                            "description": "The new Article",
+                            "paramType": "body",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "Article"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 400,
+                            "reason": "Body is malformed or contains illegal values."
+                        },
+                        {
+                            "code": 409,
+                            "reason": "Non-unique slug."
+                        }
+                    ]
                 }
             ]
         },
@@ -102,5 +121,38 @@
                 }
             ]
         }
-    ]
+    ],
+    "models": {
+        "Article": {
+            "id": "Article",
+            "properties": {
+                "articleId": {
+                    "type": "integer",
+                    "description": "Required for PUT",
+                    "required": false,
+                    "readonly": true
+                },
+                "contentType": {
+                    "type": "string",
+                    "description": "Mime type of the article",
+                    "required": true
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Name or URI of status",
+                    "required": true
+                },
+                "slug": {
+                    "type": "string",
+                    "id": "slug",
+                    "required": true
+                },
+                "title": {
+                    "type": "string",
+                    "id": "title",
+                    "required": true
+                }
+            }
+        }
+    }
 }

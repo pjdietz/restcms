@@ -43,7 +43,7 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
         try {
             $article = $controller->insert();
         } catch (DatabaseException $e) {
-            $this->response->statusCode = 400;
+            $this->response->statusCode = $e->getCode();
             $this->response->body = $e->getMessage();
             return;
         }

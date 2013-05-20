@@ -84,7 +84,7 @@ SQL;
         $status = $statusCtrl->readItem(array('status' => $this->data->status));
 
         if (!$status) {
-            throw new DatabaseException('Status ' . $this->data->status . ' is invalid');
+            throw new DatabaseException('Status ' . $this->data->status . ' is invalid', 400);
         }
 
         $statusId = $status->statusId;
@@ -117,7 +117,7 @@ SQL;
         try {
             $stmt->execute();
         } catch (PDOException $e) {
-            throw new DatabaseException('Unable to store article. Make sure the slug is unique.');
+            throw new DatabaseException('Unable to store article. Make sure the slug is unique.', 409);
         }
         $articleId = $db->lastInsertId();
 
