@@ -4,16 +4,12 @@ namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\config;
 use pjdietz\RestCms\Controllers\UserController;
+use pjdietz\WellRESTed\Handler;
 
-abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
+abstract class RestCmsBaseHandler extends Handler
 {
 
     protected $user;
-
-    public function __construct($request, $args = null)
-    {
-        parent::__construct($request, $args);
-    }
 
     protected function readUser($requireUser = false)
     {
@@ -117,8 +113,8 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
         $str = $this->user->data['username'];
         $str .= $this->user->data['passwordHash'];
         $str .= $_SERVER['REQUEST_URI'];
-        $str .= $this->request->method;
-        $str .= $this->request->body;
+        $str .= $this->request->getMethod();
+        $str .= $this->request->getBody();
         return hash('sha256', $str);
     }
 
@@ -126,21 +122,19 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
     {
 
         // TODO Additional message
-        $this->response->statusCode = 401;
+        $this->response->setStatusCode(401);
         $this->response->setHeader('WWW-Authenticate', 'restcms');
 
-        $this->response->body = "Please provide proper credentials for the request in the form of a X-restcms-auth header with a value in the following format:\n";
+        $body = "Please provide proper credentials for the request in the form of a X-restcms-auth header with a value in the following format:\n";
 
         if (config\AUTH_USE_REQUEST_HASH) {
-
-            $this->response->body .= "username={your username}; requestHash={this request's hash}\n\n";
-            $this->response->body .= "To make the request hash, concatenate the following and SHA256 the result: username, passwordHash, request URI, request method, request body.\n\n";
-
+            $body .= "username={your username}; requestHash={this request's hash}\n\n";
+            $body .= "To make the request hash, concatenate the following and SHA256 the result: username, passwordHash, request URI, request method, request body.\n\n";
         } else {
-
-            $this->response->body .= "username={your username}; passwordHash={your password hash}\n\n";
-
+            $body .= "username={your username}; passwordHash={your password hash}\n\n";
         }
+
+        $this->response->setBody($body);
 
         $this->response->respond();
         exit;
@@ -174,14 +168,15 @@ abstract class RestCmsBaseHandler extends \pjdietz\WellRESTed\Handler
     protected function respondWithInvalidJsonError($validator, $schemaUrl)
     {
         // The request body was malformed or did not adhere to the schema.
-        $this->response->statusCode = 400;
+        $this->response->setStatusCode(400);
         $this->response->setHeader('Content-type', 'text/plain');
-        $this->response->body = "The request body was malformed or did not adhere to the schema.\n";
-        $this->response->body .= "Schema for validation: " . $schemaUrl . "\n\n";
-        $this->response->body .= "Violations:\n";
+        $body  = "The request body was malformed or did not adhere to the schema.\n";
+        $body .= "Schema for validation: " . $schemaUrl . "\n\n";
+        $body .= "Violations:\n";
         foreach ($validator->getErrors() as $error) {
-            $this->response->body .= sprintf("[%s] %s\n",$error['property'], $error['message']);
+            $body .= sprintf("[%s] %s\n",$error['property'], $error['message']);
         }
+        $this->response->setBody($body);
         $this->response->respond();
         exit;
     }

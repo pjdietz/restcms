@@ -8,20 +8,22 @@ use pjdietz\RestCms\Exceptions\DatabaseException;
 
 class ArticleCollectionHandler extends RestCmsBaseHandler
 {
+    protected function getAllowedMethods()
+    {
+        return array('GET', 'POST');
+    }
+
     protected function get()
     {
-
         $this->readUser(false);
-
         // TODO Once I have users linked to articles and articles marked as public, etc. restrict this list if the user is not an admin.
 
         $controller = new ArticleCollectionController();
-        $controller->readFromOptions($this->request->query);
+        $controller->readFromOptions($this->request->getQuery());
 
-        $this->response->statusCode = 200;
+        $this->response->setStatusCode(200);
         $this->response->setHeader('Content-Type', 'application/json');
-        $this->response->body = json_encode($controller->data);
-
+        $this->response->setBody(json_encode($controller->data));
     }
 
     protected function post()
@@ -30,7 +32,7 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
         // TODO Once I have users linked to articles and articles marked as public, etc. restrict this list if the user is not an admin.
 
         $controller = new ArticleItemController();
-        $article = $controller->readFromJson($this->request->body, $validator);
+        $article = $controller->readFromJson($this->request->getBody(), $validator);
 
         // Fail if the JSON is borked.
         if (is_null($article)) {
@@ -43,15 +45,14 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
         try {
             $article = $controller->insert();
         } catch (DatabaseException $e) {
-            $this->response->statusCode = $e->getCode();
-            $this->response->body = $e->getMessage();
+            $this->response->setStatusCode($e->getCode());
+            $this->response->setBody($e->getMessage());
             return;
         }
 
-        $this->response->statusCode = 201;
+        $this->response->setStatusCode(201);
         $this->response->setHeader('Content-Type', 'application/json');
-        $this->response->body = json_encode($article);
-
+        $this->response->setBody(json_encode($article));
     }
 
 }

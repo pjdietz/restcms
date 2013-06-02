@@ -7,6 +7,8 @@ use \pjdietz\WellRESTed\Route;
 
 class MainRouter extends Router
 {
+    const HANDLER_NAMESPACE = '\\pjdietz\\RestCms\\Handlers\\';
+
     public function __construct()
     {
         parent::__construct();
@@ -21,13 +23,14 @@ class MainRouter extends Router
         $this->addTemplate('/articles/{slug}/versions/{articleVersionId}', 'ArticleVersionItemHandler', array('slug' => Route::RE_SLUG));
         $this->addTemplate('/status/', 'StatusCollectionHandler');
         $this->addTemplate('/status/{status}', 'StatusItemHandler', array('status' => Route::RE_SLUG));
+        $this->addTemplate('/test/{id}', 'TestHandler', array('id' => Route::RE_NUM));
     }
 
     protected function addTemplate($template, $handler, $variables = null)
     {
         $this->addRoute(Route::newFromUriTemplate(
                 $template,
-                'pjdietz\\RestCms\\Handlers\\' . $handler,
+                self::HANDLER_NAMESPACE . $handler,
                 $variables));
     }
 }
