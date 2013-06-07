@@ -22,11 +22,7 @@ class ArticleItemHandler extends RestCmsBaseHandler
             $this->response->setBody(json_encode($article));
         } else {
             $this->response->setStatusCode(404);
-            if (isset($this->args['articleId'])) {
-                $this->response->setBody('No article with articleId ' . $this->args['articleId']);
-            } elseif (isset($this->args['slug'])) {
-                $this->response->setBody('No article with slug ' . $this->args['slug']);
-            }
+            $this->response->setBody('No article with articleId ' . $this->args['articleId']);
         }
     }
 
