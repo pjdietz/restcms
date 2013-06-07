@@ -9,18 +9,10 @@ use InvalidArgumentException;
 
 class Database
 {
-    const QUERY_SELECT_ARTICLES_COLLECTION = 'articles/select-articles-collection';
-    const QUERY_SELECT_ARTICLE_ITEM_BY_ARTICLE_ID = 'articles/select-article-item-by-articleid';
-    const QUERY_SELECT_ARTICLE_ITEM_BY_SLUG = 'articles/select-article-item-by-slug';
-    const QUERY_SELECT_ARTICLE_VERSIONS_COLLECTION_BY_ARTICLE_ID = 'articles/select-article-versions-collection-by-articleid';
-    const QUERY_SELECT_ARTICLE_VERSIONS_COLLECTION_BY_SLUG = 'articles/select-article-versions-collection-by-slug';
-    const QUERY_SELECT_ARTICLE_VERSION_ITEM_BY_ARTICLE_ID = 'articles/select-article-version-item-by-articleid';
-    const QUERY_SELECT_ARTICLE_VERSION_ITEM_BY_SLUG = 'articles/select-article-version-item-by-slug';
-
     /**
      * Shared PDO singleton instance.
      *
-     * @var \PDO
+     * @var PDO
      */
     protected static $databaseConnection;
 
@@ -35,7 +27,7 @@ class Database
      * Return the PDO singleton instance, creating it if needed.
      *
      * @param bool $useDefaultDatabase
-     * @return \PDO
+     * @return PDO
      */
     public static function getDatabaseConnection($useDefaultDatabase = true)
     {
@@ -58,7 +50,7 @@ class Database
     }
 
     /**
-     * Return a prepared statment for the query stored in the queries directory
+     * Return a prepared statement for the query stored in the queries directory
      *
      * @param string @queryName
      * @throws \InvalidArgumentException

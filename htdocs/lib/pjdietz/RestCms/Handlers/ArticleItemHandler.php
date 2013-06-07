@@ -2,7 +2,7 @@
 
 namespace pjdietz\RestCms\Handlers;
 
-use \pjdietz\RestCms\Controllers\ArticleItemController;
+use pjdietz\RestCms\Controllers\ArticleController;
 
 class ArticleItemHandler extends RestCmsBaseHandler
 {
@@ -13,8 +13,8 @@ class ArticleItemHandler extends RestCmsBaseHandler
 
     protected function get()
     {
-        $controller = new ArticleItemController();
-        $article = $controller->readFromOptions($this->args);
+        $controller = new ArticleController();
+        $article = $controller->readItem($this->args['articleId']);
 
         if ($article) {
             $this->response->setStatusCode(200);
@@ -29,35 +29,19 @@ class ArticleItemHandler extends RestCmsBaseHandler
     protected function put()
     {
         // Attempt to build an article from the passed request body.
-        $controller = new ArticleItemController();
-        $article = $controller->readFromJson($this->request->getBody(), $validator);
+        $controller = new ArticleController();
+        $article = $controller->parseJson($this->request->getBody(), $validator);
 
-        if ($article === null) {
-
-            // Unable to validate.
-            $this->response->setStatusCode(400);
-            $this->response->setHeader('Content-type', 'application/json');
-
-            $errors = array();
-
-            /** @var \JsonSchema\Validator $validator */
-            foreach ($validator->getErrors() as $error) {
-                $errors[$error['property']] = $error['message'];
-            }
-
-            $output = array(
-                'errors' => $errors
-            );
-
-            $this->response->setBody(json_encode($output));
-            $this->response->respond();
+        if (is_null($article)) {
+            $schema = 'http://' . $_SERVER['HTTP_HOST'] . ArticleController::PATH_TO_SCHEMA;
+            $this->respondWithInvalidJsonError($validator, $schema);
             exit;
         }
 
         // TODO Write to database
         $this->response->setStatusCode(200);
         $this->response->setHeader('Content-type', 'application/json');
-        $this->response->setBody(json_encode($article->data));
+        $this->response->setBody(json_encode($article));
     }
 
     protected function delete()

@@ -2,7 +2,7 @@
 
 namespace pjdietz\RestCms\Handlers;
 
-use pjdietz\RestCms\Controllers\VersionCollectionController;
+use pjdietz\RestCms\Controllers\VersionController;
 
 class VersionCollectionHandler extends RestCmsBaseHandler {
 
@@ -13,8 +13,8 @@ class VersionCollectionHandler extends RestCmsBaseHandler {
 
     protected function get() {
 
-        $controller = new VersionCollectionController();
-        $collection = $controller->read($this->args['articleId']);
+        $controller = new VersionController();
+        $collection = $controller->readCollection($this->args['articleId']);
 
         if ($collection) {
             $this->response->setStatusCode(200);

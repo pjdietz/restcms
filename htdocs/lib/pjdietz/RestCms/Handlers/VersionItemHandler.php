@@ -2,24 +2,28 @@
 
 namespace pjdietz\RestCms\Handlers;
 
-use pjdietz\RestCms\Controllers\VersionItemController;
+use pjdietz\RestCms\Controllers\VersionController;
 
-class VersionItemHandler extends RestCmsBaseHandler {
+class VersionItemHandler extends RestCmsBaseHandler
+{
+    protected function get()
+    {
+        $controller = new VersionController();
+        $item = $controller->readItem($this->args['articleId'], $this->args['versionId']);
 
-    protected function get() {
-
-        $controller = new VersionItemController();
-        $version = $controller->read($this->args['articleId'], $this->args['versionId']);
-
-        if ($version) {
+        if ($item) {
             $this->response->setStatusCode(200);
             $this->response->setHeader('Content-Type', 'application/json');
-            $this->response->setBody(json_encode($version));
+            $this->response->setBody(json_encode($item));
         } else {
             $this->response->setStatusCode(404);
-            $this->response->setBody("No article version for articleId={$this->args['articleId']}, articleVersionId={$this->args['articleVersionId']}");
+            $this->response->setBody(
+                sprintf(
+                    "No article version for articleId=%d, versionId=%d",
+                    $this->args['articleId'],
+                    $this->args['articleVersionId']
+                )
+            );
         }
-
     }
-
 }

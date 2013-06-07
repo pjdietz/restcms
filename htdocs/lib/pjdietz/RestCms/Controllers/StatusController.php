@@ -2,8 +2,8 @@
 
 namespace pjdietz\RestCms\Controllers;
 
-use pjdietz\RestCms\Connections\Database;
 use PDO;
+use pjdietz\RestCms\Connections\Database;
 
 class StatusController extends RestCmsBaseController
 {
@@ -14,7 +14,7 @@ class StatusController extends RestCmsBaseController
         $query = <<<'SQL'
 SELECT
     s.statusId,
-    s.statusName as `status`
+    s.statusName AS `status`
 FROM status s
 
 SQL;
@@ -47,7 +47,7 @@ QUERY;
         $query = <<<'SQL'
 SELECT
     s.statusId,
-    s.statusName as `status`
+    s.statusName AS `status`
 FROM status s
 
 SQL;
