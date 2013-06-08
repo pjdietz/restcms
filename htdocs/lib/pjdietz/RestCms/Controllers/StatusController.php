@@ -7,6 +7,8 @@ use pjdietz\RestCms\Connections\Database;
 
 class StatusController extends RestCmsBaseController
 {
+    const STATUS_MODEL = 'pjdietz\RestCms\Models\StatusModel';
+
     public function readCollection($options = null)
     {
         $useTmpStatus = $this->createTmpStatus($options);
@@ -14,7 +16,8 @@ class StatusController extends RestCmsBaseController
         $query = <<<'SQL'
 SELECT
     s.statusId,
-    s.statusName AS `status`
+    s.statusSlug AS `slug`,
+    s.statusName AS `name`
 FROM status s
 
 SQL;
@@ -30,7 +33,7 @@ QUERY;
         $db = Database::getDatabaseConnection();
         $stmt = $db->prepare($query);
         $stmt->execute();
-        $this->data = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $this->data = $stmt->fetchAll(PDO::FETCH_CLASS, self::STATUS_MODEL);
 
         // Drop temporary tables.
         if ($useTmpStatus) {
@@ -40,44 +43,30 @@ QUERY;
         return $this->data;
     }
 
-    public function readItem($options)
+    public function readItem($statusId)
     {
-        $useTmpStatus = $this->createTmpStatus($options);
-
         $query = <<<'SQL'
 SELECT
     s.statusId,
-    s.statusName AS `status`
+    s.statusSlug AS `slug`,
+    s.statusName AS `name`
 FROM status s
-
+WHERE 1 = 1
+    AND s.statusId = :statusId
+LIMIT 1;
 SQL;
-
-        if ($useTmpStatus) {
-            $query .= <<<'QUERY'
-    JOIN tmpStatus ts
-        ON s.statusId = ts.statusId
-
-QUERY;
-        }
-
-        $query .= 'LIMIT 1';
 
         $db = Database::getDatabaseConnection();
         $stmt = $db->prepare($query);
+        $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
         $stmt->execute();
 
         if ($stmt->rowCount() === 0) {
-            $this->data = null;
-        } else {
-            $this->data = $stmt->fetch(PDO::FETCH_OBJ);
+            return null;
         }
 
-        // Drop temporary tables.
-        if ($useTmpStatus) {
-            $this->dropTmpStatus();
-        }
+        return $stmt->fetchObject(self::STATUS_MODEL);
 
-        return $this->data;
     }
 
 }

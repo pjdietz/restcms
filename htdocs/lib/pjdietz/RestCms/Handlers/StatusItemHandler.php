@@ -9,15 +9,15 @@ class StatusItemHandler extends RestCmsBaseHandler
     protected function get()
     {
         $controller = new StatusController();
-        $status = $controller->readItem($this->args);
+        $status = $controller->readItem($this->args['statusId']);
 
         if ($status) {
-            $this->response->statusCode = 200;
+            $this->response->setStatusCode(200);
             $this->response->setHeader('Content-Type', 'application/json');
-            $this->response->body = json_encode($status);
+            $this->response->setBody(json_encode($status));
         } else {
-            $this->response->statusCode = 404;
-            $this->response->body = 'No status with name ' . $this->args['$status'];
+            $this->response->setStatusCode(404);
+            $this->response->setBody('No status with id ' . $this->args['statusId']);
         }
     }
 }

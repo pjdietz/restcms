@@ -17,13 +17,16 @@ class MainRouter extends Router
 
         $this->templateVariables = array(
             'articleId' => Route::RE_NUM,
-            'versionId' => Route::RE_NUM
+            'versionId' => Route::RE_NUM,
+            'statusId' => Route::RE_NUM
         );
 
         $this->addTemplate('/articles/', 'ArticleCollectionHandler');
         $this->addTemplate('/articles/{articleId}', 'ArticleItemHandler');
         $this->addTemplate('/articles/{articleId}/versions/', 'VersionCollectionHandler');
         $this->addTemplate('/articles/{articleId}/versions/{versionId}', 'VersionItemHandler');
+        $this->addTemplate('/status/', 'StatusCollectionHandler');
+        $this->addTemplate('/status/{statusId}', 'StatusItemHandler');
     }
 
     private function addTemplate($template, $handler, $variables = null)

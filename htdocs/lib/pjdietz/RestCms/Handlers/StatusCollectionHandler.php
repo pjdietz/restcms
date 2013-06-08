@@ -9,10 +9,10 @@ class StatusCollectionHandler extends RestCmsBaseHandler
     protected function get()
     {
         $controller = new StatusController();
-        $collection = $controller->readCollection($this->request->query);
+        $collection = $controller->readCollection($this->request->getQuery());
 
-        $this->response->statusCode = 200;
+        $this->response->setStatusCode(200);
         $this->response->setHeader('Content-Type', 'application/json');
-        $this->response->body = json_encode($collection);
+        $this->response->setBody(json_encode($collection));
     }
 }

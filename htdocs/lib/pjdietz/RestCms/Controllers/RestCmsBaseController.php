@@ -129,8 +129,11 @@ SQL;
      */
     protected function createTmpStatus($options)
     {
+        $status = (isset($options['status']) && $options['status'] !== '');
+        $statusId = (isset($options['statusId']) && $options['statusId'] !== '');
+
         // Return false if there is no need to make the temp table.
-        if (!isset($options['status']) || $options['status'] === '') {
+        if (!($status || $statusId)) {
             return false;
         }
 
@@ -161,6 +164,24 @@ SQL;
 
         foreach ($statusSlugs as $statusSlug) {
             $stmt->bindValue(':statusSlug', $statusSlug, PDO::PARAM_STR);
+            $stmt->execute();
+        }
+
+
+        // Prepare the insert statement.
+        $query = <<<'SQL'
+INSERT IGNORE INTO tmpStatus
+SELECT statusId
+FROM status
+WHERE statusId = :statusId;
+SQL;
+        $stmt = $db->prepare($query);
+
+        // Execute the query for each status.
+        $statusIds = explode(',', $options['statusId']);
+
+        foreach ($statusIds as $statusId) {
+            $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
             $stmt->execute();
         }
 
