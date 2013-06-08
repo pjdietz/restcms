@@ -14,3 +14,7 @@ INSERT INTO user (
     1
 );
 
+INSERT INTO status (statusSlug, statusName) VALUES
+('draft', 'Draft'),
+('published', 'Published'),
+('pending', 'Pending Review');

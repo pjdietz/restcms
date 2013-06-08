@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS article (
     slug VARCHAR(255) NOT NULL COMMENT '[Required] Unique, URL-safe name for the article.',
     contentType VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Mime type for the article',
     statusId TINYINT NOT NULL DEFAULT 1 COMMENT 'Status of the article. Default is draft',
-    currentArticleVersionId INT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Link to articleVersion record',
+    currentVersionId INT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Link to version record',
     UNIQUE INDEX idxArticleSlug (slug)
 )
 ENGINE = MyISAM;

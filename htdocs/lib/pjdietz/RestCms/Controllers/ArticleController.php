@@ -33,12 +33,12 @@ SELECT
     a.slug,
     a.contentType,
     s.statusName AS status,
-    av.title,
-    av.excerpt
+    v.title,
+    v.excerpt
 FROM
     article a
-    JOIN articleVersion av
-        ON a.currentArticleVersionId = av.articleVersionId
+    JOIN version v
+        ON a.currentVersionId = v.versionId
     JOIN status s
         ON a.statusId = s.statusId
 SQL;
@@ -83,14 +83,14 @@ SELECT
     a.slug,
     a.contentType,
     s.statusName as status,
-    av.title,
-    av.content,
-    av.excerpt,
-    av.notes
+    v.title,
+    v.content,
+    v.excerpt,
+    v.notes
 FROM
     article a
-    JOIN articleVersion av
-        ON a.currentArticleVersionId = av.articleVersionId
+    JOIN version v
+        ON a.currentVersionId = v.versionId
         AND a.articleId = :articleId
     JOIN status s
         ON a.statusId = s.statusId
@@ -169,9 +169,9 @@ SQL;
         }
         $articleId = $db->lastInsertId();
 
-        // Insert the articleVersion.
+        // Insert the version.
         $query = <<<SQL
-INSERT INTO articleVersion (
+INSERT INTO version (
     dateCreated,
     dateModified,
     title,
@@ -182,7 +182,6 @@ INSERT INTO articleVersion (
     :title,
     :parentArticleId
 );
-
 SQL;
         $stmt = $db->prepare($query);
         $stmt->bindValue(':title', $article->title, PDO::PARAM_STR);
@@ -195,13 +194,12 @@ SQL;
 UPDATE
     article
 SET
-    currentArticleVersionId = :currentArticleVersionId
+    currentVersionId = :currentVersionId
 WHERE 1 = 1
     AND articleId = :articleId;
-
 SQL;
         $stmt = $db->prepare($query);
-        $stmt->bindValue(':currentArticleVersionId', $versionId,  PDO::PARAM_INT);
+        $stmt->bindValue(':currentVersionId', $versionId,  PDO::PARAM_INT);
         $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
         $stmt->execute();
 

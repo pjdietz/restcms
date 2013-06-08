@@ -152,15 +152,15 @@ SQL;
 INSERT IGNORE INTO tmpStatus
 SELECT statusId
 FROM status
-WHERE statusName = :statusName;
+WHERE statusSlug = :statusSlug;
 SQL;
         $stmt = $db->prepare($query);
 
         // Execute the query for each status.
-        $statusNames = explode(',', $options['status']);
+        $statusSlugs = explode(',', $options['status']);
 
-        foreach ($statusNames as $statusName) {
-            $stmt->bindValue(':statusName', $statusName, PDO::PARAM_STR);
+        foreach ($statusSlugs as $statusSlug) {
+            $stmt->bindValue(':statusSlug', $statusSlug, PDO::PARAM_STR);
             $stmt->execute();
         }
 

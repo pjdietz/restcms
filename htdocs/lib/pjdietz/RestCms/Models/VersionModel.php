@@ -5,11 +5,13 @@ namespace pjdietz\RestCms\Models;
 class VersionModel extends RestCmsBaseModel
 {
     public $articleId;
-    public $articleVersionId;
+    public $versionId;
+    public $isCurrent;
 
-    private function __construct()
+    protected function prepareInstance()
     {
         $this->articleId = (int) $this->articleId;
-        $this->articleVersionId = (int) $this->articleVersionId;
+        $this->versionId = (int) $this->versionId;
+        $this->isCurrent = (bool) $this->isCurrent;
     }
 }

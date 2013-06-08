@@ -41,7 +41,7 @@ class SetupApp extends CliApp
     {
         $db = Database::getDatabaseConnection(false);
         $query = 'DROP DATABASE ' . config\MYSQL_DATABASE;
-        $rslt = $db->exec($query);
+        $db->exec($query);
 
         $this->createDatabase();
         return 0;
@@ -67,7 +67,8 @@ class SetupApp extends CliApp
 
         $queryNames = array(
             'setup/tables/article',
-            'setup/tables/articleVersion',
+            'setup/tables/version',
+            'setup/tables/status',
             'setup/tables/user',
             'setup/default-data'
         );

@@ -6,7 +6,7 @@ class ArticleModel extends RestCmsBaseModel
 {
     public $articleId;
 
-    private function __construct()
+    protected function prepareInstance()
     {
         $this->articleId = (int) $this->articleId;
     }

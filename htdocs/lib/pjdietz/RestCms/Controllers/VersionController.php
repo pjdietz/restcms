@@ -19,14 +19,15 @@ class VersionController
     {
         $query = <<<SQL
 SELECT
-    av.articleVersionId,
-    av.dateCreated
+    a.articleId,
+    v.versionId,
+    v.dateCreated,
+    IF (a.currentVersionId = v.versionId, 1, 0) AS `isCurrent`
 FROM
     article a
-    JOIN articleVersion av
-        ON a.articleId = av.parentArticleId
-        AND a.articleId = :articleId
-
+    JOIN version v
+        ON a.articleId = v.parentArticleId
+        AND a.articleId = :articleId;
 SQL;
 
         $db = Database::getDatabaseConnection();
@@ -54,20 +55,20 @@ SQL;
     {
         $query = <<<SQL
 SELECT
-    av.articleVersionId,
-    av.dateCreated,
-    av.title,
-    av.content,
-    av.excerpt,
-    av.notes
+    v.versionId,
+    v.dateCreated,
+    v.title,
+    v.content,
+    v.excerpt,
+    v.notes,
+    IF (a.currentVersionId = v.versionId, 1, 0) AS `isCurrent`
 FROM
     article a
-    JOIN articleVersion av
-        ON a.articleId = av.parentArticleId
+    JOIN version v
+        ON a.articleId = v.parentArticleId
         AND a.articleId = :articleId
 WHERE 1 = 1
-    AND av.articleVersionId = :versionId;
-
+    AND v.versionId = :versionId;
 SQL;
 
         $db = Database::getDatabaseConnection();

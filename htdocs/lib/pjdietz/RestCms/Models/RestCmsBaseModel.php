@@ -9,21 +9,33 @@ use stdClass;
  */
 abstract class RestCmsBaseModel extends stdClass
 {
-    /**
-     * prevent the instance from being cloned
-     *
-     * @return void
-     */
-    private function __clone()
+    protected function __construct($source = null)
     {
+        $this->copyMembers($source);
+        $this->prepareInstance();
     }
 
     /**
-     * prevent from being unserialized
-     *
+     * Copy all public fields from $source into the instance.
+     * @param $source
+     */
+    protected function copyMembers($source)
+    {
+        if (is_null($source)) {
+            return;
+        }
+        if (is_array($source)) {
+            $source = (object) $source;
+        }
+
+        foreach ($source as $field => $value) {
+            $this->{$field} = $value;
+        }
+    }
+
+    /**
+     * Allow the instance to update its members after construction or deserialization.
      * @return void
      */
-    private function __wakeup()
-    {
-    }
+    abstract protected function prepareInstance();
 }

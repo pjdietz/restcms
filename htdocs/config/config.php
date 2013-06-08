@@ -8,7 +8,7 @@ const MYSQL_USERNAME = 'restcms';
 const MYSQL_PASSWORD = 'restcms';
 const MYSQL_DATABASE = 'restcms';
 
-// Authentication sheme:
+// Authentication scheme:
 //
 // true: [Recommended] Require requests to be signed by hashing the request URI,
 // method, and body with the username and passwordHash. This is more
