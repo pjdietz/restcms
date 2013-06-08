@@ -94,19 +94,47 @@
             ]
         },
         {
-            "path": "/articles/{slug}",
-            "description": "Article",
+            "path": "/articles/{articleId}/versions/",
+            "description": "Article Versions",
             "operations": [
                 {
                     "httpMethod": "GET",
-                    "notes": "Get a collection of articles",
-                    "nickname": "getArticleBySlug",
-                    "summary": "Get an article.",
+                    "summary": "Get a collection of versions for a given article.",
+                    "nickname": "getVersions",
                     "parameters": [
                         {
-                            "name": "slug",
+                            "name": "articleId",
+                            "description": "Filter by articleId",
+                            "dataType": "int",
+                            "required": false,
+                            "allowMultiple": true,
+                            "paramType": "path"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/articles/{articleId}/versions/{versionId}",
+            "description": "Version",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "getVersion",
+                    "summary": "Get a version for an article.",
+                    "parameters": [
+                        {
+                            "name": "articleId",
                             "description": "The articleId",
-                            "dataType": "string",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        },
+                        {
+                            "name": "versionId",
+                            "description": "The versionId",
+                            "dataType": "int",
                             "required": true,
                             "allowMultiple": false,
                             "paramType": "path"
@@ -115,7 +143,7 @@
                     "errorResponses": [
                         {
                             "code": 404,
-                            "reason": "Article does not exist"
+                            "reason": "Article or version does not exist"
                         }
                     ]
                 }

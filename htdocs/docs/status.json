@@ -26,7 +26,7 @@
             ]
         },
         {
-            "path": "/status/{status}",
+            "path": "/status/{statusId}",
             "description": "One specific status",
             "operations": [
                 {
@@ -35,9 +35,9 @@
                     "summary": "View details on a specific status.",
                     "parameters": [
                         {
-                            "name": "status",
-                            "description": "The URI-friendly name of the status",
-                            "dataType": "string",
+                            "name": "statusId",
+                            "description": "ID for the status",
+                            "dataType": "int",
                             "required": true,
                             "allowMultiple": false,
                             "paramType": "path"
