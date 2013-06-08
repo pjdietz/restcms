@@ -42,8 +42,6 @@ class Database
 
             self::$databaseConnection = new PDO($dsn, config\MYSQL_USERNAME, config\MYSQL_PASSWORD);
             self::$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            self::$databaseConnection->setAttribute( PDO::ATTR_EMULATE_PREPARES, false);
-
         }
 
         return self::$databaseConnection;

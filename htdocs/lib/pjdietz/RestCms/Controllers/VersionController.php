@@ -7,6 +7,8 @@ use pjdietz\RestCms\Connections\Database;
 
 class VersionController
 {
+    const VERSION_MODEL = 'pjdietz\RestCms\Models\VersionModel';
+
     /**
      * Read the collection of version for the given article.
      *
@@ -32,7 +34,7 @@ SQL;
         $stmt->bindParam(':articleId', $articleId, PDO::PARAM_INT);
         $stmt->execute();
 
-        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $rows = $stmt->fetchAll(PDO::FETCH_CLASS, self::VERSION_MODEL);
 
         if ($rows && count($rows) > 0) {
             return $rows;
@@ -73,7 +75,7 @@ SQL;
         $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
         $stmt->bindValue(':versionId', $versionId, PDO::PARAM_INT);
         $stmt->execute();
-        $rows = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $rows = $stmt->fetchAll(PDO::FETCH_CLASS, self::VERSION_MODEL);
 
         if ($rows && count($rows) > 0) {
             return $rows[0];

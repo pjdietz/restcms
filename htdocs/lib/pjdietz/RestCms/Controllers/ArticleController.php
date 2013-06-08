@@ -2,11 +2,10 @@
 
 namespace pjdietz\RestCms\Controllers;
 
-use JsonSchema\Constraints\Object;
 use JsonSchema\Validator;
+use PDO;
 use PDOException;
 use pjdietz\RestCms\Connections\Database;
-use PDO;
 use pjdietz\RestCms\Exceptions\DatabaseException;
 
 /**
@@ -15,6 +14,7 @@ use pjdietz\RestCms\Exceptions\DatabaseException;
 class ArticleController extends RestCmsBaseController
 {
     const PATH_TO_SCHEMA = '/schema/article.json';
+    const ARTICLE_MODEL = 'pjdietz\RestCms\Models\ArticleModel';
 
     /**
      * Read a collection of Articles filtered by the given options array.
@@ -56,7 +56,7 @@ SQL;
         $db = Database::getDatabaseConnection();
         $stmt = $db->prepare($query);
         $stmt->execute();
-        $collection = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $collection = $stmt->fetchAll(PDO::FETCH_CLASS, self::ARTICLE_MODEL);
 
         // Drop temporary tables.
         if ($useTmpArticleId) {
@@ -101,7 +101,7 @@ SQL;
         $stmt = $db->prepare($query);
         $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchObject();
+        return $stmt->fetchObject(self::ARTICLE_MODEL);
     }
 
     /**
