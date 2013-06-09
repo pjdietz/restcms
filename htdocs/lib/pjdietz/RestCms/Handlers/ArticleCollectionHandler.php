@@ -14,8 +14,7 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
 
     protected function get()
     {
-        $this->readUser(false);
-        // TODO Once I have users linked to articles and articles marked as public, etc. restrict this list if the user is not an admin.
+        $this->assertUserPrivileges(self::PRIV_READ_ARTICLE);
 
         $controller = new ArticleController();
         $collection = $controller->readCollection($this->request->getQuery());
@@ -27,8 +26,7 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
 
     protected function post()
     {
-        $this->readUser(false);
-        // TODO Once I have users linked to articles and articles marked as public, etc. restrict this list if the user is not an admin.
+        $this->assertUserPrivileges(self::PRIV_CREATE_ARTICLE);
 
         $controller = new ArticleController();
         $article = $controller->parseJson($this->request->getBody(), $validator);

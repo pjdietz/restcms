@@ -2,12 +2,13 @@
 
 namespace pjdietz\RestCms\Connections;
 
+use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\RestCms\Util;
 use pjdietz\RestCms\config;
 use PDO;
 use InvalidArgumentException;
 
-class Database
+class Database implements RestCmsCommonInterface
 {
     /**
      * Shared PDO singleton instance.
@@ -107,7 +108,9 @@ class Database
     {
         if (!isset(self::$templateMergeFields)) {
             self::$templateMergeFields = array(
-                '{DATABASE_NAME}' => config\MYSQL_DATABASE
+                '{DATABASE_NAME}' => config\MYSQL_DATABASE,
+                '{PRIV_READ_ARTICLE}' => self::PRIV_READ_ARTICLE,
+                '{PRIV_CREATE_ARTICLE}' => self::PRIV_CREATE_ARTICLE
             );
         }
         return self::$templateMergeFields;

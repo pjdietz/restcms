@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\Controllers\ArticleController;
+use pjdietz\RestCms\Models\UserModel;
 
 class ArticleItemHandler extends RestCmsBaseHandler
 {
@@ -13,6 +14,8 @@ class ArticleItemHandler extends RestCmsBaseHandler
 
     protected function get()
     {
+        $this->assertUserPrivileges(self::PRIV_READ_ARTICLE);
+
         $controller = new ArticleController();
         $article = $controller->readItem($this->args['articleId']);
 
@@ -28,6 +31,8 @@ class ArticleItemHandler extends RestCmsBaseHandler
 
     protected function put()
     {
+        $this->assertUserPrivileges(self::PRIV_CREATE_ARTICLE);
+
         // Attempt to build an article from the passed request body.
         $controller = new ArticleController();
         $article = $controller->parseJson($this->request->getBody(), $validator);

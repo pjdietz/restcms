@@ -66,7 +66,31 @@ SQL;
         }
 
         return $stmt->fetchObject(self::STATUS_MODEL);
+    }
 
+    public function readItemBySlug($statusSlug)
+    {
+        $query = <<<'SQL'
+SELECT
+    s.statusId,
+    s.statusSlug AS `slug`,
+    s.statusName AS `name`
+FROM status s
+WHERE 1 = 1
+    AND s.statusSlug = :statusSlug
+LIMIT 1;
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':statusSlug', $statusSlug, PDO::PARAM_STR);
+        $stmt->execute();
+
+        if ($stmt->rowCount() === 0) {
+            return null;
+        }
+
+        return $stmt->fetchObject(self::STATUS_MODEL);
     }
 
 }

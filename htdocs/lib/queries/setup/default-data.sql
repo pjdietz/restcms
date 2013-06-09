@@ -4,14 +4,11 @@ INSERT INTO status (statusSlug, statusName) VALUES
 ('published', 'Published'),
 ('pending', 'Pending Review');
 
-
-
-SET @privReadContent = 1;
-SET @privCrreateContent = 2;
+SET @privReadContent = {PRIV_READ_ARTICLE};
+SET @privCrreateContent = {PRIV_CREATE_ARTICLE};
 
 SET @groupAdmin = 1;
 SET @groupConsumer = 2;
-
 
 -- Create default user privileges
 INSERT INTO userPrivilege (

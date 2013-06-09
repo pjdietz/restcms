@@ -130,7 +130,7 @@ SQL;
     {
         // Find the statusId.
         $statusCtrl = new StatusController();
-        $status = $statusCtrl->readItem(array('status' => $article->status));
+        $status = $statusCtrl->readItemBySlug($article->status);
 
         if (!$status) {
             throw new DatabaseException('Status ' . $article->status . ' is invalid', 400);

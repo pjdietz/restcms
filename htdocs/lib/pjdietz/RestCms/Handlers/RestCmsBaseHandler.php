@@ -4,11 +4,13 @@ namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\config;
 use pjdietz\RestCms\Controllers\UserController;
+use pjdietz\RestCms\Models\UserModel;
+use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\WellRESTed\Handler;
 
-abstract class RestCmsBaseHandler extends Handler
+abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterface
 {
-
+    /** @var UserModel */
     protected $user;
 
     protected function readUser($requireUser = false)
@@ -27,11 +29,11 @@ abstract class RestCmsBaseHandler extends Handler
 
         }
 
-        // Read the authoziation scheme.
+        // Read the authorization scheme.
         $auth = $this->request->getHeader('X-restcms-auth');
 
         if ($auth === false) {
-            // Wrong authentication sheme.
+            // Wrong authentication scheme.
             $this->respondWithAuthenticationError();
         }
 
@@ -47,34 +49,72 @@ abstract class RestCmsBaseHandler extends Handler
 
     }
 
-    protected function authenticateUserWithPasswordHash($authFields)
+    /**
+     * Repond with 401 or 403 errors if the user is not supplied or not allowed.
+     * If execution continues beyond this method, all is good.
+     *
+     * @param array|int $privileges
+     */
+    protected function assertUserPrivileges($privileges)
+    {
+        if (!isset($this->user)) {
+            $this->readUser(true);
+        }
+
+        if (!$this->user->hasPrivileges($privileges)) {
+            $this->respondWithForbiddenError();
+        }
+    }
+
+    protected function respondWithAuthenticationError()
     {
 
-        if (isset($authFields['username']) && $authFields['username'] !== '') {
-            $username = $authFields['username'];
+        // TODO Additional message
+        $this->response->setStatusCode(401);
+        $this->response->setHeader('WWW-Authenticate', 'restcms');
+
+        $body = "Please provide proper credentials for the request in the form of a X-restcms-auth header with a value in the following format:\n";
+
+        if (config\AUTH_USE_REQUEST_HASH) {
+            $body .= "username={your username}; requestHash={this request's hash}\n\n";
+            $body .= "To make the request hash, concatenate the following and SHA256 the result: username, passwordHash, request URI, request method, request body.\n\n";
         } else {
-            $this->respondWithAuthenticationError();
-            exit;
+            $body .= "username={your username}; passwordHash={your password hash}\n\n";
         }
 
-        $user = UserController::newFromUsername($username);
-        if ($user === false) {
-            $this->respondWithAuthenticationError();
-        } else {
-            $this->user = $user;
+        $this->response->setBody($body);
+
+        $this->response->respond();
+        exit;
+
+    }
+
+    protected function respondWithForbiddenError()
+    {
+        $this->response->setStatusCode(403);
+        $this->response->respond();
+        exit;
+    }
+
+
+    public static function parsePairs($str, $pairDelimiter = ';', $kvDelimiter = '=')
+    {
+
+        $rtn = array();
+
+        $pairs = explode($pairDelimiter, $str);
+
+        foreach ($pairs as $pair) {
+
+            @list($k, $v) = explode($kvDelimiter, $pair, 2);
+
+            if (isset($k) && isset($v)) {
+                $rtn[trim($k)] = trim($v);
+            }
+
         }
 
-        if (isset($authFields['passwordHash']) && $authFields['passwordHash'] !== '') {
-            $passwordHash = $authFields['passwordHash'];
-        } else {
-            $this->respondWithAuthenticationError();
-            exit;
-        }
-
-        if ($passwordHash !== $user->data['passwordHash']) {
-            $this->respondWithAuthenticationError();
-            exit;
-        }
+        return $rtn;
 
     }
 
@@ -118,46 +158,27 @@ abstract class RestCmsBaseHandler extends Handler
         return hash('sha256', $str);
     }
 
-    protected function respondWithAuthenticationError()
+    private function authenticateUserWithPasswordHash($authFields)
     {
-
-        // TODO Additional message
-        $this->response->setStatusCode(401);
-        $this->response->setHeader('WWW-Authenticate', 'restcms');
-
-        $body = "Please provide proper credentials for the request in the form of a X-restcms-auth header with a value in the following format:\n";
-
-        if (config\AUTH_USE_REQUEST_HASH) {
-            $body .= "username={your username}; requestHash={this request's hash}\n\n";
-            $body .= "To make the request hash, concatenate the following and SHA256 the result: username, passwordHash, request URI, request method, request body.\n\n";
-        } else {
-            $body .= "username={your username}; passwordHash={your password hash}\n\n";
+        if (!isset($authFields['username']) || $authFields['username'] === '') {
+            $this->respondWithAuthenticationError();
+            exit;
         }
 
-        $this->response->setBody($body);
-
-        $this->response->respond();
-        exit;
-
-    }
-
-    public static function parsePairs( $str, $pairDelimiter = ';', $kvDelimiter = '=') {
-
-        $rtn = array();
-
-        $pairs = explode($pairDelimiter, $str);
-
-        foreach ($pairs as $pair) {
-
-            @list($k, $v) = explode($kvDelimiter, $pair, 2);
-
-            if (isset($k) && isset($v)) {
-                $rtn[trim($k)] = trim($v);
-            }
-
+        if (!isset($authFields['passwordHash']) || $authFields['passwordHash'] === '') {
+            $this->respondWithAuthenticationError();
+            exit;
         }
 
-        return $rtn;
+        $username = $authFields['username'];
+        $passwordHash = $authFields['passwordHash'];
+        $user = UserModel::newByCredentials($username, $passwordHash);
+
+        if (is_null($user)) {
+            $this->respondWithAuthenticationError();
+        }
+
+        $this->user = $user;
 
     }
 
@@ -170,11 +191,11 @@ abstract class RestCmsBaseHandler extends Handler
         // The request body was malformed or did not adhere to the schema.
         $this->response->setStatusCode(400);
         $this->response->setHeader('Content-type', 'text/plain');
-        $body  = "The request body was malformed or did not adhere to the schema.\n";
+        $body = "The request body was malformed or did not adhere to the schema.\n";
         $body .= "Schema for validation: " . $schemaUrl . "\n\n";
         $body .= "Violations:\n";
         foreach ($validator->getErrors() as $error) {
-            $body .= sprintf("[%s] %s\n",$error['property'], $error['message']);
+            $body .= sprintf("[%s] %s\n", $error['property'], $error['message']);
         }
         $this->response->setBody($body);
         $this->response->respond();
