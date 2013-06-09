@@ -70,6 +70,9 @@ class SetupApp extends CliApp
             'setup/tables/version',
             'setup/tables/status',
             'setup/tables/user',
+            'setup/tables/userGroup',
+            'setup/tables/userPrivilege',
+            'setup/tables/userGroupPrivilege',
             'setup/default-data'
         );
 

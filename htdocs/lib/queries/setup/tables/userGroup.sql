@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS userGroup (
+    userGroupId INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    dateCreated DATETIME NOT NULL DEFAULT '0000-00-00',
+    dateModified DATETIME NOT NULL DEFAULT '0000-00-00',
+    groupName VARCHAR(255) NOT NULL COMMENT 'Name for the user group',
+    UNIQUE INDEX idxUserGroupName (groupName)
+)
+ENGINE = MyISAM;
