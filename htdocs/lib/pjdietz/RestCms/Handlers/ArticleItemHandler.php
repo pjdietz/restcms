@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\Controllers\ArticleController;
+use pjdietz\RestCms\Models\ArticleModel;
 use pjdietz\RestCms\Models\UserModel;
 
 class ArticleItemHandler extends RestCmsBaseHandler
@@ -16,8 +17,10 @@ class ArticleItemHandler extends RestCmsBaseHandler
     {
         $this->assertUserPrivileges(self::PRIV_READ_ARTICLE);
 
-        $controller = new ArticleController();
-        $article = $controller->readItem($this->args['articleId']);
+//        $controller = new ArticleController();
+//        $article = $controller->readItem($this->args['articleId']);
+
+        $article = ArticleModel::newById($this->args['articleId']);
 
         if ($article) {
             $this->response->setStatusCode(200);

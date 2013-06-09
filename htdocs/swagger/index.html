@@ -24,6 +24,10 @@
                 dom_id:"swagger-ui-container",
                 supportHeaderParams: true,
                 supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
+                headers: {
+                    "Authorization": "restcms",
+                    "X-restcms-auth": "username=admin; passwordHash=admin"
+                },
                 onComplete: function(swaggerApi, swaggerUi){
                 	if(console) {
                         console.log("Loaded SwaggerUI")
