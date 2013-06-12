@@ -2,19 +2,19 @@
 
 namespace pjdietz\RestCms\Handlers;
 
-use pjdietz\RestCms\Controllers\VersionController;
+use pjdietz\RestCms\Models\VersionModel;
 
-class VersionCollectionHandler extends RestCmsBaseHandler {
+class VersionCollectionHandler extends RestCmsBaseHandler
+{
 
     protected function getAllowedMethods()
     {
         return array('GET', 'POST');
     }
 
-    protected function get() {
-
-        $controller = new VersionController();
-        $collection = $controller->readCollection($this->args['articleId']);
+    protected function get()
+    {
+        $collection = VersionModel::initCollection($this->args['articleId']);
 
         if ($collection) {
             $this->response->setStatusCode(200);
@@ -24,7 +24,6 @@ class VersionCollectionHandler extends RestCmsBaseHandler {
             $this->response->setStatusCode(404);
             $this->response->setBody('No article with articleId ' . $this->args['articleId']);
         }
-
     }
 
 }

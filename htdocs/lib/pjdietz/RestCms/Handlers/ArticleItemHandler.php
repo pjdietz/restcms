@@ -2,7 +2,6 @@
 
 namespace pjdietz\RestCms\Handlers;
 
-use pjdietz\RestCms\Controllers\ArticleController;
 use pjdietz\RestCms\Models\ArticleModel;
 use pjdietz\RestCms\Models\UserModel;
 
@@ -17,10 +16,7 @@ class ArticleItemHandler extends RestCmsBaseHandler
     {
         $this->assertUserPrivileges(self::PRIV_READ_ARTICLE);
 
-//        $controller = new ArticleController();
-//        $article = $controller->readItem($this->args['articleId']);
-
-        $article = ArticleModel::newById($this->args['articleId']);
+        $article = ArticleModel::initWithId($this->args['articleId']);
 
         if ($article) {
             $this->response->setStatusCode(200);
@@ -37,11 +33,10 @@ class ArticleItemHandler extends RestCmsBaseHandler
         $this->assertUserPrivileges(self::PRIV_CREATE_ARTICLE);
 
         // Attempt to build an article from the passed request body.
-        $controller = new ArticleController();
-        $article = $controller->parseJson($this->request->getBody(), $validator);
+        $article = ArticleModel::initWithJson($this->request->getBody(), $validator);
 
         if (is_null($article)) {
-            $schema = 'http://' . $_SERVER['HTTP_HOST'] . ArticleController::PATH_TO_SCHEMA;
+            $schema = 'http://' . $_SERVER['HTTP_HOST'] . ArticleModel::PATH_TO_SCHEMA;
             $this->respondWithInvalidJsonError($validator, $schema);
             exit;
         }

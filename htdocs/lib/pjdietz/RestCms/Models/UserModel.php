@@ -2,43 +2,15 @@
 
 namespace pjdietz\RestCms\Models;
 
-use Exception;
 use PDO;
-use pjdietz\RestCms\Connections\Database;
+use pjdietz\RestCms\Database\Database;
 
 class UserModel extends RestCmsBaseModel
 {
     public $userId;
     private $privileges;
 
-    protected function prepareInstance()
-    {
-        $this->userId = (int) $this->userId;
-        $this->userGroupId = (int) $this->userGroupId;
-        $this->readPrivileges();
-    }
-
-    /**
-     * Return is the user has a given privilege.
-     *
-     * @param array|int $privileges
-     * @return bool
-     */
-    public function hasPrivileges($privileges)
-    {
-        if (is_array($privileges)) {
-            foreach ($privileges as $privilegeId) {
-                if (!in_array($privilegeId, $this->privileges)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        return in_array($privileges, $this->privileges);
-    }
-
-    public static function newByCredentials($username, $passwordHash)
+    public static function initWithCredentials($username, $passwordHash)
     {
         $query = <<<SQL
 SELECT
@@ -69,6 +41,33 @@ SQL;
 
         $results = $stmt->fetchObject();
         return new self($results);
+    }
+
+    /**
+     * Return is the user has a given privilege.
+     *
+     * @param array|int $privileges
+     * @return bool
+     */
+    public function hasPrivileges($privileges)
+    {
+        if (is_array($privileges)) {
+            foreach ($privileges as $privilegeId) {
+                if (!in_array($privilegeId, $this->privileges)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return in_array($privileges, $this->privileges);
+    }
+
+    protected function prepareInstance()
+    {
+        $this->userId = (int) $this->userId;
+        $this->userGroupId = (int) $this->userGroupId;
+        $this->readPrivileges();
     }
 
     private function readPrivileges()

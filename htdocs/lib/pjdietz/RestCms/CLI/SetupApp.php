@@ -3,7 +3,7 @@
 namespace pjdietz\RestCms\CLI;
 
 use pjdietz\CliApp\CliApp;
-use pjdietz\RestCms\Connections\Database;
+use pjdietz\RestCms\Database\Database;
 use pjdietz\RestCms\config;
 
 class SetupApp extends CliApp

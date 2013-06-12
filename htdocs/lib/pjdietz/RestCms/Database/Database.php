@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\RestCms\Connections;
+namespace pjdietz\RestCms\Database;
 
 use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\RestCms\Util;

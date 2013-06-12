@@ -2,28 +2,20 @@
 
 namespace pjdietz\RestCms\Handlers;
 
-use pjdietz\RestCms\Controllers\VersionController;
+use pjdietz\RestCms\Models\VersionModel;
 
 class VersionItemHandler extends RestCmsBaseHandler
 {
     protected function get()
     {
-        $controller = new VersionController();
-        $item = $controller->readItem($this->args['articleId'], $this->args['versionId']);
+        $version = VersionModel::init($this->args['articleId'], $this->args['versionId']);
 
-        if ($item) {
+        if ($version) {
             $this->response->setStatusCode(200);
             $this->response->setHeader('Content-Type', 'application/json');
-            $this->response->setBody(json_encode($item));
+            $this->response->setBody(json_encode($version));
         } else {
-            $this->response->setStatusCode(404);
-            $this->response->setBody(
-                sprintf(
-                    "No article version for articleId=%d, versionId=%d",
-                    $this->args['articleId'],
-                    $this->args['articleVersionId']
-                )
-            );
+            $this->respondWithNotFoundError();
         }
     }
 }

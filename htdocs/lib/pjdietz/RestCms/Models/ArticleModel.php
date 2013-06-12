@@ -2,26 +2,81 @@
 
 namespace pjdietz\RestCms\Models;
 
+use JsonSchema\Validator;
 use PDO;
-use pjdietz\RestCms\Connections\Database;
+use PDOException;
+use pjdietz\RestCms\Database\Database;
+use pjdietz\RestCms\Database\Helpers\ArticleHelper;
+use pjdietz\RestCms\Database\Helpers\StatusHelper;
+use pjdietz\RestCms\Exceptions\DatabaseException;
 
 class ArticleModel extends RestCmsBaseModel
 {
+    const PATH_TO_SCHEMA = '/schema/article.json';
+    /** @var int */
     public $articleId;
 
-    protected function prepareInstance()
+    /**
+     * Read a collection of Articles filtered by the given options array.
+     *
+     * @param array $options
+     * @return array|null
+     */
+    public static function initCollection($options)
     {
-        $this->articleId = (int) $this->articleId;
+        $tmpArticle = new ArticleHelper($options);
+        $tmpStatus = new StatusHelper($options);
+
+        $query = <<<SQL
+SELECT
+    a.articleId,
+    a.slug,
+    a.contentType,
+    s.statusName AS status,
+    v.title,
+    v.excerpt
+FROM
+    article a
+    JOIN version v
+        ON a.currentVersionId = v.versionId
+    JOIN status s
+        ON a.statusId = s.statusId
+SQL;
+
+        if ($tmpArticle->isRequired()) {
+            $query .= " JOIN tmpArticleId ta ON a.articleId = ta.articleId";
+        }
+
+        if ($tmpStatus->isRequired()) {
+            $query .= " JOIN tmpStatus ts ON a.statusId = ts.statusId";
+        }
+
+        $query .= ";";
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        $collection = $stmt->fetchAll(PDO::FETCH_CLASS, get_called_class());
+
+        $tmpArticle->drop();
+        $tmpStatus->drop();
+
+        return $collection;
     }
 
-    public static function newById($articleId)
+    /**
+     * Read an article from the database by articleId.
+     * @param int $articleId
+     * @return ArticleModel|null
+     */
+    public static function initWithId($articleId)
     {
         $query = <<<SQL
 SELECT
     a.articleId,
     a.slug,
     a.contentType,
-    s.statusName as status,
+    s.statusName AS status,
     v.title,
     v.content,
     v.excerpt,
@@ -46,5 +101,124 @@ SQL;
         }
 
         return new self($stmt->fetchObject());
+    }
+
+    /**
+     * Read and validate a JSON representation into the data member.
+     *
+     * Returns the parsed data, if valid. Otherwise, returns null.
+     *
+     * @param string $jsonString
+     * @param Validator $validator
+     * @return object|null
+     */
+    public static function initWithJson($jsonString, &$validator)
+    {
+        if (self::validateJson($jsonString, $validator) === false) {
+            return null;
+        }
+        return new self(json_decode($jsonString));
+    }
+
+    /**
+     * Validate the passed JSON string against the class's schema.
+     *
+     * @param string $json
+     * @param object $validator  JsonSchema validator reference
+     * @return bool
+     */
+    private static function validateJson($json, &$validator)
+    {
+        $schema = file_get_contents($_SERVER['DOCUMENT_ROOT'] . self::PATH_TO_SCHEMA);
+
+        $validator = new Validator();
+        $validator->check(json_decode($json), json_decode($schema));
+
+        return $validator->isValid();
+    }
+
+    /**
+     * Store the Article instance to the database.
+     */
+    public function create()
+    {
+        // Find the statusId.
+        $status = StatusModel::initWithSlug($this->status);
+
+        if (!$status) {
+            throw new DatabaseException('Status ' . $this->status . ' is invalid', 400);
+        }
+
+        $statusId = $status->statusId;
+        unset($status);
+
+        // Validate all members before writing.
+
+        // Insert the article.
+        $query = <<<SQL
+INSERT INTO article (
+    dateCreated,
+    dateModified,
+    slug,
+    contentType,
+    statusId
+) VALUES (
+    NOW(),
+    NOW(),
+    :slug,
+    :contentType,
+    :statusId
+);
+SQL;
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
+        $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
+        $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
+        try {
+            $stmt->execute();
+        } catch (PDOException $e) {
+            throw new DatabaseException('Unable to store article. Make sure the slug is unique.', 409);
+        }
+        $this->articleId = (int) $db->lastInsertId();
+
+        // Insert the version.
+        $query = <<<SQL
+INSERT INTO version (
+    dateCreated,
+    dateModified,
+    title,
+    parentArticleId
+) VALUES (
+    NOW(),
+    NOW(),
+    :title,
+    :parentArticleId
+);
+SQL;
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':title', $this->title, PDO::PARAM_STR);
+        $stmt->bindValue(':parentArticleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->execute();
+        $versionId = $db->lastInsertId();
+
+        // Set the version as current.
+        $query = <<<SQL
+UPDATE
+    article
+SET
+    currentVersionId = :currentVersionId
+WHERE 1 = 1
+    AND articleId = :articleId;
+SQL;
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':currentVersionId', $versionId, PDO::PARAM_INT);
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    protected function prepareInstance()
+    {
+        $this->articleId = (int) $this->articleId;
     }
 }
