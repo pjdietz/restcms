@@ -14,7 +14,7 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
 
     protected function get()
     {
-        $this->assertUserPrivileges(self::PRIV_READ_ARTICLE);
+        $this->user->assertPrivilege(self::PRIV_READ_ARTICLE);
 
         $collection = ArticleModel::initCollection($this->request->getQuery());
 
@@ -25,7 +25,7 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
 
     protected function post()
     {
-        $this->assertUserPrivileges(self::PRIV_CREATE_ARTICLE);
+        $this->user->assertPrivilege(self::PRIV_CREATE_ARTICLE);
 
         $article = ArticleModel::initWithJson($this->request->getBody(), $validator);
 

@@ -4,12 +4,21 @@ namespace pjdietz\RestCms\Models;
 
 use PDO;
 use pjdietz\RestCms\Database\Database;
+use pjdietz\RestCms\Exceptions\UserException;
 
 class UserModel extends RestCmsBaseModel
 {
     public $userId;
     private $privileges;
 
+    /**
+     * Create a new User by reading from the database.
+     *
+     * @param $username
+     * @param $passwordHash
+     * @return mixed
+     * @throws UserException
+     */
     public static function initWithCredentials($username, $passwordHash)
     {
         $query = <<<SQL
@@ -36,31 +45,45 @@ SQL;
         $stmt->execute();
 
         if ($stmt->rowCount() === 0) {
-            return null;
+            throw new UserException('Invalid credentials', UserException::INVALID_CREDENTIALS);
         }
 
-        $results = $stmt->fetchObject();
-        return new self($results);
+        return $stmt->fetchObject(get_called_class());
     }
 
     /**
-     * Return is the user has a given privilege.
+     * Throw an exception if the user does not have required privilege or privileges.
      *
-     * @param array|int $privileges
+     * @param array|int $privilege
+     * @throws UserException
+     */
+    public function assertPrivilege($privilege)
+    {
+        if (!$this->hasPrivilege($privilege)) {
+            throw new UserException(
+                'User does not have required privilege or privileges',
+                UserException::NOT_ALLOWED
+            );
+        }
+    }
+
+    /**
+     * Return if the user has a given privilege or all privileges in the passed array.
+     *
+     * @param array|int $privilege
      * @return bool
      */
-    public function hasPrivileges($privileges)
+    public function hasPrivilege($privilege)
     {
-        if (is_array($privileges)) {
-            foreach ($privileges as $privilegeId) {
+        if (is_array($privilege)) {
+            foreach ($privilege as $privilegeId) {
                 if (!in_array($privilegeId, $this->privileges)) {
                     return false;
                 }
             }
             return true;
         }
-
-        return in_array($privileges, $this->privileges);
+        return in_array($privilege, $this->privileges);
     }
 
     protected function prepareInstance()
