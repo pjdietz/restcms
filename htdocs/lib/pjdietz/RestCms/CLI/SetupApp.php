@@ -67,12 +67,13 @@ class SetupApp extends CliApp
 
         $queryNames = array(
             'setup/tables/article',
-            'setup/tables/version',
+            'setup/tables/contributor',
             'setup/tables/status',
             'setup/tables/user',
             'setup/tables/userGroup',
             'setup/tables/userPrivilege',
             'setup/tables/userGroupPrivilege',
+            'setup/tables/version',
             'setup/default-data'
         );
 
