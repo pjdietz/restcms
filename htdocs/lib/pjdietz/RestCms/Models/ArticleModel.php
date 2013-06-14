@@ -8,7 +8,7 @@ use PDOException;
 use pjdietz\RestCms\Database\Database;
 use pjdietz\RestCms\Database\Helpers\ArticleHelper;
 use pjdietz\RestCms\Database\Helpers\StatusHelper;
-use pjdietz\RestCms\Exceptions\DatabaseException;
+use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
 
 class ArticleModel extends RestCmsBaseModel
@@ -114,12 +114,13 @@ SQL;
      *
      * @param string $jsonString
      * @param Validator $validator
-     * @return ArticleModel|null
+     * @throws JsonException
+     * @return ArticleModel
      */
     public static function initWithJson($jsonString, &$validator)
     {
         if (self::validateJson($jsonString, $validator) === false) {
-            return null;
+            throw new JsonException('Unable to decode article', null, null, $validator, self::PATH_TO_SCHEMA);
         }
         return new self(json_decode($jsonString));
     }
@@ -212,10 +213,16 @@ SQL;
     public function create()
     {
         // Find the statusId.
-        $status = StatusModel::initWithSlug($this->status);
-
-        if (!$status) {
-            throw new DatabaseException('Status ' . $this->status . ' is invalid', 400);
+        try {
+            $status = StatusModel::initWithSlug($this->status);
+        } catch (ResourceException $e) {
+            if ($e->getCode() === ResourceException::NOT_FOUND) {
+                throw new ResourceException(
+                    $e->getMessage(),
+                    ResourceException::INVALID_DATA
+                );
+            }
+            throw $e;
         }
 
         $statusId = $status->statusId;
@@ -247,7 +254,10 @@ SQL;
         try {
             $stmt->execute();
         } catch (PDOException $e) {
-            throw new DatabaseException('Unable to store article. Make sure the slug is unique.', 409);
+            throw new ResourceException(
+                'Unable to store article. Make sure the slug is unique.',
+                ResourceException::CONFLICT
+            );
         }
         $this->articleId = (int) $db->lastInsertId();
 

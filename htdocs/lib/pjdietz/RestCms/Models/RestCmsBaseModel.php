@@ -5,7 +5,7 @@ namespace pjdietz\RestCms\Models;
 use stdClass;
 
 /**
- * Base class for models. Models are inted for use with PDO.
+ * Base class for models.
  */
 abstract class RestCmsBaseModel extends stdClass
 {

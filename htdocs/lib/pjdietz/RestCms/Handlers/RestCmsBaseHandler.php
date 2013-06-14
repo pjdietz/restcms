@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\config;
+use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\Exceptions\UserException;
 use pjdietz\RestCms\Models\UserModel;
@@ -28,14 +29,21 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
                     $this->respondWithForbiddenError();
                     break;
             }
+        } catch (JsonException $e) {
+            $this->respondWithInvalidJsonError($e->getValidator(), $e->getSchema());
         } catch (ResourceException $e) {
             switch ($e->getCode()) {
                 case ResourceException::NOT_FOUND:
                     $this->respondWithNotFoundError($e->getMessage());
                     break;
+                case ResourceException::CONFLICT:
+                    $this->respondWithConflictError($e->getMessage());
+                    break;
+                case ResourceException::INVALID_DATA:
+                    $this->respondWithBadRequestError($e->getMessage());
+                    break;
             }
         }
-
     }
 
     protected function readUser($requireUser = false)
@@ -73,57 +81,6 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
 
     }
 
-    protected static function parsePairs($str, $pairDelimiter = ';', $kvDelimiter = '=')
-    {
-
-        $rtn = array();
-
-        $pairs = explode($pairDelimiter, $str);
-
-        foreach ($pairs as $pair) {
-
-            @list($k, $v) = explode($kvDelimiter, $pair, 2);
-
-            if (isset($k) && isset($v)) {
-                $rtn[trim($k)] = trim($v);
-            }
-
-        }
-
-        return $rtn;
-
-    }
-
-    protected function buildRequestHash()
-    {
-        $str = $this->user->data['username'];
-        $str .= $this->user->data['passwordHash'];
-        $str .= $_SERVER['REQUEST_URI'];
-        $str .= $this->request->getMethod();
-        $str .= $this->request->getBody();
-        return hash('sha256', $str);
-    }
-
-    /**
-     * @param object $validator
-     * @param string $schemaUrl
-     */
-    protected function respondWithInvalidJsonError($validator, $schemaUrl)
-    {
-        // The request body was malformed or did not adhere to the schema.
-        $this->response->setStatusCode(400);
-        $this->response->setHeader('Content-type', 'text/plain');
-        $body = "The request body was malformed or did not adhere to the schema.\n";
-        $body .= "Schema for validation: " . $schemaUrl . "\n\n";
-        $body .= "Violations:\n";
-        foreach ($validator->getErrors() as $error) {
-            $body .= sprintf("[%s] %s\n", $error['property'], $error['message']);
-        }
-        $this->response->setBody($body);
-        $this->response->respond();
-        exit;
-    }
-
     protected function respondWithAuthenticationError()
     {
 
@@ -147,46 +104,25 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
 
     }
 
-    protected function respondWithForbiddenError()
+    protected static function parsePairs($str, $pairDelimiter = ';', $kvDelimiter = '=')
     {
-        $this->response->setStatusCode(403);
-        $this->response->respond();
-        exit;
-    }
 
-    protected function respondWithNotFoundError($message = '')
-    {
-        if ($message) {
-            $body = $message;
-        } else {
-            $body = "No resource at {$this->getRequest()->getPath()}\n";
+        $rtn = array();
+
+        $pairs = explode($pairDelimiter, $str);
+
+        foreach ($pairs as $pair) {
+
+            @list($k, $v) = explode($kvDelimiter, $pair, 2);
+
+            if (isset($k) && isset($v)) {
+                $rtn[trim($k)] = trim($v);
+            }
+
         }
 
-        $this->response->setStatusCode(404);
-        $this->response->setBody($body);
-        $this->response->respond();
-        exit;
-    }
+        return $rtn;
 
-    protected function respondWithConflictError($message = '')
-    {
-        if ($message) {
-            $body = $message;
-        } else {
-            $body = "Conflict storing resource to {$this->getRequest()->getPath()}\n";
-        }
-
-        $this->response->setStatusCode(409);
-        $this->response->setBody($body);
-        $this->response->respond();
-        exit;
-    }
-
-    protected function respondWithInternalServerError()
-    {
-        $this->response->setStatusCode(500);
-        $this->response->respond();
-        exit;
     }
 
     private function authenticateUserWithRequestHash($authFields)
@@ -239,6 +175,92 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
         $username = $authFields['username'];
         $passwordHash = $authFields['passwordHash'];
         $this->user = UserModel::initWithCredentials($username, $passwordHash);
+    }
+
+    protected function respondWithForbiddenError()
+    {
+        $this->response->setStatusCode(403);
+        $this->response->respond();
+        exit;
+    }
+
+    /**
+     * @param object $validator
+     * @param string $schemaUrl
+     */
+    protected function respondWithInvalidJsonError($validator, $schemaUrl)
+    {
+        // The request body was malformed or did not adhere to the schema.
+        $this->response->setStatusCode(400);
+        $this->response->setHeader('Content-type', 'text/plain');
+        $body = "The request body was malformed or did not adhere to the schema.\n";
+        $body .= "Schema for validation: " . $schemaUrl . "\n\n";
+        $body .= "Violations:\n";
+        foreach ($validator->getErrors() as $error) {
+            $body .= sprintf("[%s] %s\n", $error['property'], $error['message']);
+        }
+        $this->response->setBody($body);
+        $this->response->respond();
+        exit;
+    }
+
+    protected function respondWithNotFoundError($message = '')
+    {
+        if ($message) {
+            $body = $message;
+        } else {
+            $body = "No resource at {$this->getRequest()->getPath()}\n";
+        }
+
+        $this->response->setStatusCode(404);
+        $this->response->setBody($body);
+        $this->response->respond();
+        exit;
+    }
+
+    protected function respondWithConflictError($message = '')
+    {
+        if ($message) {
+            $body = $message;
+        } else {
+            $body = "Conflict storing resource to {$this->getRequest()->getPath()}\n";
+        }
+
+        $this->response->setStatusCode(409);
+        $this->response->setBody($body);
+        $this->response->respond();
+        exit;
+    }
+
+    protected function respondWithBadRequestError($message = '')
+    {
+        if ($message) {
+            $body = $message;
+        } else {
+            $body = '';
+        }
+
+        $this->response->setStatusCode(400);
+        $this->response->setBody($body);
+        $this->response->respond();
+        exit;
+    }
+
+    protected function buildRequestHash()
+    {
+        $str = $this->user->data['username'];
+        $str .= $this->user->data['passwordHash'];
+        $str .= $_SERVER['REQUEST_URI'];
+        $str .= $this->request->getMethod();
+        $str .= $this->request->getBody();
+        return hash('sha256', $str);
+    }
+
+    protected function respondWithInternalServerError()
+    {
+        $this->response->setStatusCode(500);
+        $this->response->respond();
+        exit;
     }
 
 }

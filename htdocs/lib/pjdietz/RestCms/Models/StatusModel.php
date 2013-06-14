@@ -5,16 +5,17 @@ namespace pjdietz\RestCms\Models;
 use PDO;
 use pjdietz\RestCms\Database\Database;
 use pjdietz\RestCms\Database\Helpers\StatusHelper;
+use pjdietz\RestCms\Exceptions\ResourceException;
 
 class StatusModel extends RestCmsBaseModel
 {
     public $statusId;
 
-    protected function prepareInstance()
-    {
-        $this->statusId = (int) $this->statusId;
-    }
-
+    /**
+     * @param $statusId
+     * @return StatusModel
+     * @throws ResourceException
+     */
     public static function initWithId($statusId)
     {
         $query = <<<'SQL'
@@ -34,12 +35,17 @@ SQL;
         $stmt->execute();
 
         if ($stmt->rowCount() === 0) {
-            return null;
+            throw new ResourceException("No status with id {$statusId}", ResourceException::NOT_FOUND);
         }
 
         return new self($stmt->fetchObject());
     }
 
+    /**
+     * @param $statusSlug
+     * @return StatusModel
+     * @throws ResourceException
+     */
     public static function initWithSlug($statusSlug)
     {
         $query = <<<'SQL'
@@ -59,13 +65,17 @@ SQL;
         $stmt->execute();
 
         if ($stmt->rowCount() === 0) {
-            return null;
+            throw new ResourceException("No status with slug {$statusSlug}", ResourceException::NOT_FOUND);
         }
 
         return new self($stmt->fetchObject());
     }
 
-    public static function initCollection($options)
+    /**
+     * @param array $options
+     * @return array
+     */
+    public static function initCollection(array $options)
     {
         $tmpStatus = new StatusHelper($options);
 
@@ -95,5 +105,10 @@ QUERY;
         $tmpStatus->drop();
 
         return $collection;
+    }
+
+    protected function prepareInstance()
+    {
+        $this->statusId = (int) $this->statusId;
     }
 }

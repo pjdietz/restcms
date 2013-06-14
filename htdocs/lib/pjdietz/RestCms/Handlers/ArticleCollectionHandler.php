@@ -2,7 +2,6 @@
 
 namespace pjdietz\RestCms\Handlers;
 
-use pjdietz\RestCms\Exceptions\DatabaseException;
 use pjdietz\RestCms\Models\ArticleModel;
 
 class ArticleCollectionHandler extends RestCmsBaseHandler
@@ -29,21 +28,8 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
 
         $article = ArticleModel::initWithJson($this->request->getBody(), $validator);
 
-        // Fail if the JSON is borked.
-        if (is_null($article)) {
-            $schema = 'http://' . $_SERVER['HTTP_HOST'] . ArticleModel::PATH_TO_SCHEMA;
-            $this->respondWithInvalidJsonError($validator, $schema);
-            exit;
-        }
-
         // Attempt to add this to the database.
-        try {
-            $article->create();
-        } catch (DatabaseException $e) {
-            $this->response->setStatusCode($e->getCode());
-            $this->response->setBody($e->getMessage());
-            return;
-        }
+        $article->create();
 
         // Set the current user as a contributor for the new article.
         $article->addContributor($this->user);
