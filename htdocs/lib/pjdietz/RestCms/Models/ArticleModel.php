@@ -114,7 +114,7 @@ SQL;
      *
      * @param string $jsonString
      * @param Validator $validator
-     * @return object|null
+     * @return ArticleModel|null
      */
     public static function initWithJson($jsonString, &$validator)
     {

@@ -45,6 +45,9 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
             return;
         }
 
+        // Set the current user as a contributor for the new article.
+        $article->addContributor($this->user);
+
         $this->response->setStatusCode(201);
         $this->response->setHeader('Content-Type', 'application/json');
         $this->response->setBody(json_encode($article));
