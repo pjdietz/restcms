@@ -168,6 +168,20 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
         exit;
     }
 
+    protected function respondWithConflictError($message = '')
+    {
+        if ($message) {
+            $body = $message;
+        } else {
+            $body = "Conflict storing resource to {$this->getRequest()->getPath()}\n";
+        }
+
+        $this->response->setStatusCode(409);
+        $this->response->setBody($body);
+        $this->response->respond();
+        exit;
+    }
+
     protected function respondWithInternalServerError()
     {
         $this->response->setStatusCode(500);

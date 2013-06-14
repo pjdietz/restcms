@@ -173,12 +173,39 @@ SQL;
         $stmt->bindValue(':userId', $user->userId, PDO::PARAM_INT);
         $stmt->execute();
 
+        // Add the userId to the list of contributors.
         $this->contributors[] = $user->userId;
     }
 
     public function hasContributor(UserModel $user)
     {
         return in_array($user->userId, $this->contributors);
+    }
+
+    public function removeContributor(UserModel $user)
+    {
+        // Skip if this user is not currently a contributor.
+        if (!$this->hasContributor($user)) {
+            return;
+        }
+
+        $query = <<<SQL
+DELETE FROM contributor
+WHERE 1 = 1
+    AND articleId = :articleId
+    AND userId = :userId
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':userId', $user->userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Remove the userId from the list of contributors.
+        if (($key = array_search($user->userId, $this->contributors)) !== false) {
+            unset($this->contributors[$key]);
+        }
     }
 
     /** Store the Article instance to the database. */
