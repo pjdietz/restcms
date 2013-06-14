@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\config;
+use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\Exceptions\UserException;
 use pjdietz\RestCms\Models\UserModel;
 use pjdietz\RestCms\RestCmsCommonInterface;
@@ -27,7 +28,14 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
                     $this->respondWithForbiddenError();
                     break;
             }
+        } catch (ResourceException $e) {
+            switch ($e->getCode()) {
+                case ResourceException::NOT_FOUND:
+                    $this->respondWithNotFoundError($e->getMessage());
+                    break;
+            }
         }
+
     }
 
     protected function readUser($requireUser = false)
@@ -65,29 +73,6 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
 
     }
 
-    protected function respondWithAuthenticationError()
-    {
-
-        // TODO Additional message
-        $this->response->setStatusCode(401);
-        $this->response->setHeader('WWW-Authenticate', 'restcms');
-
-        $body = "Please provide proper credentials for the request in the form of a X-restcms-auth header with a value in the following format:\n";
-
-        if (config\AUTH_USE_REQUEST_HASH) {
-            $body .= "username={your username}; requestHash={this request's hash}\n\n";
-            $body .= "To make the request hash, concatenate the following and SHA256 the result: username, passwordHash, request URI, request method, request body.\n\n";
-        } else {
-            $body .= "username={your username}; passwordHash={your password hash}\n\n";
-        }
-
-        $this->response->setBody($body);
-
-        $this->response->respond();
-        exit;
-
-    }
-
     protected static function parsePairs($str, $pairDelimiter = ';', $kvDelimiter = '=')
     {
 
@@ -107,13 +92,6 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
 
         return $rtn;
 
-    }
-
-    protected function respondWithForbiddenError()
-    {
-        $this->response->setStatusCode(403);
-        $this->response->respond();
-        exit;
     }
 
     protected function buildRequestHash()
@@ -146,10 +124,53 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
         exit;
     }
 
-    protected function respondWithNotFoundError()
+    protected function respondWithAuthenticationError()
     {
+
+        // TODO Additional message
+        $this->response->setStatusCode(401);
+        $this->response->setHeader('WWW-Authenticate', 'restcms');
+
+        $body = "Please provide proper credentials for the request in the form of a X-restcms-auth header with a value in the following format:\n";
+
+        if (config\AUTH_USE_REQUEST_HASH) {
+            $body .= "username={your username}; requestHash={this request's hash}\n\n";
+            $body .= "To make the request hash, concatenate the following and SHA256 the result: username, passwordHash, request URI, request method, request body.\n\n";
+        } else {
+            $body .= "username={your username}; passwordHash={your password hash}\n\n";
+        }
+
+        $this->response->setBody($body);
+
+        $this->response->respond();
+        exit;
+
+    }
+
+    protected function respondWithForbiddenError()
+    {
+        $this->response->setStatusCode(403);
+        $this->response->respond();
+        exit;
+    }
+
+    protected function respondWithNotFoundError($message = '')
+    {
+        if ($message) {
+            $body = $message;
+        } else {
+            $body = "No resource at {$this->getRequest()->getPath()}\n";
+        }
+
         $this->response->setStatusCode(404);
-        $this->response->setBody('No resource at ' . $this->getRequest()->getPath());
+        $this->response->setBody($body);
+        $this->response->respond();
+        exit;
+    }
+
+    protected function respondWithInternalServerError()
+    {
+        $this->response->setStatusCode(500);
         $this->response->respond();
         exit;
     }

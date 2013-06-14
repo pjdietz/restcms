@@ -17,14 +17,9 @@ class ArticleItemHandler extends RestCmsBaseHandler
 
         $article = ArticleModel::initWithId($this->args['articleId']);
 
-        if ($article) {
-            $this->response->setStatusCode(200);
-            $this->response->setHeader('Content-Type', 'application/json');
-            $this->response->setBody(json_encode($article));
-        } else {
-            $this->response->setStatusCode(404);
-            $this->response->setBody('No article with articleId ' . $this->args['articleId']);
-        }
+        $this->response->setStatusCode(200);
+        $this->response->setHeader('Content-Type', 'application/json');
+        $this->response->setBody(json_encode($article));
     }
 
     protected function put()

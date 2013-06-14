@@ -4,12 +4,91 @@ namespace pjdietz\RestCms\Models;
 
 use PDO;
 use pjdietz\RestCms\Database\Database;
+use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\Exceptions\UserException;
 
 class UserModel extends RestCmsBaseModel
 {
     public $userId;
     private $privileges;
+
+    /**
+     * Create a new User by reading from the database.
+     *
+     * @param int $userId
+     * @return UserModel
+     * @throws ResourceException
+     */
+    public static function initWithId($userId)
+    {
+        $query = <<<SQL
+SELECT
+    u.userId,
+    u.username,
+    u.passwordHash,
+    COALESCE(u.emailAddress, '') AS `emailAddress`,
+    u.displayName,
+    u.userGroupId,
+    ug.groupName AS `group`
+FROM user u
+    JOIN userGroup ug
+        ON u.userGroupId = ug.userGroupId
+        AND u.userId = :userId
+LIMIT 1;
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        if ($stmt->rowCount() === 0) {
+            throw new ResourceException(
+                "Unable to find User with userId {$userId}",
+                ResourceException::NOT_FOUND);
+        }
+
+        return $stmt->fetchObject(get_called_class());
+    }
+
+    /**
+     * Create a new User by reading from the database.
+     *
+     * @param string $username
+     * @return UserModel
+     * @throws ResourceException
+     */
+    public static function initWithUsername($username)
+    {
+        $query = <<<SQL
+SELECT
+    u.userId,
+    u.username,
+    u.passwordHash,
+    COALESCE(u.emailAddress, '') AS `emailAddress`,
+    u.displayName,
+    u.userGroupId,
+    ug.groupName AS `group`
+FROM user u
+    JOIN userGroup ug
+        ON u.userGroupId = ug.userGroupId
+        AND u.username = :username
+LIMIT 1;
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+
+        if ($stmt->rowCount() === 0) {
+            throw new ResourceException(
+                "Unable to find User with username {$username}",
+                ResourceException::NOT_FOUND);
+        }
+
+        return $stmt->fetchObject(get_called_class());
+    }
 
     /**
      * Create a new User by reading from the database.

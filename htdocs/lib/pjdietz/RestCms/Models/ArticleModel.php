@@ -9,12 +9,15 @@ use pjdietz\RestCms\Database\Database;
 use pjdietz\RestCms\Database\Helpers\ArticleHelper;
 use pjdietz\RestCms\Database\Helpers\StatusHelper;
 use pjdietz\RestCms\Exceptions\DatabaseException;
+use pjdietz\RestCms\Exceptions\ResourceException;
 
 class ArticleModel extends RestCmsBaseModel
 {
     const PATH_TO_SCHEMA = '/schema/article.json';
     /** @var int */
     public $articleId;
+    /** @var array List of userIds of users who may contribute to the article. */
+    private $contributors;
 
     /**
      * Read a collection of Articles filtered by the given options array.
@@ -67,7 +70,8 @@ SQL;
     /**
      * Read an article from the database by articleId.
      * @param int $articleId
-     * @return ArticleModel|null
+     * @return ArticleModel
+     * @throws ResourceException
      */
     public static function initWithId($articleId)
     {
@@ -96,8 +100,8 @@ SQL;
         $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
         $stmt->execute();
 
-        if ($stmt->rowCount() !== 1) {
-            return null;
+        if ($stmt->rowCount() === 0) {
+            throw new ResourceException("", ResourceException::NOT_FOUND);
         }
 
         return new self($stmt->fetchObject());
@@ -138,8 +142,46 @@ SQL;
     }
 
     /**
-     * Store the Article instance to the database.
+     * Assign a user as a contributor on an article.
+     *
+     * @param UserModel $user
      */
+    public function addContributor(UserModel $user)
+    {
+        // Skip if this user is already a contributor.
+        if ($this->hasContributor($user)) {
+            return;
+        }
+
+        $query = <<<SQL
+INSERT INTO contributor (
+    dateCreated,
+    dateModified,
+    articleId,
+    userId
+) VALUES (
+    NOW(),
+    NOW(),
+    :articleId,
+    :userId
+);
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':userId', $user->userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $this->contributors[] = $user->userId;
+    }
+
+    public function hasContributor(UserModel $user)
+    {
+        return in_array($user->userId, $this->contributors);
+    }
+
+    /** Store the Article instance to the database. */
     public function create()
     {
         // Find the statusId.
@@ -220,5 +262,27 @@ SQL;
     protected function prepareInstance()
     {
         $this->articleId = (int) $this->articleId;
+        $this->readContributors();
+    }
+
+    private function readContributors()
+    {
+        $query = <<<SQL
+SELECT c.userId
+FROM contributor c
+WHERE c.articleId = :articleId;
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        $contributors = array();
+        foreach ($results as $result) {
+            $contributors[] = (int) $result->userId;
+        }
+        $this->contributors = $contributors;
     }
 }
