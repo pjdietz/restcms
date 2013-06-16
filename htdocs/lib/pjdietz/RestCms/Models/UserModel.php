@@ -6,8 +6,9 @@ use PDO;
 use pjdietz\RestCms\Database\Database;
 use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\Exceptions\UserException;
+use pjdietz\RestCms\RestCmsCommonInterface;
 
-class UserModel extends RestCmsBaseModel
+class UserModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
     public $userId;
     private $privileges;
@@ -131,6 +132,22 @@ SQL;
     }
 
     /**
+     * Throw an exception if the user does not have privileges for modifying the article.
+     *
+     * @param ArticleModel $article
+     * @throws UserException
+     */
+    public function assertArticleAccess(ArticleModel $article)
+    {
+        if (!$this->hasArticleAccess($article)) {
+            throw new UserException(
+                'User may not modify this article',
+                UserException::NOT_ALLOWED
+            );
+        }
+    }
+
+    /**
      * Throw an exception if the user does not have required privilege or privileges.
      *
      * @param array|int $privilege
@@ -144,6 +161,27 @@ SQL;
                 UserException::NOT_ALLOWED
             );
         }
+    }
+
+    /**
+     * Return if the user has privileges for modifying the article.
+     *
+     * @param ArticleModel $article
+     * @return bool
+     */
+    public function hasArticleAccess(ArticleModel $article)
+    {
+        // Check if the user may modify any article.
+        if ($this->hasPrivilege(self::PRIV_MODIFY_ANY_ARTICLE)) {
+            return true;
+        }
+
+        // Check if the user is a contributor and is able to modify.
+        if ($this->hasPrivilege(self::PRIV_MODIFY_ARTICLE) && $article->hasContributor($this)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

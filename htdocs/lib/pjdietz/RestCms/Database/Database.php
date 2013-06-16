@@ -110,7 +110,9 @@ class Database implements RestCmsCommonInterface
             self::$templateMergeFields = array(
                 '{DATABASE_NAME}' => config\MYSQL_DATABASE,
                 '{PRIV_READ_ARTICLE}' => self::PRIV_READ_ARTICLE,
-                '{PRIV_CREATE_ARTICLE}' => self::PRIV_CREATE_ARTICLE
+                '{PRIV_CREATE_ARTICLE}' => self::PRIV_CREATE_ARTICLE,
+                '{PRIV_MODIFY_ARTICLE}' => self::PRIV_MODIFY_ARTICLE,
+                '{PRIV_MODIFY_ANY_ARTICLE}' => self::PRIV_MODIFY_ANY_ARTICLE
             );
         }
         return self::$templateMergeFields;

@@ -26,6 +26,10 @@ class ContributorCollectionHandler extends RestCmsBaseHandler
 
     protected function post()
     {
+        // Ensure the user may modify this article.
+        $article = ArticleModel::initWithId($this->args['articleId']);
+        $this->user->assertArticleAccess($article);
+
         $article = ArticleModel::initWithId($this->args['articleId']);
 
         $userId = trim($this->request->getBody());

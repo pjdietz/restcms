@@ -26,8 +26,10 @@ class ContributorItemHandler extends RestCmsBaseHandler
 
     protected function put()
     {
-        // TODO assert user can modify this article.
+        // Ensure the user may modify this article.
         $article = ArticleModel::initWithId($this->args['articleId']);
+        $this->user->assertArticleAccess($article);
+
         $user = UserModel::initWithId($this->args['userId']);
 
         if ($article->hasContributor($user)) {
@@ -47,9 +49,10 @@ class ContributorItemHandler extends RestCmsBaseHandler
     {
         // TODO assert user can modify this article.
         $article = ArticleModel::initWithId($this->args['articleId']);
+        $this->user->assertArticleAccess($article);
         $user = UserModel::initWithId($this->args['userId']);
 
-        if ($article->hasContributor($user)) {
+        if (!$article->hasContributor($user)) {
             $this->respondWithNotFoundError("User \"{$user->username}\" (userId {$user->userId}) is not a contributor for this article.");
         }
 

@@ -4,11 +4,14 @@ INSERT INTO status (statusSlug, statusName) VALUES
 ('published', 'Published'),
 ('pending', 'Pending Review');
 
-SET @privReadContent = {PRIV_READ_ARTICLE};
-SET @privCrreateContent = {PRIV_CREATE_ARTICLE};
+SET @privReadArticle = {PRIV_READ_ARTICLE};
+SET @privCreateArticle = {PRIV_CREATE_ARTICLE};
+SET @privModifyArticle = {PRIV_MODIFY_ARTICLE};
+SET @privModifyAnyArticle = {PRIV_MODIFY_ANY_ARTICLE};
 
 SET @groupAdmin = 1;
-SET @groupConsumer = 2;
+SET @groupContributor = 2;
+SET @groupConsumer = 3;
 
 -- Create default user privileges
 INSERT INTO userPrivilege (
@@ -17,8 +20,11 @@ INSERT INTO userPrivilege (
     dateModified,
     privilegeName
 ) VALUES
-(@privReadContent, NOW(), NOW(), 'Read Content'),
-(@privCrreateContent, NOW(), NOW(), 'Create Content');
+(@privReadArticle, NOW(), NOW(), 'Read Article'),
+(@privCreateArticle, NOW(), NOW(), 'Create Article'),
+(@privModifyArticle, NOW(), NOW(), 'Modify Article'),
+(@privModifyAnyArticle, NOW(), NOW(), 'Modify Any Article')
+;
 
 -- Create default user groups
 INSERT INTO userGroup (
@@ -27,8 +33,9 @@ INSERT INTO userGroup (
     dateModified,
     groupName
 ) VALUES
-(@groupConsumer, NOW(), NOW(), 'Consumer'),
-(@groupAdmin, NOW(), NOW(), 'Admin');
+(@groupAdmin, NOW(), NOW(), 'Admin'),
+(@groupContributor, NOW(), NOW(), 'Contributor'),
+(@groupConsumer, NOW(), NOW(), 'Consumer');
 
 -- Assign privileges to groups
 INSERT INTO userGroupPrivilege (
@@ -37,9 +44,16 @@ INSERT INTO userGroupPrivilege (
     userGroupId,
     userPrivilegeId
 ) VALUES
-(NOW(), NOW(), @groupConsumer, @privReadContent),
-(NOW(), NOW(), @groupAdmin, @privReadContent),
-(NOW(), NOW(), @groupAdmin, @privCrreateContent);
+-- Admin
+(NOW(), NOW(), @groupAdmin, @privReadArticle),
+(NOW(), NOW(), @groupAdmin, @privCreateArticle),
+(NOW(), NOW(), @groupAdmin, @privModifyAnyArticle),
+-- Contributor
+(NOW(), NOW(), @groupContributor, @privReadArticle),
+(NOW(), NOW(), @groupContributor, @privCreateArticle),
+(NOW(), NOW(), @groupContributor, @privModifyArticle),
+-- Consumer
+(NOW(), NOW(), @groupConsumer, @privReadArticle);
 
 -- Create default users and groups.
 INSERT INTO user (
@@ -51,4 +65,5 @@ INSERT INTO user (
     userGroupId
 ) VALUES
 (NOW(), NOW(), 'admin', 'admin', 'Administrator', @groupAdmin),
+(NOW(), NOW(), 'contributor', 'contributor', 'Contributor', @groupContributor),
 (NOW(), NOW(), 'consumer', 'consumer', 'Consumer', @groupConsumer);
