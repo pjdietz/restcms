@@ -109,10 +109,17 @@ class Database implements RestCmsCommonInterface
         if (!isset(self::$templateMergeFields)) {
             self::$templateMergeFields = array(
                 '{DATABASE_NAME}' => config\MYSQL_DATABASE,
+                '{GROUP_ADMIN}' => self::GROUP_ADMIN,
+                '{GROUP_CONTRIBUTOR}' => self::GROUP_CONTRIBUTOR,
+                '{GROUP_CONSUMER}' => self::GROUP_CONSUMER,
                 '{PRIV_READ_ARTICLE}' => self::PRIV_READ_ARTICLE,
                 '{PRIV_CREATE_ARTICLE}' => self::PRIV_CREATE_ARTICLE,
                 '{PRIV_MODIFY_ARTICLE}' => self::PRIV_MODIFY_ARTICLE,
-                '{PRIV_MODIFY_ANY_ARTICLE}' => self::PRIV_MODIFY_ANY_ARTICLE
+                '{PRIV_MODIFY_ANY_ARTICLE}' => self::PRIV_MODIFY_ANY_ARTICLE,
+                '{STATUS_DRAFT}' => self::STATUS_DRAFT,
+                '{STATUS_PUBLISHED}' => self::STATUS_PUBLISHED,
+                '{STATUS_PENDING}' => self::STATUS_PENDING,
+                '{STATUS_REMOVED}' => self::STATUS_REMOVED
             );
         }
         return self::$templateMergeFields;

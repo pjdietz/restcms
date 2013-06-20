@@ -10,8 +10,9 @@ use pjdietz\RestCms\Database\Helpers\ArticleHelper;
 use pjdietz\RestCms\Database\Helpers\StatusHelper;
 use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
+use pjdietz\RestCms\RestCmsCommonInterface;
 
-class ArticleModel extends RestCmsBaseModel
+class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
     const PATH_TO_SCHEMA = '/schema/article.json';
     /** @var int */
@@ -397,6 +398,29 @@ SQL;
             );
         }
 
+    }
+
+    /** Remove the records from the database relating to the instance. */
+    public function delete()
+    {
+        // Mark the status for the article as Removed.
+        // Also, obsufcate the slug, so that it won't collide if the user tried to re-use it.
+        $query = <<<SQL
+UPDATE
+    article
+SET
+    statusId = :statusId,
+    slug = :slug
+WHERE
+    articleId = :articleId;
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':statusId', self::STATUS_REMOVED, PDO::PARAM_INT);
+        $stmt->bindValue(':slug', $this->slug . '-' . SHA1(time()), PDO::PARAM_INT);
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->execute();
     }
 
     protected function prepareInstance()

@@ -49,7 +49,9 @@ class ArticleItemHandler extends RestCmsBaseHandler
         $article = ArticleModel::initWithId($this->args['articleId']);
         $this->user->assertArticleAccess($article);
 
-        // TODO Write to database
+        // Remove the article from the database.
+        $article->delete();
+
         $this->response->setStatusCode(200);
         $this->response->setBody('You deleted this article.');
     }
