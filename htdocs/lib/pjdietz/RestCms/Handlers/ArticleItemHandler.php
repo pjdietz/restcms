@@ -29,15 +29,15 @@ class ArticleItemHandler extends RestCmsBaseHandler
         $this->user->assertArticleAccess($article);
 
         // Attempt to build an article from the passed request body.
-        $article = ArticleModel::initWithJson($this->request->getBody(), $validator);
+        $newArticle = ArticleModel::initWithJson($this->request->getBody(), $validator);
 
-        if (is_null($article)) {
-            $schema = 'http://' . $_SERVER['HTTP_HOST'] . ArticleModel::PATH_TO_SCHEMA;
-            $this->respondWithInvalidJsonError($validator, $schema);
-            exit;
-        }
+        // Update the instance with data from the new article.
+        $article->updateFrom($newArticle);
 
-        // TODO Write to database
+        // Write the current state to the database.
+        $article->update();
+
+        // Output the current representation.
         $this->response->setStatusCode(200);
         $this->response->setHeader('Content-type', 'application/json');
         $this->response->setBody(json_encode($article));

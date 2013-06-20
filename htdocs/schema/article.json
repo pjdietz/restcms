@@ -2,11 +2,11 @@
     "type": "object",
     "$schema": "http://json-schema.org/draft-03/schema",
     "id": "#",
-    "required": false,
+    "required": true,
     "properties": {
         "articleId": {
             "type": "integer",
-            "description": "Required for PUT",
+            "description": "Unique ID of the article.",
             "required": false,
             "readonly": true
         },
@@ -22,13 +22,36 @@
         },
         "slug": {
             "type": "string",
-            "id": "slug",
+            "description": "URL-friendly unique identifier",
             "required": true
         },
         "title": {
             "type": "string",
-            "id": "title",
+            "description": "Article title",
             "required": true
+        },
+        "originalContent": {
+            "type": "string",
+            "description": "Editable body content of the article.",
+            "required": true
+        },
+        "content": {
+            "type": "string",
+            "description": "Processed body content of the article.",
+            "required": false,
+            "readonly": "true"
+        },
+        "excerpt": {
+            "type": "string",
+            "description": "Text snippet summarizing the article.",
+            "required": false,
+            "default": ""
+        },
+        "notes": {
+            "type": "string",
+            "description": "Private notes for the user",
+            "required": false,
+            "default": ""
         }
     }
 }

@@ -82,7 +82,7 @@ SELECT
     a.contentType,
     s.statusName AS status,
     v.title,
-    v.content,
+    v.content AS originalContent,
     v.excerpt,
     v.notes
 FROM
@@ -294,6 +294,109 @@ SQL;
         $stmt->bindValue(':currentVersionId', $versionId, PDO::PARAM_INT);
         $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
         $stmt->execute();
+    }
+
+    /**
+     * Update the instance with properties from another article.
+     * @param ArticleModel $update
+     */
+    public function updateFrom(ArticleModel $update)
+    {
+        // Copy properties that may be modified by a user.
+        $properties = array(
+            "contentType",
+            "status",
+            "slug",
+            "title",
+            "originalContent",
+        );
+        foreach ($properties as $property) {
+            $this->$property = $update->$property;
+        }
+    }
+
+    /** Update the database with the instance's current state. */
+    public function update()
+    {
+        // TODO: Validate that instance contains all required fields.
+
+        // Find the statusId.
+        try {
+            $status = StatusModel::initWithSlug($this->status);
+        } catch (ResourceException $e) {
+            if ($e->getCode() === ResourceException::NOT_FOUND) {
+                throw new ResourceException(
+                    $e->getMessage(),
+                    ResourceException::INVALID_DATA
+                );
+            }
+            throw $e;
+        }
+
+        $statusId = $status->statusId;
+        unset($status);
+
+        // Insert a new version containing the current fields.
+        $query = <<<SQL
+INSERT INTO version (
+    dateCreated,
+    dateModified,
+    parentArticleId,
+    title,
+    excerpt,
+    content,
+    notes
+) VALUES (
+    NOW(),
+    NOW(),
+    :articleId,
+    :title,
+    :excerpt,
+    :content,
+    :notes
+);
+SQL;
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':title', $this->title, PDO::PARAM_STR);
+        $stmt->bindValue(':excerpt', $this->excerpt, PDO::PARAM_STR);
+        $stmt->bindValue(':content', $this->originalContent, PDO::PARAM_STR);
+        $stmt->bindValue(':notes', $this->notes, PDO::PARAM_STR);
+        $stmt->execute();
+        $versionId = $db->lastInsertId();
+
+        // Update the article record to track the new version and match the new fields.
+        $query = <<<SQL
+UPDATE article
+SET
+    dateModified = NOW(),
+    slug = :slug,
+    contentType = :contentType,
+    statusId = :statusId,
+    currentVersionId = :versionId
+WHERE
+    articleId = :articleId;
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
+        $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
+        $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
+        $stmt->bindValue(':versionId', $versionId, PDO::PARAM_INT);
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+
+        try {
+            $stmt->execute();
+        } catch (PDOException $e) {
+            // todo: Check if this really is the problem.
+            throw new ResourceException(
+                'Unable to store article. Please check the slug is not already in use.',
+                ResourceException::CONFLICT
+            );
+        }
+
     }
 
     protected function prepareInstance()
