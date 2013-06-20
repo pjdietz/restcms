@@ -1,7 +1,7 @@
 {
     "apiVersion": "0.0.1",
     "swaggerVersion": "1.0",
-    "basePath": "http://restcms.home.local",
+    "basePath": "http://restcms.vm2.home.local",
     "resourcePath": "/articles",
     "apis": [
         {
@@ -88,6 +88,129 @@
                         {
                             "code": 404,
                             "reason": "Article does not exist"
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "PUT",
+                    "nickname": "updateArticleById",
+                    "summary": "Get an article.",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        },
+                        {
+                            "name": "article",
+                            "description": "Representation of the article.",
+                            "paramType": "body",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "Article"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "DELETE",
+                    "nickname": "deleteArticleById",
+                    "summary": "Delete an article.",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/articles/{articleId}/contributors/",
+            "description": "Users who may modify a given article.",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Get a collection of users who may modify the article",
+                    "nickname": "getContributors",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "POST",
+                    "summary": "Add users who may modify the article",
+                    "nickname": "addContributor",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        },
+                        {
+                            "name": "userId",
+                            "description": "ID of the user to add as a contributor",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "body"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/articles/{articleId}/contributors/{userId}",
+            "description": "User who may modify a given article.",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Get a users who may modify the article",
+                    "nickname": "getContributor",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        },
+                        {
+                            "name": "userId",
+                            "description": "The user's ID",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
                         }
                     ]
                 }

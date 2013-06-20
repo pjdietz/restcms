@@ -1,17 +1,25 @@
--- Create default statuses.
-INSERT INTO status (statusSlug, statusName) VALUES
-('draft', 'Draft'),
-('published', 'Published'),
-('pending', 'Pending Review');
+-- Set session variables based on global constants.
+
+SET @groupAdmin = {GROUP_ADMIN};
+SET @groupContributor = {GROUP_CONTRIBUTOR};
+SET @groupConsumer = {GROUP_CONSUMER};
 
 SET @privReadArticle = {PRIV_READ_ARTICLE};
 SET @privCreateArticle = {PRIV_CREATE_ARTICLE};
 SET @privModifyArticle = {PRIV_MODIFY_ARTICLE};
 SET @privModifyAnyArticle = {PRIV_MODIFY_ANY_ARTICLE};
 
-SET @groupAdmin = 1;
-SET @groupContributor = 2;
-SET @groupConsumer = 3;
+SET @statusDraft = {STATUS_DRAFT};
+SET @statusPublished = {STATUS_PUBLISHED};
+SET @statusPending = {STATUS_PENDING};
+SET @statusRemoved = {STATUS_REMOVED};
+
+-- Create default statuses.
+INSERT INTO status (statusId, statusSlug, statusName) VALUES
+(@statusDraft, 'draft', 'Draft'),
+(@statusPublished, 'published', 'Published'),
+(@statusPending, 'pending', 'Pending Review'),
+(@statusRemoved, 'removed', 'Removed');
 
 -- Create default user privileges
 INSERT INTO userPrivilege (
