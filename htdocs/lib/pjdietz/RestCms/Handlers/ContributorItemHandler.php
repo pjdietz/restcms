@@ -10,7 +10,7 @@ class ContributorItemHandler extends RestCmsBaseHandler
 {
     protected function getAllowedMethods()
     {
-        return array('GET', 'PUT', 'DELETE');
+        return array('GET', 'DELETE');
     }
 
     protected function get()
@@ -23,28 +23,6 @@ class ContributorItemHandler extends RestCmsBaseHandler
         $this->response->setHeader('Content-Type', 'application/json');
         $this->response->setBody(json_encode($contributor));
     }
-
-    protected function put()
-    {
-        // Ensure the user may modify this article.
-        $article = ArticleModel::initWithId($this->args['articleId']);
-        $this->user->assertArticleAccess($article);
-
-        $user = UserModel::initWithId($this->args['userId']);
-
-        if ($article->hasContributor($user)) {
-            $this->respondWithConflictError("User \"{$user->username}\" (userId {$user->userId}) is already a contributor for this article.");
-        }
-
-        $article->addContributor($user);
-
-        $contributor = ContributorModel::initWithId($this->args['articleId'], $this->args['userId']);
-
-        $this->response->setStatusCode(201);
-        $this->response->setHeader('Content-Type', 'application/json');
-        $this->response->setBody(json_encode($contributor));
-    }
-
     protected function delete()
     {
         // TODO assert user can modify this article.

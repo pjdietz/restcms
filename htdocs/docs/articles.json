@@ -205,6 +205,29 @@
                             "paramType": "path"
                         }
                     ]
+                },
+                {
+                    "httpMethod": "DELETE",
+                    "summary": "Revoke a user's ability to modify the article.",
+                    "nickname": "deleteContributor",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        },
+                        {
+                            "name": "userId",
+                            "description": "The user's ID",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ]
                 }
             ]
         },
