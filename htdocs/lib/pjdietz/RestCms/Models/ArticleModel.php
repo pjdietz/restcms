@@ -36,7 +36,7 @@ SELECT
     a.articleId,
     a.slug,
     a.contentType,
-    s.statusName AS status,
+    s.statusSlug AS status,
     v.title,
     v.excerpt
 FROM
@@ -80,12 +80,13 @@ SQL;
 SELECT
     a.articleId,
     a.slug,
+    s.statusSlug AS status,
     a.contentType,
-    s.statusName AS status,
     v.title,
     v.content AS originalContent,
     v.excerpt,
-    v.notes
+    v.notes,
+    a.currentVersionId
 FROM
     article a
     JOIN version v
@@ -208,6 +209,37 @@ SQL;
         if (($key = array_search($user->userId, $this->contributors)) !== false) {
             unset($this->contributors[$key]);
         }
+    }
+
+    public function setCurrentVersion(VersionModel $version)
+    {
+        if ($version->articleId !== $this->articleId) {
+            throw new ResourceException(
+                'Version does not belong to this article.',
+                ResourceException::INVALID_DATA
+            );
+        }
+
+        // Update the article record to point to the new version.
+        $query = <<<SQL
+UPDATE
+    article
+SET
+    dateModified = NOW(),
+    currentVersionId = :newVersionId
+WHERE
+    articleId = :articleId;
+SQL;
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':newVersionId', $version->versionId, PDO::PARAM_INT);
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Re-read the article after changing the version.
+        $newArticle = self::initWithId($this->articleId);
+        $this->copyMembers($newArticle);
+        $this->prepareInstance();
     }
 
     /** Store the Article instance to the database. */
@@ -407,6 +439,7 @@ SQL;
             );
         }
 
+        $this->currentVersionId = $versionId;
     }
 
     /** Remove the records from the database relating to the instance. */

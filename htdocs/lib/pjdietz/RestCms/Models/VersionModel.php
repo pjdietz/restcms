@@ -39,6 +39,7 @@ SELECT
     v.content,
     v.excerpt,
     v.notes,
+    a.articleId,
     IF (a.currentVersionId = v.versionId, 1, 0) AS `isCurrent`
 FROM
     article a
@@ -72,9 +73,9 @@ SQL;
     {
         $query = <<<SQL
 SELECT
-    a.articleId,
     v.versionId,
     v.dateCreated,
+    a.articleId,
     IF (a.currentVersionId = v.versionId, 1, 0) AS `isCurrent`
 FROM
     article a

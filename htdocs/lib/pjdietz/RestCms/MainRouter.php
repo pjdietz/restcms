@@ -27,6 +27,7 @@ class MainRouter extends Router
         $this->addTemplate('/articles/{articleId}', 'ArticleItemHandler');
         $this->addTemplate('/articles/{articleId}/contributors/', 'ContributorCollectionHandler');
         $this->addTemplate('/articles/{articleId}/contributors/{userId}', 'ContributorItemHandler');
+        $this->addTemplate('/articles/{articleId}/current-version', 'CurrentVersionHandler');
         $this->addTemplate('/articles/{articleId}/versions/', 'VersionCollectionHandler');
         $this->addTemplate('/articles/{articleId}/versions/{versionId}', 'VersionItemHandler');
         $this->addTemplate('/status/', 'StatusCollectionHandler');
