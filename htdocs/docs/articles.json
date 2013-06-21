@@ -14,17 +14,9 @@
                     "nickname": "getArticles",
                     "parameters": [
                         {
-                            "name": "articleId",
-                            "description": "Filter by articleId",
-                            "dataType": "int",
-                            "required": false,
-                            "allowMultiple": true,
-                            "paramType": "query"
-                        },
-                        {
-                            "name": "slug",
-                            "description": "Filter by slug",
-                            "dataType": "string",
+                            "name": "article",
+                            "description": "Filter by articleId or slug",
+                            "dataType": "int|string",
                             "required": false,
                             "allowMultiple": true,
                             "paramType": "query"
@@ -277,12 +269,6 @@
         "Article": {
             "id": "Article",
             "properties": {
-                "articleId": {
-                    "type": "integer",
-                    "description": "Required for PUT",
-                    "required": false,
-                    "readonly": true
-                },
                 "contentType": {
                     "type": "string",
                     "description": "Mime type of the article",
@@ -295,13 +281,30 @@
                 },
                 "slug": {
                     "type": "string",
-                    "id": "slug",
+                    "description": "URL-friendly unique identifier",
                     "required": true
                 },
                 "title": {
                     "type": "string",
-                    "id": "title",
+                    "description": "Article title",
                     "required": true
+                },
+                "originalContent": {
+                    "type": "string",
+                    "description": "Editable body content of the article.",
+                    "required": true
+                },
+                "excerpt": {
+                    "type": "string",
+                    "description": "Text snippet summarizing the article.",
+                    "required": false,
+                    "default": ""
+                },
+                "notes": {
+                    "type": "string",
+                    "description": "Private notes for the user",
+                    "required": false,
+                    "default": ""
                 }
             }
         }

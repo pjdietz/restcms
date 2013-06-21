@@ -268,17 +268,26 @@ INSERT INTO version (
     dateCreated,
     dateModified,
     title,
-    parentArticleId
+    parentArticleId,
+    content,
+    excerpt,
+    notes
 ) VALUES (
     NOW(),
     NOW(),
     :title,
-    :parentArticleId
+    :parentArticleId,
+    :content,
+    :excerpt,
+    :notes
 );
 SQL;
         $stmt = $db->prepare($query);
         $stmt->bindValue(':title', $this->title, PDO::PARAM_STR);
         $stmt->bindValue(':parentArticleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':content', $this->originalContent, PDO::PARAM_INT);
+        $stmt->bindValue(':excerpt', $this->excerpt, PDO::PARAM_INT);
+        $stmt->bindValue(':notes', $this->notes, PDO::PARAM_INT);
         $stmt->execute();
         $versionId = $db->lastInsertId();
 
@@ -427,6 +436,14 @@ SQL;
     {
         $this->articleId = (int) $this->articleId;
         $this->readContributors();
+
+        if (!isset($this->excerpt)) {
+            $this->excerpt = '';
+        }
+
+        if (!isset($this->notes)) {
+            $this->notes = '';
+        }
     }
 
     private function readContributors()
