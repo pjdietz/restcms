@@ -11,6 +11,7 @@ use pjdietz\RestCms\Database\Helpers\StatusHelper;
 use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\RestCmsCommonInterface;
+use pjdietz\RestCms\TextProcessors\Markdown;
 
 class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
@@ -469,6 +470,7 @@ SQL;
     {
         $this->articleId = (int) $this->articleId;
         $this->readContributors();
+        $this->processContent();
 
         if (!isset($this->excerpt)) {
             $this->excerpt = '';
@@ -477,6 +479,22 @@ SQL;
         if (!isset($this->notes)) {
             $this->notes = '';
         }
+    }
+
+    private function processContent()
+    {
+        if (!isset($this->originalContent)) {
+            $this->originalContent = '';
+            $this->content = '';
+            return;
+        }
+
+        $content = $this->originalContent;
+
+        $processor = new Markdown();
+        $content = $processor->transform($content);
+
+        $this->content = $content;
     }
 
     private function readContributors()

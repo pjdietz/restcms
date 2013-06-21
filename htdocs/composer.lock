@@ -3,8 +3,67 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ea3e73445601eb55a5be938b22991c74",
+    "hash": "73fe71cfc8fe063b79d6e45f813f5f67",
     "packages": [
+        {
+            "name": "dflydev/markdown",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dflydev/dflydev-markdown.git",
+                "reference": "11f8faa2d17f717a038b4d372abd22a6ac4a15dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dflydev/dflydev-markdown/zipball/11f8faa2d17f717a038b4d372abd22a6ac4a15dc",
+                "reference": "11f8faa2d17f717a038b4d372abd22a6ac4a15dc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "dflydev\\markdown": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Dragonfly Development Inc.",
+                    "email": "info@dflydev.com",
+                    "homepage": "http://dflydev.com"
+                },
+                {
+                    "name": "Beau Simensen",
+                    "email": "beau@dflydev.com",
+                    "homepage": "http://beausimensen.com"
+                },
+                {
+                    "name": "Michel Fortin",
+                    "homepage": "http://michelf.com"
+                },
+                {
+                    "name": "John Gruber",
+                    "homepage": "http://daringfireball.net"
+                }
+            ],
+            "description": "PHP Markdown & Extra",
+            "homepage": "http://github.com/dflydev/dflydev-markdown",
+            "keywords": [
+                "markdown"
+            ],
+            "time": "2012-07-15 16:31:27"
+        },
         {
             "name": "justinrainbow/json-schema",
             "version": "1.2.4",
@@ -92,12 +151,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pjdietz/wellrested.git",
-                "reference": "e693e138d055a31c3083288971556cabe1533084"
+                "reference": "v1.2.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pjdietz/wellrested/zipball/e693e138d055a31c3083288971556cabe1533084",
-                "reference": "e693e138d055a31c3083288971556cabe1533084",
+                "url": "https://api.github.com/repos/pjdietz/wellrested/zipball/v1.2.1",
+                "reference": "v1.2.1",
                 "shasum": ""
             },
             "require": {
@@ -128,7 +187,7 @@
                 "rest",
                 "restful"
             ],
-            "time": "2013-05-27 18:13:16"
+            "time": "2013-06-12 23:54:08"
         }
     ],
     "packages-dev": [
@@ -140,7 +199,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "pjdietz/cliapp": 20,
-        "pjdietz/wellrested": 20
+        "pjdietz/wellrested": 20,
+        "dflydev/markdown": 20
     },
     "platform": [
 

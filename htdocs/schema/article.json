@@ -2,7 +2,7 @@
     "type": "object",
     "$schema": "http://json-schema.org/draft-03/schema",
     "id": "#",
-    "required": true,
+    "required": false,
     "properties": {
         "articleId": {
             "type": "integer",
