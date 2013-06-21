@@ -38,7 +38,18 @@ class CurrentVersionHandler extends RestCmsBaseHandler
             $this->response->setBody("Request body must be the integer ID of the version to promote to current. (text/plain)");
             return;
         }
-        $version = VersionModel::init($this->args['articleId'], $versionId);
+
+        try {
+            $version = VersionModel::init($this->args['articleId'], $versionId);
+        } catch (ResourceException $e) {
+            if ($e->getCode() === ResourceException::NOT_FOUND) {
+                throw new ResourceException(
+                    "Version {$versionId} does not belong to this article.",
+                    ResourceException::INVALID_DATA
+                );
+            }
+            throw $e;
+        }
 
         // Fail if the passed version is already the current version.
         if ($version->isCurrent) {

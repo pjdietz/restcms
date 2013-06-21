@@ -10,7 +10,7 @@
             "operations": [
                 {
                     "httpMethod": "GET",
-                    "summary": "Get a collection of available statuses",
+                    "summary": "Read a collection of available statuses",
                     "nickname": "getStatuses",
                     "parameters": [
                         {

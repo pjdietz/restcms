@@ -10,8 +10,8 @@
             "operations": [
                 {
                     "httpMethod": "GET",
-                    "summary": "Get a collection of articles",
-                    "nickname": "getArticles",
+                    "summary": "Read a collection of articles",
+                    "nickname": "readArticles",
                     "parameters": [
                         {
                             "name": "article",
@@ -23,19 +23,28 @@
                         },
                         {
                             "name": "status",
-                            "description": "Filter by status",
-                            "dataType": "string",
+                            "description": "Filter by statusId or slug",
+                            "dataType": "int|string",
                             "required": false,
                             "allowMultiple": true,
                             "paramType": "query"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
                         }
                     ]
                 },
                 {
                     "httpMethod": "POST",
-                    "summary": "Add a new article",
-                    "notes": "Not implemented yet",
-                    "nickname": "postArticle",
+                    "summary": "Create a new article",
+                    "nickname": "createArticle",
                     "parameters": [
                         {
                             "description": "The new Article",
@@ -51,6 +60,14 @@
                             "reason": "Body is malformed or contains illegal values."
                         },
                         {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
                             "code": 409,
                             "reason": "Non-unique slug."
                         }
@@ -64,8 +81,8 @@
             "operations": [
                 {
                     "httpMethod": "GET",
-                    "nickname": "getArticleById",
-                    "summary": "Get an article.",
+                    "summary": "Read an article",
+                    "nickname": "readArticle",
                     "parameters": [
                         {
                             "name": "articleId",
@@ -78,6 +95,14 @@
                     ],
                     "errorResponses": [
                         {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
                             "code": 404,
                             "reason": "Article does not exist"
                         }
@@ -85,8 +110,8 @@
                 },
                 {
                     "httpMethod": "PUT",
-                    "nickname": "updateArticleById",
-                    "summary": "Get an article.",
+                    "nickname": "updateArticle",
+                    "summary": "Update an article",
                     "parameters": [
                         {
                             "name": "articleId",
@@ -107,15 +132,31 @@
                     ],
                     "errorResponses": [
                         {
+                            "code": 400,
+                            "reason": "Body is malformed or contains illegal values."
+                        },
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
                             "code": 404,
                             "reason": "Article does not exist"
+                        },
+                        {
+                            "code": 409,
+                            "reason": "Non-unique slug."
                         }
                     ]
                 },
                 {
                     "httpMethod": "DELETE",
-                    "nickname": "deleteArticleById",
-                    "summary": "Delete an article.",
+                    "nickname": "deleteArticle",
+                    "summary": "Delete an article",
                     "parameters": [
                         {
                             "name": "articleId",
@@ -127,6 +168,14 @@
                         }
                     ],
                     "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
                         {
                             "code": 404,
                             "reason": "Article does not exist"
@@ -152,11 +201,25 @@
                             "allowMultiple": false,
                             "paramType": "path"
                         }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        }
                     ]
                 },
                 {
                     "httpMethod": "POST",
-                    "summary": "Add users who may modify the article",
+                    "summary": "Grant a user the privilege to modify the article",
                     "nickname": "addContributor",
                     "parameters": [
                         {
@@ -175,18 +238,36 @@
                             "allowMultiple": false,
                             "paramType": "body"
                         }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 400,
+                            "reason": "User does not exist"
+                        },
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        }
                     ]
                 }
             ]
         },
         {
             "path": "/articles/{articleId}/contributors/{userId}",
-            "description": "User who may modify a given article.",
+            "description": "User who may modify a given article",
             "operations": [
                 {
                     "httpMethod": "GET",
-                    "summary": "Get a users who may modify the article",
-                    "nickname": "getContributor",
+                    "summary": "Read a user who may modify the article",
+                    "nickname": "readContributor",
                     "parameters": [
                         {
                             "name": "articleId",
@@ -204,12 +285,26 @@
                             "allowMultiple": false,
                             "paramType": "path"
                         }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article or user does not exist, or user is not assigned to this article"
+                        }
                     ]
                 },
                 {
                     "httpMethod": "DELETE",
-                    "summary": "Revoke a user's ability to modify the article.",
-                    "nickname": "deleteContributor",
+                    "summary": "Revoke a user's ability to modify the article",
+                    "nickname": "removeContributor",
                     "parameters": [
                         {
                             "name": "articleId",
@@ -226,6 +321,96 @@
                             "required": true,
                             "allowMultiple": false,
                             "paramType": "path"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article or user does not exist, or user is not assigned to this article"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/articles/{articleId}/current-version",
+            "description": "The version of the article.",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Read the ID of the version an article currently point to",
+                    "nickname": "readCurrentVerion",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        }
+                    ]
+                },
+                {
+                    "httpMethod": "PUT",
+                    "summary": "Update an article to point to an existing version",
+                    "nickname": "updateCurrentVersion",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        },
+                        {
+                            "name": "userId",
+                            "description": "ID of the version to use.",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "body"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 400,
+                            "reason": "Version does not belong to the article"
+                        },
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
                         }
                     ]
                 }
@@ -237,7 +422,7 @@
             "operations": [
                 {
                     "httpMethod": "GET",
-                    "summary": "Get a collection of versions for a given article.",
+                    "summary": "Read a collection of versions for an article",
                     "nickname": "getVersions",
                     "parameters": [
                         {
@@ -247,6 +432,20 @@
                             "required": false,
                             "allowMultiple": true,
                             "paramType": "path"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
                         }
                     ]
                 }
@@ -258,8 +457,8 @@
             "operations": [
                 {
                     "httpMethod": "GET",
-                    "nickname": "getVersion",
-                    "summary": "Get a version for an article.",
+                    "summary": "Read a version for an article",
+                    "nickname": "readVersion",
                     "parameters": [
                         {
                             "name": "articleId",
@@ -279,6 +478,14 @@
                         }
                     ],
                     "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
                         {
                             "code": 404,
                             "reason": "Article or version does not exist"

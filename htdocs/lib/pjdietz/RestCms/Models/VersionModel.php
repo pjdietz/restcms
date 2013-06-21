@@ -4,6 +4,7 @@ namespace pjdietz\RestCms\Models;
 
 use PDO;
 use pjdietz\RestCms\Database\Database;
+use pjdietz\RestCms\Exceptions\ResourceException;
 
 class VersionModel extends RestCmsBaseModel
 {
@@ -57,7 +58,7 @@ SQL;
         $stmt->execute();
 
         if ($stmt->rowCount() !== 1) {
-            return null;
+            throw new ResourceException("", ResourceException::NOT_FOUND);
         }
 
         return new self($stmt->fetchObject());
