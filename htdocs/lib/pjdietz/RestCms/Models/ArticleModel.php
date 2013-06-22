@@ -11,7 +11,9 @@ use pjdietz\RestCms\Database\Helpers\StatusHelper;
 use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\RestCmsCommonInterface;
-use RestCmsConfig\TextProcessors\DefaultTextProcessor;
+use pjdietz\RestCms\TextProcessors\SubArticle;
+use pjdietz\RestCms\TextProcessors\TextReplacement;
+use RestCmsConfig\DefaultTextProcessor;
 
 class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
@@ -559,6 +561,17 @@ SQL;
 
         $content = $this->originalContent;
 
+        // Replace references to other articles with actual article content.
+        $processor = new SubArticle();
+        $content = $processor->transform($content);
+
+        // TODO: add merge data for meta-data for the article (date, author, etc.)
+
+        // Replace merge fields in the article with their values.
+        $processor = new TextReplacement();
+        $content = $processor->transform($content);
+
+        // Use any user-defined text replacements.
         $processor = new DefaultTextProcessor();
         $content = $processor->transform($content);
 
