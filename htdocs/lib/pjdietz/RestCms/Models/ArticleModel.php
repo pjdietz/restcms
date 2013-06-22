@@ -398,6 +398,17 @@ SQL;
     }
 
     /**
+     * Set the original content and re-process the content.
+     *
+     * @param string $content New original content
+     */
+    public function setContent($content)
+    {
+        $this->originalContent = $content;
+        $this->processContent();
+    }
+
+    /**
      * Update the instance with properties from another article.
      * @param ArticleModel $update
      */

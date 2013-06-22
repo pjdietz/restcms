@@ -216,6 +216,43 @@
                             "reason": "Article does not exist"
                         }
                     ]
+                },
+                {
+                    "httpMethod": "PUT",
+                    "summary": "Update an article's content",
+                    "nickname": "updateArticleContent",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        },
+                        {
+                            "name": "originalContent",
+                            "description": "The editable content for the article",
+                            "dataType": "string",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "body"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        }
+                    ]
                 }
             ]
         },
