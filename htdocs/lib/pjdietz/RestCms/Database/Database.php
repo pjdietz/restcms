@@ -7,22 +7,23 @@ use pjdietz\RestCms\Util;
 use pjdietz\RestCms\config;
 use PDO;
 use InvalidArgumentException;
+use RestCmsConfig\ConfigInterface;
 
-class Database implements RestCmsCommonInterface
+class Database implements RestCmsCommonInterface, ConfigInterface
 {
     /**
      * Shared PDO singleton instance.
      *
      * @var PDO
      */
-    protected static $databaseConnection;
+    private static $databaseConnection;
 
     /**
      * Array of merge fields to replace into template strings.
      *
      * @var array
      */
-    protected static $templateMergeFields;
+    private static $templateMergeFields;
 
     /**
      * Return the PDO singleton instance, creating it if needed.
@@ -36,13 +37,15 @@ class Database implements RestCmsCommonInterface
 
             // Create a new instance of the database and store it statically.
             if ($useDefaultDatabase) {
-                $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8', config\MYSQL_HOSTNAME, config\MYSQL_DATABASE);
+                $dsn = sprintf('mysql:host=%s;dbname=%s;charset=utf8',
+                    self::MYSQL_HOSTNAME, self::MYSQL_DATABASE);
             } else {
-                $dsn = sprintf('mysql:host=%s;charset=utf8', config\MYSQL_HOSTNAME);
+                $dsn = sprintf('mysql:host=%s;charset=utf8', self::MYSQL_HOSTNAME);
             }
 
-            self::$databaseConnection = new PDO($dsn, config\MYSQL_USERNAME, config\MYSQL_PASSWORD);
+            self::$databaseConnection = new PDO($dsn, self::MYSQL_USERNAME, self::MYSQL_PASSWORD);
             self::$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            self::$databaseConnection->exec("SET NAMES utf8;");
         }
 
         return self::$databaseConnection;
@@ -71,7 +74,7 @@ class Database implements RestCmsCommonInterface
     public static function getQuery($queryName)
     {
         // Read the query.
-        $pathToQuery = config\QUERIES_DIR . $queryName . '.sql';
+        $pathToQuery = self::QUERIES_DIR . $queryName . '.sql';
         if (!file_exists($pathToQuery)) {
             throw new InvalidArgumentException('file does not exist: ' . $pathToQuery);
         }
@@ -90,7 +93,7 @@ class Database implements RestCmsCommonInterface
      * @param array $mergeFields
      * @return string
      */
-    protected static function stringFromTemplate($template, $mergeFields = null)
+    private static function stringFromTemplate($template, $mergeFields = null)
     {
         if (!is_null($mergeFields)) {
             $mergeFields = array_merge(self::getMergeFields(), $mergeFields);
@@ -104,11 +107,11 @@ class Database implements RestCmsCommonInterface
             $template);
     }
 
-    protected static function getMergeFields()
+    private static function getMergeFields()
     {
         if (!isset(self::$templateMergeFields)) {
             self::$templateMergeFields = array(
-                '{DATABASE_NAME}' => config\MYSQL_DATABASE,
+                '{DATABASE_NAME}' => self::MYSQL_DATABASE,
                 '{GROUP_ADMIN}' => self::GROUP_ADMIN,
                 '{GROUP_CONTRIBUTOR}' => self::GROUP_CONTRIBUTOR,
                 '{GROUP_CONSUMER}' => self::GROUP_CONSUMER,

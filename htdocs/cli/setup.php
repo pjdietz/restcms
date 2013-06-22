@@ -8,7 +8,6 @@ if (php_sapi_name() !== 'cli') {
     exit;
 }
 
-require_once(dirname(__FILE__) . '/../config/config.php');
 require_once(dirname(__FILE__) . '/../vendor/autoload.php');
 
 $app = new SetupApp();

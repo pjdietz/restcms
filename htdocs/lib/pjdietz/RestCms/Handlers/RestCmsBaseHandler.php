@@ -9,8 +9,9 @@ use pjdietz\RestCms\Exceptions\UserException;
 use pjdietz\RestCms\Models\UserModel;
 use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\WellRESTed\Handler;
+use RestCmsConfig\ConfigInterface;
 
-abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterface
+abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterface, ConfigInterface
 {
     /** @var UserModel */
     protected $user;
@@ -73,7 +74,7 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
         $authFields = self::parsePairs($auth);
 
         // Use the type of authentication determined by the configuration.
-        if (config\AUTH_USE_REQUEST_HASH) {
+        if (self::AUTH_USE_REQUEST_HASH) {
             $this->authenticateUserWithRequestHash($authFields);
         } else {
             $this->authenticateUserWithPasswordHash($authFields);
@@ -90,7 +91,7 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
 
         $body = "Please provide proper credentials for the request in the form of a X-restcms-auth header with a value in the following format:\n";
 
-        if (config\AUTH_USE_REQUEST_HASH) {
+        if (self::AUTH_USE_REQUEST_HASH) {
             $body .= "username={your username}; requestHash={this request's hash}\n\n";
             $body .= "To make the request hash, concatenate the following and SHA256 the result: username, passwordHash, request URI, request method, request body.\n\n";
         } else {
