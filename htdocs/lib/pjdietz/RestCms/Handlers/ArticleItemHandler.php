@@ -15,7 +15,7 @@ class ArticleItemHandler extends RestCmsBaseHandler
     {
         $this->user->assertPrivilege(self::PRIV_READ_ARTICLE);
 
-        $article = ArticleModel::initWithId($this->args['articleId']);
+        $article = ArticleModel::init($this->args['articleId']);
 
         $this->response->setStatusCode(200);
         $this->response->setHeader('Content-Type', 'application/json');
@@ -25,7 +25,7 @@ class ArticleItemHandler extends RestCmsBaseHandler
     protected function put()
     {
         // Ensure the user may modify this article.
-        $article = ArticleModel::initWithId($this->args['articleId']);
+        $article = ArticleModel::init($this->args['articleId']);
         $this->user->assertArticleAccess($article);
 
         // Attempt to build an article from the passed request body.
@@ -46,7 +46,7 @@ class ArticleItemHandler extends RestCmsBaseHandler
     protected function delete()
     {
         // Ensure the user may modify this article.
-        $article = ArticleModel::initWithId($this->args['articleId']);
+        $article = ArticleModel::init($this->args['articleId']);
         $this->user->assertArticleAccess($article);
 
         // Remove the article from the database.

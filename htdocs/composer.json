@@ -13,6 +13,9 @@
         "dflydev/markdown": "1.0.*@dev"
     },
     "autoload": {
-        "psr-0": { "pjdietz\\RestCms": "lib/" }
+        "psr-0": {
+            "pjdietz\\RestCms": "lib/",
+            "RestCmsConfig": "config/"
+        }
     }
 }

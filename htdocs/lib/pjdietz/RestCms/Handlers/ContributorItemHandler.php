@@ -26,7 +26,7 @@ class ContributorItemHandler extends RestCmsBaseHandler
     protected function delete()
     {
         // TODO assert user can modify this article.
-        $article = ArticleModel::initWithId($this->args['articleId']);
+        $article = ArticleModel::init($this->args['articleId']);
         $this->user->assertArticleAccess($article);
         $user = UserModel::initWithId($this->args['userId']);
 

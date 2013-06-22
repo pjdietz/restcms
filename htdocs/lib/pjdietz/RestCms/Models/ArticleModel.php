@@ -11,7 +11,7 @@ use pjdietz\RestCms\Database\Helpers\StatusHelper;
 use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\RestCmsCommonInterface;
-use pjdietz\RestCms\TextProcessors\Markdown;
+use RestCmsConfig\TextProcessors\DefaultTextProcessor;
 
 class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
@@ -70,7 +70,23 @@ SQL;
     }
 
     /**
+     * Read an article from the database by articleId or slug.
+     *
+     * @param int|string $articleId
+     * @return ArticleModel
+     * @throws ResourceException
+     */
+    public static function init($articleId)
+    {
+        if (is_numeric($articleId)) {
+            return self::initWithId($articleId);
+        }
+        return self::initWithSlug($articleId);
+    }
+
+    /**
      * Read an article from the database by articleId.
+     *
      * @param int $articleId
      * @return ArticleModel
      * @throws ResourceException
@@ -101,6 +117,48 @@ SQL;
         $db = Database::getDatabaseConnection();
         $stmt = $db->prepare($query);
         $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        if ($stmt->rowCount() === 0) {
+            throw new ResourceException("", ResourceException::NOT_FOUND);
+        }
+
+        return new self($stmt->fetchObject());
+    }
+
+    /**
+     * Read an article from the database by slug.
+     *
+     * @param string $slug
+     * @return ArticleModel
+     * @throws ResourceException
+     */
+    public static function initWithSlug($slug)
+    {
+        $query = <<<SQL
+SELECT
+    a.articleId,
+    a.slug,
+    s.statusSlug AS status,
+    a.contentType,
+    v.title,
+    v.content AS originalContent,
+    v.excerpt,
+    v.notes,
+    a.currentVersionId
+FROM
+    article a
+    JOIN version v
+        ON a.currentVersionId = v.versionId
+        AND a.slug = :slug
+    JOIN status s
+        ON a.statusId = s.statusId
+LIMIT 1;
+SQL;
+
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':slug', $slug, PDO::PARAM_STR);
         $stmt->execute();
 
         if ($stmt->rowCount() === 0) {
@@ -238,7 +296,7 @@ SQL;
         $stmt->execute();
 
         // Re-read the article after changing the version.
-        $newArticle = self::initWithId($this->articleId);
+        $newArticle = self::init($this->articleId);
         $this->copyMembers($newArticle);
         $this->prepareInstance();
     }
@@ -356,6 +414,7 @@ SQL;
         foreach ($properties as $property) {
             $this->$property = $update->$property;
         }
+        $this->prepareInstance();
     }
 
     /** Update the database with the instance's current state. */
@@ -484,14 +543,12 @@ SQL;
     private function processContent()
     {
         if (!isset($this->originalContent)) {
-            $this->originalContent = '';
-            $this->content = '';
             return;
         }
 
         $content = $this->originalContent;
 
-        $processor = new Markdown();
+        $processor = new DefaultTextProcessor();
         $content = $processor->transform($content);
 
         $this->content = $content;

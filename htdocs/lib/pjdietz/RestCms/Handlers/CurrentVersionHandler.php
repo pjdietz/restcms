@@ -16,7 +16,7 @@ class CurrentVersionHandler extends RestCmsBaseHandler
     protected function get()
     {
         // Ensure the user may modify this article.
-        $article = ArticleModel::initWithId($this->args['articleId']);
+        $article = ArticleModel::init($this->args['articleId']);
         $this->user->assertArticleAccess($article);
 
         $this->response->setStatusCode(200);
@@ -27,7 +27,7 @@ class CurrentVersionHandler extends RestCmsBaseHandler
     protected function put()
     {
         // Ensure the user may modify this article.
-        $article = ArticleModel::initWithId($this->args['articleId']);
+        $article = ArticleModel::init($this->args['articleId']);
         $this->user->assertArticleAccess($article);
 
         // Read the version to set as current.

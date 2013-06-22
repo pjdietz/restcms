@@ -4,22 +4,6 @@ namespace pjdietz\RestCms\Util;
 
 Class Template
 {
-    protected static $fields;
-
-    public function setField($field, $value)
-    {
-        if (!isset(self::$fields)) {
-            self::$fields = array();
-        }
-
-        self::$fields[$field] = $value;
-    }
-
-    public function getField()
-    {
-
-    }
-
     /**
      * Merge an associative array into a string template.
      *

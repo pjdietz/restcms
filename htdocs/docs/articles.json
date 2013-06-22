@@ -185,6 +185,41 @@
             ]
         },
         {
+            "path": "/articles/{articleId}/content",
+            "description": "Article",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Read an article's content",
+                    "nickname": "readArticleContent",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "path": "/articles/{articleId}/contributors/",
             "description": "Users who may modify a given article.",
             "operations": [

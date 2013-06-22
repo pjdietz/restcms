@@ -16,7 +16,7 @@ class VersionCollectionHandler extends RestCmsBaseHandler
     protected function get()
     {
         // Ensure the user may modify this article.
-        $article = ArticleModel::initWithId($this->args['articleId']);
+        $article = ArticleModel::init($this->args['articleId']);
         $this->user->assertArticleAccess($article);
 
         $collection = VersionModel::initCollection($this->args['articleId']);
