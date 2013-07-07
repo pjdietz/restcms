@@ -6,6 +6,9 @@ CREATE TABLE IF NOT EXISTS article (
     contentType VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Mime type for the article',
     statusId TINYINT NOT NULL DEFAULT 1 COMMENT 'Status of the article. Default is draft',
     currentVersionId INT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Link to version record',
-    UNIQUE INDEX idxArticleSlug (slug)
+    siteId INT UNSIGNED COMMENT '[Optional] Site the article belongs to',
+    sitePath VARCHAR(255) COMMENT '[Optional] Published path on a given site for this article',
+    UNIQUE INDEX idxArticleSlug (slug),
+    UNIQUE INDEX idxSitePath (siteId, sitePath)
 )
 ENGINE = MyISAM;

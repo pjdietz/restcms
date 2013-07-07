@@ -41,7 +41,7 @@ class SetupApp extends CliApp implements ConfigInterface
     protected function main()
     {
         $db = Database::getDatabaseConnection(false);
-        $query = 'DROP DATABASE ' . config\MYSQL_DATABASE;
+        $query = 'DROP DATABASE ' . self::MYSQL_DATABASE;
         $db->exec($query);
 
         $this->createDatabase();
@@ -69,6 +69,7 @@ class SetupApp extends CliApp implements ConfigInterface
         $queryNames = array(
             'setup/tables/article',
             'setup/tables/contributor',
+            'setup/tables/site',
             'setup/tables/status',
             'setup/tables/user',
             'setup/tables/userGroup',
