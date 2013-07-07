@@ -31,6 +31,10 @@ class MainRouter extends Router
         $this->addTemplate('/articles/{articleId}/current-version', 'CurrentVersionHandler');
         $this->addTemplate('/articles/{articleId}/versions/', 'VersionCollectionHandler');
         $this->addTemplate('/articles/{articleId}/versions/{versionId}', 'VersionItemHandler');
+
+
+        $this->addTemplate('/sites/{siteId}', 'SiteItemHandler');
+
         $this->addTemplate('/status/', 'StatusCollectionHandler');
         $this->addTemplate('/status/{statusId}', 'StatusItemHandler');
         $this->addTemplate('/status/{statusSlug}', 'StatusItemHandler');

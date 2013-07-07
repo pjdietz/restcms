@@ -22,6 +22,8 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
     public $articleId;
     /** @var array List of userIds of users who may contribute to the article. */
     private $contributors;
+    /** @var  SiteModel */
+    public $site;
 
     /**
      * Read a collection of Articles filtered by the given options array.
@@ -101,6 +103,8 @@ SELECT
     a.slug,
     s.statusSlug AS status,
     a.contentType,
+    a.siteId,
+    a.sitePath,
     v.title,
     v.content AS originalContent,
     v.excerpt,
@@ -143,6 +147,8 @@ SELECT
     a.slug,
     s.statusSlug AS status,
     a.contentType,
+    a.siteId,
+    a.sitePath,
     v.title,
     v.content AS originalContent,
     v.excerpt,
@@ -541,6 +547,13 @@ SQL;
     protected function prepareInstance()
     {
         $this->articleId = (int) $this->articleId;
+        if (isset($this->siteId)) {
+            $this->siteId = (int) $this->siteId;
+            $this->site = SiteModel::init($this->siteId);
+            if ($this->sitePath) {
+                $this->uri = $this->site->makeUri($this->sitePath);
+            }
+        }
         $this->readContributors();
         $this->processContent();
 
@@ -566,6 +579,7 @@ SQL;
         $content = $processor->transform($content);
 
         // TODO: add merge data for meta-data for the article (date, author, etc.)
+
 
         // Replace merge fields in the article with their values.
         $processor = new TextReplacement();
