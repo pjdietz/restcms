@@ -66,6 +66,8 @@ SQL;
      */
     public function getArticleWithPath($path)
     {
+        $path = urldecode($path);
+
         // Search the database for the articleId matching this criteria.
         $query = <<<SQL
 SELECT

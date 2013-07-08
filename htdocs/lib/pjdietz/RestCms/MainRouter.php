@@ -2,13 +2,12 @@
 
 namespace pjdietz\RestCms;
 
-use \pjdietz\WellRESTed\Router;
-use \pjdietz\WellRESTed\Route;
+use pjdietz\WellRESTed\Route;
+use pjdietz\WellRESTed\Router;
 
 class MainRouter extends Router
 {
     const HANDLER_NAMESPACE = '\\pjdietz\\RestCms\\Handlers\\';
-
     private $templateVariables;
 
     public function __construct()
@@ -26,7 +25,7 @@ class MainRouter extends Router
         // /sites/{siteId}/{path}
         // Path may contain slashes, so build manually instead of as URI template.
         $this->addRoute(new Route(
-                '/^\/sites\/(?<siteId>[0-9a-zA-Z\-_]+)(?<path>\/.*)$/',
+                '/^\/sites\/(?<siteId>[0-9a-zA-Z\-_]+)\/paths\/(?<path>.*)$/',
                 self::HANDLER_NAMESPACE . 'SitePathItemHandler'));
 
         $this->addTemplate('/articles/', 'ArticleCollectionHandler');
@@ -48,9 +47,12 @@ class MainRouter extends Router
             $variables = $this->templateVariables;
         }
 
-        $this->addRoute(Route::newFromUriTemplate(
+        $this->addRoute(
+            Route::newFromUriTemplate(
                 $template,
                 self::HANDLER_NAMESPACE . $handler,
-                $variables));
+                $variables
+            )
+        );
     }
 }

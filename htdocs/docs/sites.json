@@ -1,0 +1,58 @@
+{
+    "apiVersion": "0.0.1",
+    "swaggerVersion": "1.0",
+    "basePath": "http://restcms.vm2.home.local",
+    "resourcePath": "/sites",
+    "apis": [
+        {
+            "path": "/sites/{siteId}",
+            "description": "Site",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Read details of a site",
+                    "nickname": "getSite",
+                    "parameters": [
+                        {
+                            "name": "siteId",
+                            "description": "ID or slug for the Site",
+                            "dataType": "int|string",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/sites/{siteId}/paths/{path}",
+            "description": "Site path",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "summary": "Read an article for a given path of a site",
+                    "nickname": "getSitePath",
+                    "parameters": [
+                        {
+                            "name": "siteId",
+                            "description": "ID or slug for the Site",
+                            "dataType": "int|string",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        },
+                        {
+                            "name": "path",
+                            "description": "Path relative to the site root for the page",
+                            "dataType": "string",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

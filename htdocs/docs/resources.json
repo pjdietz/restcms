@@ -10,6 +10,10 @@
         {
             "path": "/docs/status.{format}",
             "description": "Statuses for the articles"
+        },
+        {
+            "path": "/docs/sites.{format}",
+            "description": "Site managed by this CMS"
         }
     ]
 }
