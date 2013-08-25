@@ -22,7 +22,7 @@ class MainRouter extends Router
             'userId' => Route::RE_NUM
         );
 
-        // /sites/{siteId}/{path}
+        // /sites/{siteId}/paths/{path}
         // Path may contain slashes, so build manually instead of as URI template.
         $this->addRoute(new Route(
                 '/^\/sites\/(?<siteId>[0-9a-zA-Z\-_]+)\/paths\/(?<path>.*)$/',

@@ -619,13 +619,15 @@
         if (param.paramType === 'path') {
           if (args[param.name]) {
             reg = new RegExp('\{' + param.name + '[^\}]*\}', 'gi');
-            url = url.replace(reg, encodeURIComponent(args[param.name]));
+            // Do not URL encode path components.
+            url = url.replace(reg, args[param.name]);
             delete args[param.name];
           } else {
             throw "" + param.name + " is a required path param.";
           }
         }
       }
+      // Encode forward slash to %252F to prevent creating URLs with %2F in the path component.
       url = url.replace(/%2[Ff]/g, "%252F");
       if (includeApiKey && (this.resource.api.api_key != null) && this.resource.api.api_key.length > 0) {
         args[this.apiKeyName] = this.resource.api.api_key;
