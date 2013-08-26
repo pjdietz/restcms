@@ -1,7 +1,7 @@
 {
     "apiVersion": "0.1",
     "swaggerVersion": "1.1",
-    "basePath": "http://restcms.vm2.home.local",
+    "basePath": "http://{{HOSTNAME}}",
     "apis": [
         {
             "path": "/docs/articles.{format}",

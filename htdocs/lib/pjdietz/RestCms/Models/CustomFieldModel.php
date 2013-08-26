@@ -139,6 +139,17 @@ SQL;
     }
 
     /**
+     * Create and return a new instance and copy the members from the passed object.
+     *
+     * @param object $obj
+     * @return CustomFieldModel
+     */
+    public static function initWithObject($obj)
+    {
+        return new self($obj);
+    }
+
+    /**
      * Validate the passed JSON string against the class's schema.
      *
      * @param string $json

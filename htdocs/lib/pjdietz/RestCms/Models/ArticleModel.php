@@ -402,6 +402,16 @@ SQL;
         $stmt->bindValue(':currentVersionId', $versionId, PDO::PARAM_INT);
         $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
         $stmt->execute();
+
+        // If the instance has custom fields, add them.
+        if ($this->customFields) {
+            foreach ($this->customFields as $customField) {
+                if (!($customField instanceof CustomFieldModel)) {
+                    $customField = CustomFieldModel::initWithObject($customField);
+                }
+                $customField->create($this->articleId);
+            }
+        }
     }
 
     /**
@@ -556,7 +566,13 @@ SQL;
         $this->readContributors();
         $this->processContent();
 
-        $this->customFields = CustomFieldModel::initCollection($this->articleId);
+        if (!isset($this->customFields)) {
+            $this->customFields = CustomFieldModel::initCollection($this->articleId);
+        } else {
+            foreach ($this->customFields as $i => $customField) {
+                $this->customFields[$i] = CustomFieldModel::initWithObject($customField);
+            }
+        }
 
         if (!isset($this->excerpt)) {
             $this->excerpt = '';

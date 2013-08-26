@@ -52,6 +52,52 @@
             "description": "Private notes for the user",
             "required": false,
             "default": ""
+        },
+        "customFields": {
+            "type": "array",
+            "description": "Custom fields to attach to the article",
+            "required": "false",
+            "items": {
+                "type": "object",
+                "required": false,
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Key for the custom field",
+                        "required": true
+                    },
+                    "originalValue": {
+                        "type": "string",
+                        "description": "Editable value for the custom field",
+                        "required": true
+                    },
+                    "sortOrder": {
+                        "type": "integer",
+                        "description": "Arbitrary sorting field",
+                        "required": false,
+                        "default": 0,
+                        "minimum": 0
+                    },
+                    "value": {
+                        "type": "string",
+                        "description": "Processed value for the custom field",
+                        "required": false,
+                        "readonly": true
+                    },
+                    "articleId": {
+                        "type": "integer",
+                        "description": "Unique ID of the article this custom fields belongs to",
+                        "required": false,
+                        "readonly": true
+                    },
+                    "customFieldId": {
+                        "type": "integer",
+                        "description": "Unique ID of the customField",
+                        "required": false,
+                        "readonly": true
+                    }
+                }
+            }
         }
     }
 }

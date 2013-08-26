@@ -1,7 +1,7 @@
 {
     "apiVersion": "0.0.1",
     "swaggerVersion": "1.0",
-    "basePath": "http://restcms.vm2.home.local",
+    "basePath": "http://{{HOSTNAME}}",
     "resourcePath": "/status",
     "apis": [
         {

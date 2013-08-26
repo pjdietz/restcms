@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteBase /docs/
+
+# Send all requests to index.php
+RewriteRule ^.+$ index.php [L,QSA]

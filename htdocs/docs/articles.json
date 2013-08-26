@@ -1,7 +1,7 @@
 {
     "apiVersion": "0.0.1",
     "swaggerVersion": "1.0",
-    "basePath": "http://restcms.vm2.home.local",
+    "basePath": "http://{{HOSTNAME}}",
     "resourcePath": "/articles",
     "apis": [
         {
@@ -810,6 +810,14 @@
                     "description": "Private notes for the user",
                     "required": false,
                     "default": ""
+                },
+                "customFields": {
+                    "type": "array",
+                    "required": false,
+                    "items": {
+                        "type": "CustomField",
+                        "required": false
+                    }
                 }
             }
         },
