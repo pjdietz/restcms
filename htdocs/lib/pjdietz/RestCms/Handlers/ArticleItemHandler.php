@@ -29,7 +29,7 @@ class ArticleItemHandler extends RestCmsBaseHandler
         $this->user->assertArticleAccess($article);
 
         // Attempt to build an article from the passed request body.
-        $newArticle = ArticleModel::initWithJson($this->request->getBody(), $validator);
+        $newArticle = ArticleModel::initWithJson($this->request->getBody());
 
         // Update the instance with data from the new article.
         $article->updateFrom($newArticle);

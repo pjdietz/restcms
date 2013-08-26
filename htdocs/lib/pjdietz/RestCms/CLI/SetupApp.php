@@ -4,7 +4,6 @@ namespace pjdietz\RestCms\CLI;
 
 use pjdietz\CliApp\CliApp;
 use pjdietz\RestCms\Database\Database;
-use pjdietz\RestCms\config;
 use RestCmsConfig\ConfigInterface;
 
 class SetupApp extends CliApp implements ConfigInterface

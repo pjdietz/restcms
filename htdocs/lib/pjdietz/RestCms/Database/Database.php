@@ -4,7 +4,6 @@ namespace pjdietz\RestCms\Database;
 
 use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\RestCms\Util;
-use pjdietz\RestCms\config;
 use PDO;
 use InvalidArgumentException;
 use RestCmsConfig\ConfigInterface;

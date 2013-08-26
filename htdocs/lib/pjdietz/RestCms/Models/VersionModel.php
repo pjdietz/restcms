@@ -28,7 +28,8 @@ class VersionModel extends RestCmsBaseModel
      *
      * @param int $articleId
      * @param int $versionId
-     * @return VersionModel|null
+     * @throws ResourceException
+     * @return VersionModel
      */
     public static function init($articleId, $versionId)
     {
@@ -61,7 +62,7 @@ SQL;
             throw new ResourceException("", ResourceException::NOT_FOUND);
         }
 
-        return new self($stmt->fetchObject());
+        return $stmt->fetchObject(get_called_class());
     }
 
     /**

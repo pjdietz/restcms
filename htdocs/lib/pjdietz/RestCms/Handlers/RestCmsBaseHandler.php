@@ -2,7 +2,6 @@
 
 namespace pjdietz\RestCms\Handlers;
 
-use pjdietz\RestCms\config;
 use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\Exceptions\UserException;

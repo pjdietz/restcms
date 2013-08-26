@@ -26,7 +26,7 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
     {
         $this->user->assertPrivilege(self::PRIV_CREATE_ARTICLE);
 
-        $article = ArticleModel::initWithJson($this->request->getBody(), $validator);
+        $article = ArticleModel::initWithJson($this->request->getBody());
 
         // Attempt to add this to the database.
         $article->create();
