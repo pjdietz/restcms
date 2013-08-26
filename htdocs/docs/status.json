@@ -32,7 +32,7 @@
                 {
                     "httpMethod": "GET",
                     "nickname": "getStatus",
-                    "summary": "View details on a specific status.",
+                    "summary": "View details on a specific status",
                     "parameters": [
                         {
                             "name": "statusId",
