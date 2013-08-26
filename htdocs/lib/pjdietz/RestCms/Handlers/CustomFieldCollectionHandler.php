@@ -29,7 +29,7 @@ class CustomFieldCollectionHandler extends RestCmsBaseHandler
         $article = ArticleModel::init($this->args['articleId']);
         $this->user->assertArticleAccess($article);
 
-        $customField = CustomFieldModel::initWithJson($this->request->getBody(), $validator);
+        $customField = CustomFieldModel::initWithJson($this->request->getBody());
         $customField->create($article->articleId);
 
         $this->response->setStatusCode(201);

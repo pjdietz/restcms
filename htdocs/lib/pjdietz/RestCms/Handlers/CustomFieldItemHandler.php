@@ -32,7 +32,7 @@ class CustomFieldItemHandler extends RestCmsBaseHandler
         // Read the request body as a custom field.
         // Ensure the IDs in the URI are assigned in the object.
         // Update the record.
-        $customField = CustomFieldModel::initWithJson($this->request->getBody(), $validator);
+        $customField = CustomFieldModel::initWithJson($this->request->getBody());
         $customField->articleId = $article->articleId;
         $customField->customFieldId = $this->args['customFieldId'];
         $customField->update($article);

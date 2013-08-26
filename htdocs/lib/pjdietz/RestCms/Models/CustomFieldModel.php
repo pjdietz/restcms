@@ -127,11 +127,10 @@ SQL;
      * Returns the parsed data, if valid. Otherwise, returns null.
      *
      * @param string $jsonString
-     * @param Validator $validator
      * @throws JsonException
      * @return ArticleModel
      */
-    public static function initWithJson($jsonString, &$validator)
+    public static function initWithJson($jsonString)
     {
         if (self::validateJson($jsonString, $validator) === false) {
             throw new JsonException('Unable to decode article', null, null, $validator, self::PATH_TO_SCHEMA);
