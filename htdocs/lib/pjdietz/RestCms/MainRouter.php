@@ -16,6 +16,7 @@ class MainRouter extends Router
 
         $this->templateVariables = array(
             'articleId' => Route::RE_NUM,
+            'customFieldId' => Route::RE_NUM,
             'statusId' => Route::RE_NUM,
             'statusSlug' => Route::RE_SLUG,
             'versionId' => Route::RE_NUM,
@@ -34,6 +35,8 @@ class MainRouter extends Router
         $this->addTemplate('/articles/{articleId}/contributors/', 'ContributorCollectionHandler');
         $this->addTemplate('/articles/{articleId}/contributors/{userId}', 'ContributorItemHandler');
         $this->addTemplate('/articles/{articleId}/current-version', 'CurrentVersionHandler');
+        $this->addTemplate('/articles/{articleId}/customFields/', 'CustomFieldCollectionHandler');
+        $this->addTemplate('/articles/{articleId}/customFields/{customFieldId}', 'CustomFieldItemHandler');
         $this->addTemplate('/articles/{articleId}/versions/', 'VersionCollectionHandler');
         $this->addTemplate('/articles/{articleId}/versions/{versionId}', 'VersionItemHandler');
         $this->addTemplate('/sites/{siteId}', 'SiteItemHandler');

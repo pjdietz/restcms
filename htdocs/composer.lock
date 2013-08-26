@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "73fe71cfc8fe063b79d6e45f813f5f67",
+    "hash": "6e691c9305f9b6a57126dea4f042648e",
     "packages": [
         {
             "name": "dflydev/markdown",
@@ -151,12 +151,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pjdietz/wellrested.git",
-                "reference": "v1.2.1"
+                "reference": "e3e98377c33b8a7eb99ef1003b56c02f7fa409ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pjdietz/wellrested/zipball/v1.2.1",
-                "reference": "v1.2.1",
+                "url": "https://api.github.com/repos/pjdietz/wellrested/zipball/e3e98377c33b8a7eb99ef1003b56c02f7fa409ea",
+                "reference": "e3e98377c33b8a7eb99ef1003b56c02f7fa409ea",
                 "shasum": ""
             },
             "require": {
@@ -187,7 +187,7 @@
                 "rest",
                 "restful"
             ],
-            "time": "2013-06-12 23:54:08"
+            "time": "2013-08-16 22:59:05"
         }
     ],
     "packages-dev": [

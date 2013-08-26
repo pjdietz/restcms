@@ -8,7 +8,7 @@ use pjdietz\RestCms\Util\Template;
 
 class SubArticle implements TextProcessorInterface
 {
-    const ARTICLE_PATTERN = '/\{\{article\/([0-9a-z_-]+)\}\}/';
+    const ARTICLE_PATTERN = '/\{\{\/articles\/([0-9a-z_-]+)\}\}/';
 
     /**
      * @param string $text

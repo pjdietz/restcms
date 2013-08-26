@@ -557,6 +557,8 @@ SQL;
         $this->readContributors();
         $this->processContent();
 
+        $this->customFields = CustomFieldModel::initCollection($this);
+
         if (!isset($this->excerpt)) {
             $this->excerpt = '';
         }

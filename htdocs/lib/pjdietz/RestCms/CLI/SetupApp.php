@@ -69,6 +69,7 @@ class SetupApp extends CliApp implements ConfigInterface
         $queryNames = array(
             'setup/tables/article',
             'setup/tables/contributor',
+            'setup/tables/customField',
             'setup/tables/site',
             'setup/tables/status',
             'setup/tables/user',
