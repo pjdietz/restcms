@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS customField (
     value VARCHAR(65535) NOT NULL COMMENT '[Required] Value for the custom field.',
     articleId INT UNSIGNED NOT NULL COMMENT '[Required] Relates a field to an article.',
     sortOrder SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Arbitraty sort order for fields within an article.',
-    UNIQUE INDEX idxCustomFieldArticle (articleId)
+    INDEX idxCustomFieldArticle (articleId)
 )
 ENGINE = MyISAM;

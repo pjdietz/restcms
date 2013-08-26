@@ -1,0 +1,43 @@
+{
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-03/schema",
+    "id": "#",
+    "required": false,
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Key for the custom field",
+            "required": true
+        },
+        "originalValue": {
+            "type": "string",
+            "description": "Editable value for the custom field",
+            "required": true
+        },
+        "sortOrder": {
+            "type": "integer",
+            "description": "Arbitrary sorting field",
+            "required": false,
+            "default": 0,
+            "minimum": 0
+        },
+        "value": {
+            "type": "string",
+            "description": "Processed value for the custom field",
+            "required": false,
+            "readonly": true
+        },
+        "articleId": {
+            "type": "integer",
+            "description": "Unique ID of the article this custom fields belongs to",
+            "required": false,
+            "readonly": true
+        },
+        "customFieldId": {
+            "type": "integer",
+            "description": "Unique ID of the customField",
+            "required": false,
+            "readonly": true
+        }
+    }
+}
