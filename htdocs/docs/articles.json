@@ -616,7 +616,7 @@
             ]
         },
         {
-            "path": "/articles/{articleId}/current-version",
+            "path": "/articles/{articleId}/currentVersion",
             "description": "The version of the article.",
             "operations": [
                 {

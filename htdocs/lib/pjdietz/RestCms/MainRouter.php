@@ -34,7 +34,7 @@ class MainRouter extends Router
         $this->addTemplate('/articles/{articleId}/content', 'ArticleContentHandler');
         $this->addTemplate('/articles/{articleId}/contributors/', 'ContributorCollectionHandler');
         $this->addTemplate('/articles/{articleId}/contributors/{userId}', 'ContributorItemHandler');
-        $this->addTemplate('/articles/{articleId}/current-version', 'CurrentVersionHandler');
+        $this->addTemplate('/articles/{articleId}/currentVersion', 'CurrentVersionHandler');
         $this->addTemplate('/articles/{articleId}/customFields/', 'CustomFieldCollectionHandler');
         $this->addTemplate('/articles/{articleId}/customFields/{customFieldId}', 'CustomFieldItemHandler');
         $this->addTemplate('/articles/{articleId}/versions/', 'VersionCollectionHandler');
