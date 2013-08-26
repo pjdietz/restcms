@@ -38,7 +38,7 @@ SQL;
             throw new ResourceException("No status with id {$statusId}", ResourceException::NOT_FOUND);
         }
 
-        return new self($stmt->fetchObject());
+        return $stmt->fetchObject(get_called_class());
     }
 
     /**
@@ -68,7 +68,7 @@ SQL;
             throw new ResourceException("No status with slug {$statusSlug}", ResourceException::NOT_FOUND);
         }
 
-        return new self($stmt->fetchObject());
+        return $stmt->fetchObject(get_called_class());
     }
 
     /**

@@ -129,7 +129,7 @@ SQL;
             throw new ResourceException("", ResourceException::NOT_FOUND);
         }
 
-        return new self($stmt->fetchObject());
+        return $stmt->fetchObject(get_called_class());
     }
 
     /**
@@ -173,7 +173,7 @@ SQL;
             throw new ResourceException("", ResourceException::NOT_FOUND);
         }
 
-        return new self($stmt->fetchObject());
+        return $stmt->fetchObject(get_called_class());
     }
 
     /**
