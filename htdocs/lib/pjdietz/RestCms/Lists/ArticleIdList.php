@@ -4,16 +4,16 @@ namespace pjdietz\RestCms\Lists;
 
 use PDO;
 use pjdietz\RestCms\Database\Database;
-use pjdietz\RestCms\Database\Helpers\ArticleHelper;
-use pjdietz\RestCms\Database\Helpers\SiteHelper;
-use pjdietz\RestCms\Database\Helpers\StatusHelper;
+use pjdietz\RestCms\Database\TempTable\ArticleTempTable;
+use pjdietz\RestCms\Database\TempTable\SiteTempTable;
+use pjdietz\RestCms\Database\TempTable\StatusTempTable;
 
 class ArticleIdList
 {
     public static function init($options)
     {
         $tmpArticleJoin = '';
-        $tmpArticle = new ArticleHelper($options);
+        $tmpArticle = new ArticleTempTable($options);
         if ($tmpArticle->isRequired()) {
             $tmpArticleJoin .= <<<QUERY
 JOIN tmpArticleId ta
@@ -22,7 +22,7 @@ QUERY;
         }
 
         $tmpSiteJoin = '';
-        $tmpSite = new SiteHelper($options);
+        $tmpSite = new SiteTempTable($options);
         if ($tmpSite->isRequired()) {
             $tmpSiteJoin .= <<<QUERY
 JOIN tmpSite ts
@@ -31,7 +31,7 @@ QUERY;
         }
 
         $tmpStatusJoin = '';
-        $tmpStatus = new StatusHelper($options);
+        $tmpStatus = new StatusTempTable($options);
         if ($tmpStatus->isRequired()) {
             $tmpStatusJoin .= <<<QUERY
 JOIN status s

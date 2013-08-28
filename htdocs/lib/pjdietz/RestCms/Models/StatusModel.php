@@ -4,7 +4,7 @@ namespace pjdietz\RestCms\Models;
 
 use PDO;
 use pjdietz\RestCms\Database\Database;
-use pjdietz\RestCms\Database\Helpers\StatusHelper;
+use pjdietz\RestCms\Database\TempTable\StatusTempTable;
 use pjdietz\RestCms\Exceptions\ResourceException;
 
 class StatusModel extends RestCmsBaseModel
@@ -77,7 +77,7 @@ SQL;
      */
     public static function initCollection(array $options)
     {
-        $tmpStatus = new StatusHelper($options);
+        $tmpStatus = new StatusTempTable($options);
 
         $query = <<<SQL
 SELECT

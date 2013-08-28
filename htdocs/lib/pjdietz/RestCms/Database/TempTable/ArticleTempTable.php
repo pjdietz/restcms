@@ -1,16 +1,20 @@
 <?php
 
-namespace pjdietz\RestCms\Database\Helpers;
+namespace pjdietz\RestCms\Database\TempTable;
 
 use PDO;
-use pjdietz\RestCms\Database\Database;
 
-class ArticleHelper extends BaseHelper
+class ArticleTempTable extends TempTableBase
 {
     private $id;
     private $slug;
 
-    public function __construct(array $options)
+    public function isRequired()
+    {
+        return (bool) ($this->id || $this->slug);
+    }
+
+    protected function readOptions(array $options)
     {
         $this->id = array();
         $this->slug = array();
@@ -25,30 +29,25 @@ class ArticleHelper extends BaseHelper
                 }
             }
         }
-
-        $this->create();
     }
 
-    public function create()
+    protected function getDropQuery()
     {
-        // Return if there is no need to make the temp table.
-        if (!($this->id || $this->slug)) {
-            return;
-        }
+        return 'DROP TEMPORARY TABLE IF EXISTS tmpArticleId;';
+    }
 
-        $db = Database::getDatabaseConnection();
-
-        // Create an empty temp table.
-        $query = <<<SQL
-DROP TEMPORARY TABLE IF EXISTS tmpArticleId;
-
+    protected function getCreateQuery()
+    {
+        return <<<SQL
 CREATE TEMPORARY TABLE IF NOT EXISTS tmpArticleId (
     articleId INT UNSIGNED NOT NULL,
     UNIQUE INDEX uidxTmpArticleId(articleId)
 );
 SQL;
-        $db->exec($query);
+    }
 
+    protected function populate(PDO $db)
+    {
         if ($this->id) {
 
             // Prepare the insert statement.
@@ -86,16 +85,5 @@ SQL;
             }
 
         }
-
-        $this->required = true;
     }
-
-    public function drop()
-    {
-        if ($this->required) {
-            $query = 'DROP TEMPORARY TABLE IF EXISTS tmpArticleId;';
-            Database::getDatabaseConnection()->exec($query);
-        }
-    }
-
 }
