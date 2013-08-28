@@ -18,15 +18,23 @@ use RestCmsConfig\DefaultTextProcessor;
 class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
     const PATH_TO_SCHEMA = '/schema/article.json';
-    /** @var int */
+
     public $articleId;
-    public $site;
-    public $notes;
-    public $excerpts;
+    public $currentVersionId;
+    public $status;
+    public $title;
+    public $slug;
+    public $excerpt = '';
+    public $content;
+    public $originalContent;
+    public $contentType;
+    public $siteId;
+    public $sitePath = '';
+    public $notes = '';
+    public $customFields;
+
     /** @var array List of userIds of users who may contribute to the article. */
     private $contributors;
-    /** @var  SiteModel */
-    private $siteId = 0;
 
     /**
      * Read a collection of Articles filtered by the given options array.
@@ -337,13 +345,17 @@ INSERT INTO article (
     dateModified,
     slug,
     contentType,
-    statusId
+    statusId,
+    siteId,
+    sitePath
 ) VALUES (
     NOW(),
     NOW(),
     :slug,
     :contentType,
-    :statusId
+    :statusId,
+    :siteId,
+    :sitePath
 );
 SQL;
         $db = Database::getDatabaseConnection();
@@ -351,6 +363,8 @@ SQL;
         $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
         $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
         $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
+        $stmt->bindValue(':siteId', $this->siteId, PDO::PARAM_INT);
+        $stmt->bindValue(':sitePath', $this->sitePath, PDO::PARAM_STR);
         try {
             $stmt->execute();
         } catch (PDOException $e) {
@@ -439,6 +453,8 @@ SQL;
             "slug",
             "title",
             "originalContent",
+            "siteId",
+            "sitePath"
         );
         foreach ($properties as $property) {
             $this->$property = $update->$property;
@@ -505,6 +521,8 @@ SET
     slug = :slug,
     contentType = :contentType,
     statusId = :statusId,
+    siteId = :siteId,
+    sitePath = :sitePath,
     currentVersionId = :versionId
 WHERE
     articleId = :articleId;
@@ -515,6 +533,8 @@ SQL;
         $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
         $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
         $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
+        $stmt->bindValue(':siteId', $this->siteId, PDO::PARAM_INT);
+        $stmt->bindValue(':sitePath', $this->sitePath, PDO::PARAM_STR);
         $stmt->bindValue(':versionId', $versionId, PDO::PARAM_INT);
         $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
 
@@ -557,23 +577,9 @@ SQL;
     protected function prepareInstance()
     {
         $this->articleId = (int) $this->articleId;
-
-        if (isset($this->siteId)) {
-            $this->siteId = (int) $this->siteId;
-            if ($this->siteId !== 0) {
-                try {
-                    $this->site = SiteModel::init($this->siteId);
-                    if ($this->sitePath) {
-                        $this->uri = $this->site->makeUri($this->sitePath);
-                    }
-                } catch (ResourceException $e) {
-                    if ($e->getCode() !== ResourceException::NOT_FOUND) {
-                        throw $e;
-                    }
-                }
-            }
-        }
-
+        $this->currentVersionId = (int) $this->currentVersionId;
+        $this->siteId = (int) $this->siteId;
+        $this->customFields = CustomFieldModel::initCollection($this->articleId);
         $this->readContributors();
         $this->processContent();
     }
@@ -591,7 +597,6 @@ SQL;
         $content = $processor->transform($content);
 
         // TODO: add merge data for meta-data for the article (date, author, etc.)
-
 
         // Replace merge fields in the article with their values.
         $processor = new TextReplacement();

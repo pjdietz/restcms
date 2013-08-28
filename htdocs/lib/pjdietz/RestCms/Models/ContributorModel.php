@@ -10,6 +10,8 @@ class ContributorModel extends RestCmsBaseModel
 {
     /** @var int */
     public $userId;
+    public $username;
+    public $displayName;
 
     /**
      * Read a collection of Articles filtered by the given options array.

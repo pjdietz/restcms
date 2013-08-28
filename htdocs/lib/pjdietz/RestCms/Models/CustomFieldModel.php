@@ -77,10 +77,10 @@ WHERE
 SQL;
 
     public $customFieldId;
+    public $articleId;
     public $name;
     public $value;
     public $originalValue;
-    public $articleId;
     public $sortOrder = 0;
 
     /**

@@ -6,23 +6,19 @@
     "properties": {
         "articleId": {
             "type": "integer",
-            "description": "Unique ID of the article.",
+            "description": "Unique ID of the article",
             "required": false,
             "readonly": true
         },
-        "contentType": {
-            "type": "string",
-            "description": "Mime type of the article",
-            "required": true
+        "currentVersionId": {
+            "type": "integer",
+            "description": "Unique ID of the version representing the current content",
+            "required": false,
+            "readonly": true
         },
         "status": {
             "type": "string",
-            "description": "Name or URI of status",
-            "required": true
-        },
-        "slug": {
-            "type": "string",
-            "description": "URL-friendly unique identifier",
+            "description": "Name of status",
             "required": true
         },
         "title": {
@@ -30,20 +26,43 @@
             "description": "Article title",
             "required": true
         },
+        "slug": {
+            "type": "string",
+            "description": "URL-friendly unique identifier",
+            "required": true
+        },
+        "excerpt": {
+            "type": "string",
+            "description": "Text snippet summarizing the article",
+            "required": false,
+            "default": ""
+        },
+        "content": {
+            "type": "string",
+            "description": "Processed body content of the article",
+            "required": false,
+            "readonly": true
+        },
         "originalContent": {
             "type": "string",
             "description": "Editable body content of the article.",
             "required": true
         },
-        "content": {
+        "contentType": {
             "type": "string",
-            "description": "Processed body content of the article.",
-            "required": false,
-            "readonly": "true"
+            "description": "Mime type of the article",
+            "required": true
         },
-        "excerpt": {
+        "siteId": {
+            "type": "integer",
+            "description": "Unique ID of site the article belongs to.",
+            "required": false,
+            "readonly": false,
+            "minimum": 1
+        },
+        "sitePath": {
             "type": "string",
-            "description": "Text snippet summarizing the article.",
+            "description": "Relative path to the root of the article's site",
             "required": false,
             "default": ""
         },
