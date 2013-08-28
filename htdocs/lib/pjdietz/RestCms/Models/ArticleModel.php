@@ -6,13 +6,13 @@ use JsonSchema\Validator;
 use PDO;
 use PDOException;
 use pjdietz\RestCms\Database\Database;
-use pjdietz\RestCms\Database\Helpers\ArticleHelper;
-use pjdietz\RestCms\Database\Helpers\StatusHelper;
 use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
+use pjdietz\RestCms\Lists\ArticleIdList;
 use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\RestCms\TextProcessors\SubArticle;
 use pjdietz\RestCms\TextProcessors\TextReplacement;
+use pjdietz\RestCms\Util\Util;
 use RestCmsConfig\DefaultTextProcessor;
 
 class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
@@ -24,6 +24,10 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
     private $contributors;
     /** @var  SiteModel */
     public $site;
+    public $siteId = 0;
+    public $notes;
+    public $excerpts;
+
 
     /**
      * Read a collection of Articles filtered by the given options array.
@@ -33,42 +37,40 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
      */
     public static function initCollection($options)
     {
-        $tmpArticle = new ArticleHelper($options);
-        $tmpStatus = new StatusHelper($options);
+        $articleIds = ArticleIdList::init($options);
+        if (isset($options['ids']) && Util::stringToBool($options['ids'])) {
+            return $articleIds;
+        }
+
+        $articleIds = join(',', $articleIds);
 
         $query = <<<SQL
 SELECT
     a.articleId,
     a.slug,
-    a.contentType,
     s.statusSlug AS status,
+    a.contentType,
+    a.siteId,
+    a.sitePath,
     v.title,
-    v.excerpt
+    v.content AS originalContent,
+    v.excerpt,
+    v.notes,
+    a.currentVersionId
 FROM
     article a
     JOIN version v
         ON a.currentVersionId = v.versionId
     JOIN status s
         ON a.statusId = s.statusId
+WHERE
+    a.articleId IN ({$articleIds});
 SQL;
-
-        if ($tmpArticle->isRequired()) {
-            $query .= " JOIN tmpArticleId ta ON a.articleId = ta.articleId";
-        }
-
-        if ($tmpStatus->isRequired()) {
-            $query .= " JOIN tmpStatus ts ON a.statusId = ts.statusId";
-        }
-
-        $query .= ";";
 
         $db = Database::getDatabaseConnection();
         $stmt = $db->prepare($query);
         $stmt->execute();
         $collection = $stmt->fetchAll(PDO::FETCH_CLASS, get_called_class());
-
-        $tmpArticle->drop();
-        $tmpStatus->drop();
 
         return $collection;
     }
@@ -556,31 +558,25 @@ SQL;
     protected function prepareInstance()
     {
         $this->articleId = (int) $this->articleId;
+
         if (isset($this->siteId)) {
             $this->siteId = (int) $this->siteId;
-            $this->site = SiteModel::init($this->siteId);
-            if ($this->sitePath) {
-                $this->uri = $this->site->makeUri($this->sitePath);
+            if ($this->siteId !== 0) {
+                try {
+                    $this->site = SiteModel::init($this->siteId);
+                    if ($this->sitePath) {
+                        $this->uri = $this->site->makeUri($this->sitePath);
+                    }
+                } catch (ResourceException $e) {
+                    if ($e->getCode() !== ResourceException::NOT_FOUND) {
+                        throw $e;
+                    }
+                }
             }
         }
+
         $this->readContributors();
         $this->processContent();
-
-        if (!isset($this->customFields)) {
-            $this->customFields = CustomFieldModel::initCollection($this->articleId);
-        } else {
-            foreach ($this->customFields as $i => $customField) {
-                $this->customFields[$i] = CustomFieldModel::initWithObject($customField);
-            }
-        }
-
-        if (!isset($this->excerpt)) {
-            $this->excerpt = '';
-        }
-
-        if (!isset($this->notes)) {
-            $this->notes = '';
-        }
     }
 
     private function processContent()

@@ -14,11 +14,27 @@
                     "nickname": "readArticles",
                     "parameters": [
                         {
+                            "name": "ids",
+                            "description": "Respond with only a list of articleIds",
+                            "dataType": "boolean",
+                            "required": false,
+                            "allowMultiple": false,
+                            "paramType": "query"
+                        },
+                        {
                             "name": "article",
                             "description": "Filter by articleId or slug",
                             "dataType": "int|string",
                             "required": false,
                             "allowMultiple": true,
+                            "paramType": "query"
+                        },
+                        {
+                            "name": "site",
+                            "description": "Filter by siteId or slug",
+                            "dataType": "int",
+                            "required": false,
+                            "allowMultiple": false,
                             "paramType": "query"
                         },
                         {
