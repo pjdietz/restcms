@@ -4,6 +4,7 @@ namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
+use pjdietz\RestCms\Exceptions\SetupException;
 use pjdietz\RestCms\Exceptions\UserException;
 use pjdietz\RestCms\Models\UserModel;
 use pjdietz\RestCms\RestCmsCommonInterface;
@@ -43,6 +44,8 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
                     $this->respondWithBadRequestError($e->getMessage());
                     break;
             }
+        } catch (SetupException $e) {
+            $this->respondWithInternalServerError($e->getMessage());
         }
     }
 
@@ -256,9 +259,16 @@ abstract class RestCmsBaseHandler extends Handler implements RestCmsCommonInterf
         return hash('sha256', $str);
     }
 
-    protected function respondWithInternalServerError()
+    protected function respondWithInternalServerError($message = '')
     {
+        if ($message) {
+            $body = $message;
+        } else {
+            $body = '';
+        }
+
         $this->response->setStatusCode(500);
+        $this->response->setBody($body);
         $this->response->respond();
         exit;
     }

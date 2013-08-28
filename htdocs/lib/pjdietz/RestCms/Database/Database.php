@@ -2,6 +2,8 @@
 
 namespace pjdietz\RestCms\Database;
 
+use PDOException;
+use pjdietz\RestCms\Exceptions\SetupException;
 use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\RestCms\Util;
 use PDO;
@@ -28,6 +30,7 @@ class Database implements RestCmsCommonInterface, ConfigInterface
      * Return the PDO singleton instance, creating it if needed.
      *
      * @param bool $useDefaultDatabase
+     * @throws SetupException
      * @return PDO
      */
     public static function getDatabaseConnection($useDefaultDatabase = true)
@@ -42,7 +45,14 @@ class Database implements RestCmsCommonInterface, ConfigInterface
                 $dsn = sprintf('mysql:host=%s;charset=utf8', self::MYSQL_HOSTNAME);
             }
 
-            self::$databaseConnection = new PDO($dsn, self::MYSQL_USERNAME, self::MYSQL_PASSWORD);
+            try {
+                self::$databaseConnection = new PDO($dsn, self::MYSQL_USERNAME, self::MYSQL_PASSWORD);
+            } catch (PDOException $e) {
+                throw new SetupException(
+                    'Unable to connect to database. Ensure configuration is correct in RestCmsConfig\\ConfigInterface',
+                    SetupException::DATABASE_CONNECTION
+                );
+            }
             self::$databaseConnection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             self::$databaseConnection->exec("SET NAMES utf8;");
         }

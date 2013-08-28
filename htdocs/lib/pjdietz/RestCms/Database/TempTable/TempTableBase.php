@@ -28,11 +28,6 @@ abstract class TempTableBase implements TempTableInterface
     }
 
     /**
-     * @return bool
-     */
-    abstract public function isRequired();
-
-    /**
      * Read the options passed to the constructor and configure the instance.
      *
      * @param array $options

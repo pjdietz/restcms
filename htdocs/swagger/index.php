@@ -19,7 +19,7 @@
     <script type="text/javascript">
 	$(function () {
 	    window.swaggerUi = new SwaggerUi({
-                discoveryUrl:"http://restcms.vm2.home.local/docs/resources.json",
+                discoveryUrl:"http://<?php print $_SERVER['HTTP_HOST']; ?>/docs/resources.json",
                 //apiKey:"",
                 dom_id:"swagger-ui-container",
                 supportHeaderParams: true,

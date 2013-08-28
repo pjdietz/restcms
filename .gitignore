@@ -1,2 +1,3 @@
 workspace.xml
 vendor
+htdocs/config/RestCmsConfig/*.php
