@@ -75,7 +75,7 @@
         "customFields": {
             "type": "array",
             "description": "Custom fields to attach to the article",
-            "required": "false",
+            "required": false,
             "items": {
                 "type": "object",
                 "required": false,
