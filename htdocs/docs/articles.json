@@ -32,9 +32,9 @@
                         {
                             "name": "site",
                             "description": "Filter by siteId or slug",
-                            "dataType": "int",
+                            "dataType": "int|string",
                             "required": false,
-                            "allowMultiple": false,
+                            "allowMultiple": true,
                             "paramType": "query"
                         },
                         {

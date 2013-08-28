@@ -4,6 +4,7 @@ namespace pjdietz\RestCms\Lists;
 
 use PDO;
 use pjdietz\RestCms\Database\Database;
+use pjdietz\RestCms\Database\Helpers\ArticleHelper;
 use pjdietz\RestCms\Database\Helpers\SiteHelper;
 use pjdietz\RestCms\Database\Helpers\StatusHelper;
 
@@ -11,12 +12,21 @@ class ArticleIdList
 {
     public static function init($options)
     {
+        $tmpArticleJoin = '';
+        $tmpArticle = new ArticleHelper($options);
+        if ($tmpArticle->isRequired()) {
+            $tmpArticleJoin .= <<<QUERY
+JOIN tmpArticleId ta
+    ON a.articleId = ta.articleId
+QUERY;
+        }
+
         $tmpSiteJoin = '';
         $tmpSite = new SiteHelper($options);
         if ($tmpSite->isRequired()) {
             $tmpSiteJoin .= <<<QUERY
-JOIN site
-    ON a.siteId = site.siteId
+JOIN tmpSite ts
+    ON a.siteId = ts.siteId
 QUERY;
         }
 
@@ -36,6 +46,7 @@ SELECT
     a.articleId
 FROM
     article a
+{$tmpArticleJoin}
 {$tmpSiteJoin}
 {$tmpStatusJoin}
 ;
@@ -46,6 +57,8 @@ QUERY;
         $stmt->execute();
         $collection = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
+        $tmpArticle->drop();
+        $tmpSite->drop();
         $tmpStatus->drop();
 
         return $collection;

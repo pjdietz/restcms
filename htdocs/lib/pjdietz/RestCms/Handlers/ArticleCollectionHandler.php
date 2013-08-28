@@ -19,6 +19,7 @@ class ArticleCollectionHandler extends RestCmsBaseHandler
 
         $this->response->setStatusCode(200);
         $this->response->setHeader('Content-Type', 'application/json');
+        $this->response->setHeader('X-Count', count($collection));
         $this->response->setBody(json_encode($collection));
     }
 

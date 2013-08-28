@@ -20,14 +20,13 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
     const PATH_TO_SCHEMA = '/schema/article.json';
     /** @var int */
     public $articleId;
+    public $site;
+    public $notes;
+    public $excerpts;
     /** @var array List of userIds of users who may contribute to the article. */
     private $contributors;
     /** @var  SiteModel */
-    public $site;
-    public $siteId = 0;
-    public $notes;
-    public $excerpts;
-
+    private $siteId = 0;
 
     /**
      * Read a collection of Articles filtered by the given options array.

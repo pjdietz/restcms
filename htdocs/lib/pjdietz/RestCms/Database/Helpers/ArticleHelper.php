@@ -7,21 +7,21 @@ use pjdietz\RestCms\Database\Database;
 
 class ArticleHelper extends BaseHelper
 {
-    private $articleId;
-    private $articleSlug;
+    private $id;
+    private $slug;
 
     public function __construct(array $options)
     {
-        $this->articleId = array();
-        $this->articleSlug = array();
+        $this->id = array();
+        $this->slug = array();
 
         if (isset($options['article']) && $options['article'] !== '') {
-            $articles = explode(',', $options['article']);
-            foreach ($articles as $article) {
-                if (is_numeric($article)) {
-                    $this->articleId[] = (int) $article;
+            $ids = explode(',', $options['article']);
+            foreach ($ids as $id) {
+                if (is_numeric($id)) {
+                    $this->id[] = (int) $id;
                 } else {
-                    $this->articleSlug[] = $article;
+                    $this->slug[] = $id;
                 }
             }
         }
@@ -32,7 +32,7 @@ class ArticleHelper extends BaseHelper
     public function create()
     {
         // Return if there is no need to make the temp table.
-        if (!($this->articleId || $this->articleSlug)) {
+        if (!($this->id || $this->slug)) {
             return;
         }
 
@@ -49,26 +49,26 @@ CREATE TEMPORARY TABLE IF NOT EXISTS tmpArticleId (
 SQL;
         $db->exec($query);
 
-        if ($this->articleId) {
+        if ($this->id) {
 
             // Prepare the insert statement.
             $query = <<<SQL
 INSERT IGNORE INTO tmpArticleId
 SELECT articleId
 FROM article
-WHERE articleId = :articleId;
+WHERE articleId = :id;
 SQL;
             $stmt = $db->prepare($query);
 
             // Execute the query for each status.
-            foreach ($this->articleId as $articleId) {
-                $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
+            foreach ($this->id as $id) {
+                $stmt->bindValue(':id', $id, PDO::PARAM_INT);
                 $stmt->execute();
             }
 
         }
 
-        if ($this->articleSlug) {
+        if ($this->slug) {
 
             // Prepare the insert statement.
             $query = <<<SQL
@@ -80,7 +80,7 @@ SQL;
             $stmt = $db->prepare($query);
 
             // Execute the query for each status.
-            foreach ($this->articleSlug as $slug) {
+            foreach ($this->slug as $slug) {
                 $stmt->bindValue(':slug', $slug, PDO::PARAM_STR);
                 $stmt->execute();
             }
