@@ -5,6 +5,7 @@ namespace pjdietz\RestCms\Lists;
 use PDO;
 use pjdietz\RestCms\Database\Database;
 use pjdietz\RestCms\Database\TempTable\ArticleTempTable;
+use pjdietz\RestCms\Database\TempTable\SitePathTempTable;
 use pjdietz\RestCms\Database\TempTable\SiteTempTable;
 use pjdietz\RestCms\Database\TempTable\StatusTempTable;
 use pjdietz\RestCms\Database\TempTable\TagTempTable;
@@ -28,6 +29,15 @@ QUERY;
             $tmpSiteJoin .= <<<QUERY
 JOIN tmpSite
     ON a.siteId = tmpSite.siteId
+QUERY;
+        }
+
+        $tmpSitePathJoin = '';
+        $tmpSitePath = new SitePathTempTable($options);
+        if ($tmpSitePath->isRequired()) {
+            $tmpSitePathJoin .= <<<QUERY
+JOIN tmpSitePath
+    ON a.articleId = tmpSitePath.articleId
 QUERY;
         }
 
@@ -67,6 +77,7 @@ FROM
     article a
 {$tmpArticleJoin}
 {$tmpSiteJoin}
+{$tmpSitePathJoin}
 {$tmpStatusJoin}
 {$tmpTagJoin}
 ORDER BY

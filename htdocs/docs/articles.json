@@ -54,6 +54,14 @@
                             "paramType": "query"
                         },
                         {
+                            "name": "sitePath",
+                            "description": "Filter by sitePath",
+                            "dataType": "string",
+                            "required": false,
+                            "allowMultiple": false,
+                            "paramType": "query"
+                        },
+                        {
                             "name": "status",
                             "description": "Filter by statusId or slug",
                             "dataType": "int|string",
