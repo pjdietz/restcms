@@ -531,8 +531,18 @@ SQL;
         $statusId = $status->statusId;
         unset($status);
 
-        // Insert a new version containing the current fields.
-        $query = <<<SQL
+        // Read a representation of this article in its currently stored state.
+        // Compare this against the instance to see if the instance has changes.
+        $current = self::init($this->articleId);
+
+        // Insert a new version, if any version field have changed.
+        if ($this->title != $current->title
+            || $this->excerpt != $current->excerpt
+            || $this->notes != $current->notes
+            || $this->originalContent != $current->originalContent
+        ) {
+            // Insert a new version containing the current fields.
+            $query = <<<SQL
 INSERT INTO version (
     dateCreated,
     dateModified,
@@ -551,18 +561,29 @@ INSERT INTO version (
     :notes
 );
 SQL;
-        $db = Database::getDatabaseConnection();
-        $stmt = $db->prepare($query);
-        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
-        $stmt->bindValue(':title', $this->title, PDO::PARAM_STR);
-        $stmt->bindValue(':excerpt', $this->excerpt, PDO::PARAM_STR);
-        $stmt->bindValue(':content', $this->originalContent, PDO::PARAM_STR);
-        $stmt->bindValue(':notes', $this->notes, PDO::PARAM_STR);
-        $stmt->execute();
-        $versionId = $db->lastInsertId();
+            $db = Database::getDatabaseConnection();
+            $stmt = $db->prepare($query);
+            $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+            $stmt->bindValue(':title', $this->title, PDO::PARAM_STR);
+            $stmt->bindValue(':excerpt', $this->excerpt, PDO::PARAM_STR);
+            $stmt->bindValue(':content', $this->originalContent, PDO::PARAM_STR);
+            $stmt->bindValue(':notes', $this->notes, PDO::PARAM_STR);
+            $stmt->execute();
+            $this->currentVersionId = $db->lastInsertId();
+        }
 
-        // Update the article record to track the new version and match the new fields.
-        $query = <<<SQL
+        // Update the article record, if anything has changed.
+        if ($this->contentType != $current->contentType
+            || $this->currentVersionId != $current->currentVersionId
+            || $this->datePublished != $current->datePublished
+            || $this->slug != $current->slug
+            || $this->status != $current->status
+            || $this->siteId != $current->siteId
+            || $this->sitePath != $current->sitePath
+        ) {
+
+            // Update the article record to track the new version and match the new fields.
+            $query = <<<SQL
 UPDATE article
 SET
     dateModified = NOW(),
@@ -572,33 +593,32 @@ SET
     statusId = :statusId,
     siteId = :siteId,
     sitePath = :sitePath,
-    currentVersionId = :versionId
+    currentVersionId = :currentVersionId
 WHERE
     articleId = :articleId;
 SQL;
+            $db = Database::getDatabaseConnection();
+            $stmt = $db->prepare($query);
+            $stmt->bindValue(':datePublished', $this->datePublished, PDO::PARAM_STR);
+            $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
+            $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
+            $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
+            $stmt->bindValue(':siteId', $this->siteId, PDO::PARAM_INT);
+            $stmt->bindValue(':sitePath', $this->sitePath, PDO::PARAM_STR);
+            $stmt->bindValue(':currentVersionId', $this->currentVersionId, PDO::PARAM_INT);
+            $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
 
-        $db = Database::getDatabaseConnection();
-        $stmt = $db->prepare($query);
-        $stmt->bindValue(':datePublished', $this->datePublished, PDO::PARAM_STR);
-        $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
-        $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
-        $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
-        $stmt->bindValue(':siteId', $this->siteId, PDO::PARAM_INT);
-        $stmt->bindValue(':sitePath', $this->sitePath, PDO::PARAM_STR);
-        $stmt->bindValue(':versionId', $versionId, PDO::PARAM_INT);
-        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+            try {
+                $stmt->execute();
+            } catch (PDOException $e) {
+                // todo: Check if this really is the problem.
+                throw new ResourceException(
+                    'Unable to store article. Please check the slug is not already in use.',
+                    ResourceException::CONFLICT
+                );
+            }
 
-        try {
-            $stmt->execute();
-        } catch (PDOException $e) {
-            // todo: Check if this really is the problem.
-            throw new ResourceException(
-                'Unable to store article. Please check the slug is not already in use.',
-                ResourceException::CONFLICT
-            );
         }
-
-        $this->currentVersionId = $versionId;
     }
 
     /** Remove the records from the database relating to the instance. */
