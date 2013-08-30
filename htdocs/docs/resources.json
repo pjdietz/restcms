@@ -14,6 +14,10 @@
         {
             "path": "/docs/sites.{format}",
             "description": "Site managed by this CMS"
+        },
+        {
+            "path": "/docs/tags.{format}",
+            "description": "Tags used in the CMS"
         }
     ]
 }

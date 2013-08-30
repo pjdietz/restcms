@@ -19,6 +19,7 @@ class MainRouter extends Router
             'customFieldId' => Route::RE_NUM,
             'statusId' => Route::RE_NUM,
             'statusSlug' => Route::RE_SLUG,
+            'tagId' => Route::RE_NUM,
             'versionId' => Route::RE_NUM,
             'userId' => Route::RE_NUM
         );
@@ -42,6 +43,8 @@ class MainRouter extends Router
         $this->addTemplate('/sites/{siteId}', 'SiteItemHandler');
         $this->addTemplate('/status/', 'StatusCollectionHandler');
         $this->addTemplate('/status/{statusId}', 'StatusItemHandler');
+        $this->addTemplate('/tags/', 'TagCollectionHandler');
+        $this->addTemplate('/tags/{tagId}', 'TagItemHandler');
     }
 
     private function addTemplate($template, $handler, $variables = null)

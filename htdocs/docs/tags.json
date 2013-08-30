@@ -1,0 +1,46 @@
+{
+    "apiVersion": "0.0.1",
+    "swaggerVersion": "1.0",
+    "basePath": "http://{{HOSTNAME}}",
+    "resourcePath": "/tags",
+    "apis": [
+        {
+            "path": "/tags/",
+            "description": "All tags used on the CMS",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "getTags",
+                    "summary": "Read a list of all tags in the CMS"
+                }
+            ]
+        },
+        {
+            "path": "/tags/{tagId}",
+            "description": "One specific status",
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "getTag",
+                    "summary": "View details on a specific tag",
+                    "parameters": [
+                        {
+                            "name": "tagId",
+                            "description": "ID for the tag",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 404,
+                            "reason": "Tag does not exist"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
