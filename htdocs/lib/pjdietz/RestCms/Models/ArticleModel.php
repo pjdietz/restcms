@@ -18,6 +18,7 @@ use RestCmsConfig\DefaultTextProcessor;
 class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
     const PATH_TO_SCHEMA = '/schema/article.json';
+    const DATE_TIME_FORMAT = 'Y-m-d H:i:s';
 
     public $articleId;
     public $currentVersionId;
@@ -359,6 +360,7 @@ SQL;
 INSERT INTO article (
     dateCreated,
     dateModified,
+    datePublished,
     slug,
     contentType,
     statusId,
@@ -367,6 +369,7 @@ INSERT INTO article (
 ) VALUES (
     NOW(),
     NOW(),
+    :datePublished,
     :slug,
     :contentType,
     :statusId,
@@ -376,6 +379,7 @@ INSERT INTO article (
 SQL;
         $db = Database::getDatabaseConnection();
         $stmt = $db->prepare($query);
+        $stmt->bindValue(':datePublished', $this->datePublished, PDO::PARAM_STR);
         $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
         $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
         $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
@@ -464,6 +468,7 @@ SQL;
     {
         // Copy properties that may be modified by a user.
         $properties = array(
+            "datePublished",
             "contentType",
             "status",
             "slug",
@@ -534,6 +539,7 @@ SQL;
 UPDATE article
 SET
     dateModified = NOW(),
+    datePublished = :datePublished,
     slug = :slug,
     contentType = :contentType,
     statusId = :statusId,
@@ -546,6 +552,7 @@ SQL;
 
         $db = Database::getDatabaseConnection();
         $stmt = $db->prepare($query);
+        $stmt->bindValue(':datePublished', $this->datePublished, PDO::PARAM_STR);
         $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
         $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
         $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
@@ -595,6 +602,8 @@ SQL;
         $this->articleId = (int) $this->articleId;
         $this->currentVersionId = (int) $this->currentVersionId;
         $this->siteId = (int) $this->siteId;
+        $this->datePublished = date(self::DATE_TIME_FORMAT, strtotime($this->datePublished));
+        $this->dateModified = date(self::DATE_TIME_FORMAT, strtotime($this->dateModified));
         $this->customFields = CustomFieldModel::initCollection($this->articleId);
         $this->readContributors();
         $this->processContent();

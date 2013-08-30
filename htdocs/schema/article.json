@@ -22,6 +22,11 @@
             "required": false,
             "default": "draft"
         },
+        "datePublished": {
+            "type": "string",
+            "required": "false",
+            "default": "0000:00:00 00-00-00"
+        },
         "title": {
             "type": "string",
             "description": "Article title",

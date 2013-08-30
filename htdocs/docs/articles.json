@@ -818,6 +818,11 @@
                     "required": false,
                     "default": "draft"
                 },
+                "datePublished": {
+                    "type": "string",
+                    "required": "false",
+                    "default": "0000:00:00 00-00-00"
+                },
                 "slug": {
                     "type": "string",
                     "description": "URL-friendly unique identifier",
