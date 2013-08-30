@@ -60,6 +60,14 @@
                             "required": false,
                             "allowMultiple": true,
                             "paramType": "query"
+                        },
+                        {
+                            "name": "tag",
+                            "description": "Filter by tagId or tagName",
+                            "dataType": "int|string",
+                            "required": false,
+                            "allowMultiple": true,
+                            "paramType": "query"
                         }
                     ],
                     "errorResponses": [

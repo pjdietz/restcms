@@ -7,6 +7,7 @@ use pjdietz\RestCms\Database\Database;
 use pjdietz\RestCms\Database\TempTable\ArticleTempTable;
 use pjdietz\RestCms\Database\TempTable\SiteTempTable;
 use pjdietz\RestCms\Database\TempTable\StatusTempTable;
+use pjdietz\RestCms\Database\TempTable\TagTempTable;
 
 class ArticleIdList
 {
@@ -41,6 +42,15 @@ JOIN tmpStatus
 QUERY;
         }
 
+        $tmpTagJoin = '';
+        $tmpTag = new TagTempTable($options);
+        if ($tmpTag->isRequired()) {
+            $tmpTagJoin .= <<<QUERY
+JOIN tmpTag
+    ON a.articleId = tmpTag.articleId
+QUERY;
+        }
+
         $limit = '';
         if (isset($options['limit']) && is_numeric($options['limit'])) {
             $offset = 0;
@@ -58,6 +68,7 @@ FROM
 {$tmpArticleJoin}
 {$tmpSiteJoin}
 {$tmpStatusJoin}
+{$tmpTagJoin}
 ORDER BY
     a.datePublished DESC,
     a.dateModified DESC
