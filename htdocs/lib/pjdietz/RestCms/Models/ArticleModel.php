@@ -483,6 +483,33 @@ SQL;
         $this->prepareInstance();
     }
 
+    /**
+     * Update the instance with properties from a partial article.
+     * @param ArticlePatchModel $patch
+     */
+    public function patch(ArticlePatchModel $patch)
+    {
+        // Copy properties that may be modified by a user.
+        $properties = array(
+            "contentType",
+            "datePublished",
+            "excerpt",
+            "notes",
+            "originalContent",
+            "siteId",
+            "sitePath",
+            "slug",
+            "status",
+            "title"
+        );
+        foreach ($properties as $property) {
+            if (isset($patch->{$property})) {
+                $this->{$property} = $patch->{$property};
+            }
+        }
+        $this->prepareInstance();
+    }
+
     /** Update the database with the instance's current state. */
     public function update()
     {

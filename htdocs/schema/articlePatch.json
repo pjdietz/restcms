@@ -1,0 +1,57 @@
+{
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-03/schema",
+    "id": "#",
+    "required": false,
+    "properties": {
+        "contentType": {
+            "type": "string",
+            "description": "Mime type of the article",
+            "required": false
+        },
+        "datePublished": {
+            "type": "string",
+            "required": false
+        },
+        "excerpt": {
+            "type": "string",
+            "description": "Text snippet summarizing the article",
+            "required": false
+        },
+        "notes": {
+            "type": "string",
+            "description": "Private notes for the user",
+            "required": false
+        },
+        "originalContent": {
+            "type": "string",
+            "description": "Editable body content of the article.",
+            "required": false
+        },
+        "siteId": {
+            "type": "integer",
+            "description": "Unique ID of site the article belongs to.",
+            "required": false
+        },
+        "sitePath": {
+            "type": "string",
+            "description": "Relative path to the root of the article's site",
+            "required": false
+        },
+        "slug": {
+            "type": "string",
+            "description": "URL-friendly unique identifier",
+            "required": false
+        },
+        "status": {
+            "type": "string",
+            "description": "Name of status",
+            "required": false
+        },
+        "title": {
+            "type": "string",
+            "description": "Article title",
+            "required": false
+        }
+    }
+}

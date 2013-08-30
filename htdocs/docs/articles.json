@@ -186,6 +186,51 @@
                     ]
                 },
                 {
+                    "httpMethod": "PATCH",
+                    "nickname": "patchArticle",
+                    "summary": "Patch an article",
+                    "parameters": [
+                        {
+                            "name": "articleId",
+                            "description": "The articleId",
+                            "dataType": "int",
+                            "required": true,
+                            "allowMultiple": false,
+                            "paramType": "path"
+                        },
+                        {
+                            "name": "article",
+                            "description": "Representation of the article.",
+                            "paramType": "body",
+                            "required": true,
+                            "allowMultiple": false,
+                            "dataType": "ArticlePatch"
+                        }
+                    ],
+                    "errorResponses": [
+                        {
+                            "code": 400,
+                            "reason": "Body is malformed or contains illegal values."
+                        },
+                        {
+                            "code": 401,
+                            "reason": "Request did not include credentials"
+                        },
+                        {
+                            "code": 403,
+                            "reason": "User is not permitted to make this request"
+                        },
+                        {
+                            "code": 404,
+                            "reason": "Article does not exist"
+                        },
+                        {
+                            "code": 409,
+                            "reason": "Non-unique slug."
+                        }
+                    ]
+                },
+                {
                     "httpMethod": "DELETE",
                     "nickname": "deleteArticle",
                     "summary": "Delete an article",
@@ -867,6 +912,60 @@
                         "type": "CustomField",
                         "required": false
                     }
+                }
+            }
+        },
+        "ArticlePatch": {
+            "id": "ArticlePatch",
+            "properties": {
+                "contentType": {
+                    "type": "string",
+                    "description": "Mime type of the article",
+                    "required": false
+                },
+                "datePublished": {
+                    "type": "string",
+                    "required": false
+                },
+                "excerpt": {
+                    "type": "string",
+                    "description": "Text snippet summarizing the article",
+                    "required": false
+                },
+                "notes": {
+                    "type": "string",
+                    "description": "Private notes for the user",
+                    "required": false
+                },
+                "originalContent": {
+                    "type": "string",
+                    "description": "Editable body content of the article.",
+                    "required": false
+                },
+                "siteId": {
+                    "type": "integer",
+                    "description": "Unique ID of site the article belongs to.",
+                    "required": false
+                },
+                "sitePath": {
+                    "type": "string",
+                    "description": "Relative path to the root of the article's site",
+                    "required": false
+                },
+                "slug": {
+                    "type": "string",
+                    "description": "URL-friendly unique identifier",
+                    "required": false
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Name of status",
+                    "required": false
+                },
+                "title": {
+                    "type": "string",
+                    "description": "Article title",
+                    "required": false
                 }
             }
         },

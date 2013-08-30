@@ -23,7 +23,7 @@
                 //apiKey:"",
                 dom_id:"swagger-ui-container",
                 supportHeaderParams: true,
-                supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
+                supportedSubmitMethods: ['get', 'post', 'put', 'delete', "patch"],
                 headers: {
                     "Authorization": "restcms",
                     "X-restcms-auth": "username=admin; passwordHash=admin"

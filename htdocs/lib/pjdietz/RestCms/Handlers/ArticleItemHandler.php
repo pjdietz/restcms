@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\Models\ArticleModel;
+use pjdietz\RestCms\Models\ArticlePatchModel;
 
 class ArticleItemHandler extends RestCmsBaseHandler
 {
@@ -54,6 +55,28 @@ class ArticleItemHandler extends RestCmsBaseHandler
 
         $this->response->setStatusCode(200);
         $this->response->setBody('You deleted this article.');
+    }
+
+    protected function patch()
+    {
+        // Ensure the user may modify this article.
+        $article = ArticleModel::init($this->args['articleId']);
+        $this->user->assertArticleAccess($article);
+
+        // Parse the body into a patch instance.
+        $patch = ArticlePatchModel::initWithJson($this->request->getBody());
+        $article->patch($patch);
+
+        // Write the current state to the database.
+        $article->update();
+
+        // Re-read the article.
+        $article = ArticleModel::init($this->args['articleId']);
+
+        // Output the current representation.
+        $this->response->setStatusCode(200);
+        $this->response->setHeader('Content-type', 'application/json');
+        $this->response->setBody(json_encode($article));
     }
 
 }
