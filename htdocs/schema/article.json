@@ -79,6 +79,15 @@
             "required": false,
             "default": ""
         },
+        "tags": {
+            "type": "array",
+            "description": "List of tags to apply to this article",
+            "required": false,
+            "items": {
+                "type": "string",
+                "required": false
+            }
+        },
         "customFields": {
             "type": "array",
             "description": "Custom fields to attach to the article",

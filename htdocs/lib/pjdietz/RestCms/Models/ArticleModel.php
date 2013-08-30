@@ -9,6 +9,7 @@ use pjdietz\RestCms\Database\Database;
 use pjdietz\RestCms\Exceptions\JsonException;
 use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\Lists\ArticleIdList;
+use pjdietz\RestCms\Lists\TagNameList;
 use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\RestCms\TextProcessors\SubArticle;
 use pjdietz\RestCms\TextProcessors\TextReplacement;
@@ -35,6 +36,7 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
     public $sitePath = '';
     public $notes = '';
     public $customFields;
+    public $tags;
 
     /** @var array List of userIds of users who may contribute to the article. */
     private $contributors;
@@ -447,6 +449,8 @@ SQL;
                 $customField->create($this->articleId);
             }
         }
+
+        $this->updateTagAssignments();
     }
 
     /**
@@ -500,6 +504,7 @@ SQL;
             "sitePath",
             "slug",
             "status",
+            "tags",
             "title"
         );
         foreach ($properties as $property) {
@@ -619,6 +624,8 @@ SQL;
             }
 
         }
+
+        $this->updateTagAssignments();
     }
 
     /** Remove the records from the database relating to the instance. */
@@ -642,6 +649,12 @@ SQL;
         $stmt->bindValue(':slug', $this->slug . '-' . SHA1(time()), PDO::PARAM_INT);
         $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
         $stmt->execute();
+
+        // Unassign all tags.
+        foreach ($this->tags as $tagName) {
+            $tag = TagModel::initWithName($tagName);
+            $this->unassignTag($tag);
+        }
     }
 
     protected function prepareInstance()
@@ -652,8 +665,87 @@ SQL;
         $this->datePublished = date(self::DATE_TIME_FORMAT, strtotime($this->datePublished));
         $this->dateModified = date(self::DATE_TIME_FORMAT, strtotime($this->dateModified));
         $this->customFields = CustomFieldModel::initCollection($this->articleId);
+
+        if (!isset($this->tags)) {
+            $this->tags = TagNameList::init(array('article' => $this->articleId));
+        }
+
         $this->readContributors();
         $this->processContent();
+    }
+
+    private function updateTagAssignments()
+    {
+        // Find a list of all tags that exit in the CMS.
+        $cmsTags =  TagNameList::init();
+
+        // Find tags currently assigned to this article.
+        $assignedTags = TagNameList::init(array('article' => $this->articleId));
+
+        // Find tags the instance has that the current article does not.
+        $toAssign = array_diff($this->tags, $assignedTags);
+
+        // Find tags the current article has that the instance does not.
+        $toRemove = array_diff($assignedTags, $this->tags);
+
+        // Assign new tags.
+        foreach ($toAssign as $tagName) {
+            if (in_array($tagName, $cmsTags)) {
+                $tag = TagModel::initWithName($tagName);
+            } else {
+                $tag = TagModel::createNewTag($tagName);
+            }
+            $this->assignTag($tag);
+        }
+
+        // Remove tags no longer related to the article.
+        foreach ($toRemove as $tagName) {
+            $tag = TagModel::initWithName($tagName);
+            $this->unassignTag($tag);
+        }
+    }
+
+    private function assignTag(TagModel $tag)
+    {
+        $db = Database::getDatabaseConnection();
+        static $stmt = null;
+        if ($stmt === null) {
+            $query = <<<SQL
+INSERT INTO articleTag (
+    dateCreated,
+    dateModified,
+    articleId,
+    tagId
+) VALUES (
+    NOW(),
+    NOW(),
+    :articleId,
+    :tagId
+);
+SQL;
+            $stmt = $db->prepare($query);
+        }
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':tagId', $tag->tagId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    private function unassignTag(TagModel $tag)
+    {
+        $db = Database::getDatabaseConnection();
+        static $stmt = null;
+        if ($stmt === null) {
+            $query = <<<SQL
+DELETE FROM articleTag
+WHERE
+    articleId = :articleId
+    AND tagId = :tagId;
+SQL;
+            $stmt = $db->prepare($query);
+        }
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':tagId', $tag->tagId, PDO::PARAM_INT);
+        $stmt->execute();
     }
 
     private function processContent()

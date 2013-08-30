@@ -48,6 +48,15 @@
             "description": "Name of status",
             "required": false
         },
+        "tags": {
+            "type": "array",
+            "description": "List of tags to apply to this article",
+            "required": false,
+            "items": {
+                "type": "string",
+                "required": false
+            }
+        },
         "title": {
             "type": "string",
             "description": "Article title",
