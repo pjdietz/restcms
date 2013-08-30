@@ -41,6 +41,15 @@ JOIN tmpStatus
 QUERY;
         }
 
+        $limit = '';
+        if (isset($options['limit']) && is_numeric($options['limit'])) {
+            $offset = 0;
+            if (isset($options['offset']) && is_numeric($options['offset'])) {
+                $offset = $options['offset'];
+            }
+            $limit = sprintf('LIMIT %d OFFSET %d', $options['limit'], $offset);
+        }
+
         $query = <<<QUERY
 SELECT
     a.articleId
@@ -49,13 +58,20 @@ FROM
 {$tmpArticleJoin}
 {$tmpSiteJoin}
 {$tmpStatusJoin}
-;
+ORDER BY
+    a.datePublished DESC,
+    a.dateModified DESC
+{$limit};
 QUERY;
 
         $db = Database::getDatabaseConnection();
         $stmt = $db->prepare($query);
         $stmt->execute();
         $collection = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        foreach ($collection as &$item) {
+            $item = (int) $item;
+        }
 
         $tmpArticle->drop();
         $tmpSite->drop();

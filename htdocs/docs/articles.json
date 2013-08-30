@@ -22,6 +22,22 @@
                             "paramType": "query"
                         },
                         {
+                            "name": "limit",
+                            "description": "Maximum number of results",
+                            "dataType": "int",
+                            "required": false,
+                            "allowMultiple": false,
+                            "paramType": "query"
+                        },
+                        {
+                            "name": "offset",
+                            "description": "Offset of the first article to return",
+                            "dataType": "int",
+                            "required": false,
+                            "allowMultiple": false,
+                            "paramType": "query"
+                        },
+                        {
                             "name": "article",
                             "description": "Filter by articleId or slug",
                             "dataType": "int|string",

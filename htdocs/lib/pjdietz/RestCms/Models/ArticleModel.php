@@ -21,6 +21,8 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 
     public $articleId;
     public $currentVersionId;
+    public $datePublished;
+    public $dateModified;
     public $status = 'draft';
     public $title;
     public $slug;
@@ -60,6 +62,8 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 SELECT
     a.articleId,
     a.slug,
+    a.datePublished,
+    a.dateModified,
     s.statusSlug AS status,
     a.contentType,
     a.siteId,
@@ -76,7 +80,10 @@ FROM
     JOIN status s
         ON a.statusId = s.statusId
 WHERE
-    a.articleId IN ({$articleIds});
+    a.articleId IN ({$articleIds})
+ORDER BY
+    a.datePublished DESC,
+    a.dateModified DESC
 SQL;
 
         $db = Database::getDatabaseConnection();
@@ -115,6 +122,8 @@ SQL;
 SELECT
     a.articleId,
     a.slug,
+    a.datePublished,
+    a.dateModified,
     s.statusSlug AS status,
     a.contentType,
     a.siteId,
@@ -159,6 +168,8 @@ SQL;
 SELECT
     a.articleId,
     a.slug,
+    a.datePublished,
+    a.dateModified,
     s.statusSlug AS status,
     a.contentType,
     a.siteId,
