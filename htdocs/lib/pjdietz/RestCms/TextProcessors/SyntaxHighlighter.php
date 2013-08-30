@@ -7,13 +7,8 @@ namespace pjdietz\RestCms\TextProcessors;
  */
 class SyntaxHighlighter implements TextProcessorInterface
 {
-    /**
-     * @param string $text
-     * @return string
-     */
-    public function transform($text)
-    {
-        $pattern = <<<'RE'
+    const DEFAULT_MARKUP = '<pre class="brush: %s">%s</pre>';
+    const DEFAULT_REGEX = <<<'RE'
 {
     # Start of line or sample.
     ^
@@ -32,13 +27,24 @@ class SyntaxHighlighter implements TextProcessorInterface
 
 }mx
 RE;
-        $callback = function ($matches) {
+
+    public $markup = self::DEFAULT_MARKUP;
+    public $regex = self::DEFAULT_REGEX;
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    public function transform($text)
+    {
+        $markup = $this->markup;
+        $callback = function ($matches) use ($markup) {
             return sprintf(
-                '<pre class="brush: %s">%s</pre>',
+                $markup,
                 trim($matches[2]),
                 htmlspecialchars(trim($matches[3]))
             );
         };
-        return preg_replace_callback($pattern, $callback, $text);
+        return preg_replace_callback($this->regex, $callback, $text);
     }
 }
