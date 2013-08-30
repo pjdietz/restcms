@@ -16,8 +16,8 @@ class ArticleIdList
         $tmpArticle = new ArticleTempTable($options);
         if ($tmpArticle->isRequired()) {
             $tmpArticleJoin .= <<<QUERY
-JOIN tmpArticleId ta
-    ON a.articleId = ta.articleId
+JOIN tmpArticleId
+    ON a.articleId = tmpArticleId.articleId
 QUERY;
         }
 
@@ -25,8 +25,8 @@ QUERY;
         $tmpSite = new SiteTempTable($options);
         if ($tmpSite->isRequired()) {
             $tmpSiteJoin .= <<<QUERY
-JOIN tmpSite ts
-    ON a.siteId = ts.siteId
+JOIN tmpSite
+    ON a.siteId = tmpSite.siteId
 QUERY;
         }
 
@@ -36,8 +36,8 @@ QUERY;
             $tmpStatusJoin .= <<<QUERY
 JOIN status s
     ON a.statusId = s.statusId
-JOIN tmpStatus ts
-    ON a.statusId = ts.statusId
+JOIN tmpStatus
+    ON a.statusId = tmpStatus.statusId
 QUERY;
         }
 

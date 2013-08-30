@@ -49,6 +49,11 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
             return $articleIds;
         }
 
+        // Return an empty set if no IDs match.
+        if (count($articleIds) === 0) {
+            return array();
+        }
+
         $articleIds = join(',', $articleIds);
 
         $query = <<<SQL
