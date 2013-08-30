@@ -21,13 +21,13 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 
     public $articleId;
     public $currentVersionId;
-    public $status;
+    public $status = 'draft';
     public $title;
     public $slug;
     public $excerpt = '';
     public $content;
     public $originalContent;
-    public $contentType;
+    public $contentType = 'text/html';
     public $siteId;
     public $sitePath = '';
     public $notes = '';

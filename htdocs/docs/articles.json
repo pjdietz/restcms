@@ -793,12 +793,14 @@
                 "contentType": {
                     "type": "string",
                     "description": "Mime type of the article",
-                    "required": true
+                    "required": false,
+                    "default": "text/html"
                 },
                 "status": {
                     "type": "string",
                     "description": "Name or URI of status",
-                    "required": true
+                    "required": false,
+                    "default": "draft"
                 },
                 "slug": {
                     "type": "string",
@@ -826,6 +828,16 @@
                     "description": "Private notes for the user",
                     "required": false,
                     "default": ""
+                },
+                "siteId": {
+                    "type": "int",
+                    "description": "UID for site",
+                    "required": false
+                },
+                "sitePath": {
+                    "type": "string",
+                    "description": "Path for this article as a page on the given site.",
+                    "required": false
                 },
                 "customFields": {
                     "type": "array",

@@ -19,7 +19,8 @@
         "status": {
             "type": "string",
             "description": "Name of status",
-            "required": true
+            "required": false,
+            "default": "draft"
         },
         "title": {
             "type": "string",
@@ -51,7 +52,8 @@
         "contentType": {
             "type": "string",
             "description": "Mime type of the article",
-            "required": true
+            "required": false,
+            "default": "text/html"
         },
         "siteId": {
             "type": "integer",
