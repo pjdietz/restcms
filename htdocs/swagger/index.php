@@ -1,3 +1,22 @@
+<?php
+
+$username = '';
+$passwordHash = '';
+
+session_start();
+if (isset($_SESSION['username']) && isset($_SESSION['passwordHash'])) {
+    $username = $_SESSION['username'];
+    $passwordHash = $_SESSION['passwordHash'];
+}
+session_write_close();
+
+if (!$username || !$passwordHash) {
+    header('Location: ./login/');
+    exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +45,7 @@
                 supportedSubmitMethods: ['get', 'post', 'put', 'delete', "patch"],
                 headers: {
                     "Authorization": "restcms",
-                    "X-restcms-auth": "username=admin; passwordHash=admin"
+                    "X-restcms-auth": "username=<?php echo $username;?>; passwordHash=<?php echo $passwordHash;?>"
                 },
                 onComplete: function(swaggerApi, swaggerUi){
                 	if(console) {
