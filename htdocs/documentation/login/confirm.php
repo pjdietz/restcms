@@ -30,13 +30,13 @@ if ($user->passwordHash === $passwordHash) {
     $_SESSION['username'] = $username;
     $_SESSION['passwordHash'] = $passwordHash;
     session_write_close();
-    header('Location: /swagger/');
+    header('Location: /documentation/');
     exit;
 } else {
     // Password is incorrect. Store the username to the session, and redirect with error.
     session_start();
     $_SESSION['username'] = $username;
     session_write_close();
-    header('Location: /swagger/login/?error=The+password+you+entered+is+incorrect.');
+    header('Location: /documentation/login/?error=The+password+you+entered+is+incorrect.');
     exit;
 }
