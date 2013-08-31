@@ -22,7 +22,6 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
     const PATH_TO_SCHEMA = '/schema/article.json';
     const DATE_TIME_FORMAT = 'Y-m-d H:i:s';
 
-
     public $articleId;
     public $currentVersionId;
     public $datePublished;
@@ -40,6 +39,7 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
     public $customFields;
     public $tags;
     public $processors;
+    private $processorModels;
 
     /** @var array List of userIds of users who may contribute to the article. */
     private $contributors;
@@ -453,6 +453,7 @@ SQL;
             }
         }
 
+        $this->updateProcessorAssignments();
         $this->updateTagAssignments();
     }
 
@@ -475,14 +476,18 @@ SQL;
     {
         // Copy properties that may be modified by a user.
         $properties = array(
-            "datePublished",
             "contentType",
-            "status",
-            "slug",
-            "title",
+            "datePublished",
+            "excerpt",
+            "notes",
             "originalContent",
+            "processors",
             "siteId",
-            "sitePath"
+            "sitePath",
+            "slug",
+            "status",
+            "tags",
+            "title"
         );
         foreach ($properties as $property) {
             $this->$property = $update->$property;
@@ -503,6 +508,7 @@ SQL;
             "excerpt",
             "notes",
             "originalContent",
+            "processors",
             "siteId",
             "sitePath",
             "slug",
@@ -628,6 +634,7 @@ SQL;
 
         }
 
+        $this->updateProcessorAssignments();
         $this->updateTagAssignments();
     }
 
@@ -674,11 +681,109 @@ SQL;
         }
 
         if (!isset($this->processors)) {
-            $this->processors = ProcessorModel::initCollectionForArticle($this->articleId);
+            if (!isset($this->processorModels)) {
+                $this->processorModels = ProcessorModel::initCollectionForArticle($this->articleId);
+            }
+            $this->processors = array();
+            foreach ($this->processorModels as $processorModel) {
+                /** @var ProcessorModel $processorModel */
+                $this->processors[] = $processorModel->processorName;
+            }
         }
 
         $this->readContributors();
         $this->processContent();
+    }
+
+    private function updateProcessorAssignments()
+    {
+        $assignedProcessors = ProcessorModel::initCollectionForArticle($this->articleId);
+        $assignedNames = array();
+        foreach ($assignedProcessors as $assignedProcessor) {
+            $assignedNames[] = $assignedProcessor->processorName;
+        }
+
+        // Skip if there's no change.
+        if ($this->processors == $assignedNames) {
+            return;
+        }
+
+        // Remove unknown processors.
+        // Find processor in the instance but not in CMS.
+        // Then, find processors in instance but not in list of bad processors.
+        $cmsProcessors = ProcessorModel::initCollection();
+        $cmsNames = array();
+        foreach ($cmsProcessors as $cmsProcessor) {
+            $cmsNames[] = $cmsProcessor->processorName;
+        }
+        $bad = array_diff($this->processors, $cmsNames);
+        $this->processors = array_diff($this->processors, $bad);
+
+        // Recheck if there's no change.
+        if ($this->processors == $assignedNames) {
+            return;
+        }
+
+        // Remove existing processors.
+        $this->unassignProcessors();
+
+        // Assign new processors.
+        $sortOrder = 0;
+        foreach ($this->processors as $processorName) {
+            try {
+                $processor = ProcessorModel::initWithName($processorName);
+                $this->assignProcessor($processor, $sortOrder++);
+            } catch (ResourceException $e) {
+                error_log("Skipping invalid processor: $processorName");
+            }
+        }
+    }
+
+    /**
+     * @param ProcessorModel $processor
+     * @param int $sortOrder
+     */
+    private function assignProcessor(ProcessorModel $processor, $sortOrder)
+    {
+        $db = Database::getDatabaseConnection();
+        static $stmt = null;
+        if ($stmt === null) {
+            $query = <<<SQL
+INSERT INTO articleProcessor (
+    dateCreated,
+    dateModified,
+    articleId,
+    processorId,
+    sortOrder
+) VALUES (
+    NOW(),
+    NOW(),
+    :articleId,
+    :processorId,
+    :sortOrder
+);
+SQL;
+            $stmt = $db->prepare($query);
+        }
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':processorId', $processor->processorId, PDO::PARAM_INT);
+        $stmt->bindValue(':sortOrder', $sortOrder, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    /**
+     * Unlink all processors assigned to the instance.
+     */
+    private function unassignProcessors()
+    {
+        $db = Database::getDatabaseConnection();
+        $query = <<<SQL
+DELETE FROM articleProcessor
+WHERE articleId = :articleId;
+SQL;
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->execute();
     }
 
     private function updateTagAssignments()
@@ -760,31 +865,11 @@ SQL;
         if (!isset($this->originalContent)) {
             return;
         }
-
         $content = $this->originalContent;
-        foreach ($this->processors as $processor) {
-            /** @var ProcessorModel $processor */
-            $content = $processor->process($content);
+        foreach ($this->processorModels as $processorModel) {
+            /** @var ProcessorModel $processorModel */
+            $content = $processorModel->process($content);
         }
-
-        /*
-
-        // Replace references to other articles with actual article content.
-        $processor = new SubArticle();
-        $content = $processor->transform($content);
-
-        // TODO: add merge data for meta-data for the article (date, author, etc.)
-
-        // Replace merge fields in the article with their values.
-        $processor = new TextReplacement();
-        $content = $processor->transform($content);
-
-        // Use any user-defined text replacements.
-        $processor = new DefaultTextProcessor();
-        $content = $processor->transform($content);
-
-        */
-
         $this->content = $content;
     }
 

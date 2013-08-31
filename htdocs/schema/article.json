@@ -54,6 +54,15 @@
             "description": "Editable body content of the article.",
             "required": true
         },
+        "processors": {
+            "type": "array",
+            "description": "List of names of processors to apply to this article",
+            "required": false,
+            "items": {
+                "type": "string",
+                "required": false
+            }
+        },
         "contentType": {
             "type": "string",
             "description": "Mime type of the article",

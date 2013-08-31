@@ -28,6 +28,15 @@
             "description": "Editable body content of the article.",
             "required": false
         },
+        "processors": {
+            "type": "array",
+            "description": "List of names of processors to apply to this article",
+            "required": false,
+            "items": {
+                "type": "string",
+                "required": false
+            }
+        },
         "siteId": {
             "type": "integer",
             "description": "Unique ID of site the article belongs to.",

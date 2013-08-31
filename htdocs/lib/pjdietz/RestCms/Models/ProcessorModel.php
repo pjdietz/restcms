@@ -4,6 +4,7 @@ namespace pjdietz\RestCms\Models;
 
 use PDO;
 use pjdietz\RestCms\Database\Database;
+use pjdietz\RestCms\Exceptions\ResourceException;
 use pjdietz\RestCms\TextProcessors\TextProcessorInterface;
 
 class ProcessorModel extends RestCmsBaseModel
@@ -14,6 +15,40 @@ class ProcessorModel extends RestCmsBaseModel
     public $processorName;
     public $description;
     public $className;
+
+    /**
+     * @param string $processorName
+     * @throws ResourceException
+     * @return ProcessorModel
+     */
+    public static function initWithName($processorName)
+    {
+        $db = Database::getDatabaseConnection();
+        static $stmt = null;
+        if ($stmt === null) {
+            $query = <<<SQL
+SELECT
+    p.processorId,
+    p.processorName,
+    p.description,
+    p.className
+FROM
+    processor p
+WHERE
+    p.processorName = :processorName
+LIMIT 1;
+SQL;
+            $stmt = $db->prepare($query);
+        }
+        $stmt->bindValue(':processorName', $processorName, PDO::PARAM_STR);
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            throw new ResourceException(
+                "No Processor with name $processorName",
+                ResourceException::NOT_FOUND);
+        }
+        return $stmt->fetchObject(get_called_class());
+    }
 
     /**
      * @return ProcessorModel
@@ -61,12 +96,15 @@ FROM
         on p.processorId = ap.processorId
     JOIN article a
         on ap.articleId = a.articleId
+WHERE
+    a.articleId = :articleId
 ORDER BY
     ap.sortOrder,
     p.processorName;
 SQL;
             $stmt = $db->prepare($query);
         }
+        $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_CLASS, get_called_class());
     }
@@ -74,14 +112,13 @@ SQL;
     public function process($text)
     {
         $processorClassName = $this->className;
-        print $processorClassName . "\n";
-        //if (is_subclass_of($processorClassName, self::TEXT_PROCESSOR_INTERFACE_FQN)) {
+        $processor = new $processorClassName();
+        if ($processor instanceof TextProcessorInterface) {
             /** @var TextProcessorInterface $processor */
-            $processor = new $processorClassName();
             $text = $processor->process($text);
-        //} else {
-        //    error_log('Skipped ' . $processorClassName . ' because it does not implement ' . self::TEXT_PROCESSOR_INTERFACE_FQN);
-        //}
+        } else {
+            error_log('Skipped ' . $processorClassName . ' because it does not implement ' . self::TEXT_PROCESSOR_INTERFACE_FQN);
+        }
         return $text;
     }
 
