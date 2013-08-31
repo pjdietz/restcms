@@ -674,7 +674,10 @@ SQL;
         $this->siteId = (int) $this->siteId;
         $this->datePublished = date(self::DATE_TIME_FORMAT, strtotime($this->datePublished));
         $this->dateModified = date(self::DATE_TIME_FORMAT, strtotime($this->dateModified));
-        $this->customFields = CustomFieldModel::initCollection($this->articleId);
+
+        if (!isset($this->customFields)) {
+            $this->customFields = CustomFieldModel::initCollection($this->articleId);
+        }
 
         if (!isset($this->tags)) {
             $this->tags = TagNameList::init(array('article' => $this->articleId));

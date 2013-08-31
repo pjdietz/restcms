@@ -16,7 +16,7 @@ class CustomFieldModel extends RestCmsBaseModel
 SELECT
     cf.customFieldId,
     cf.name,
-    cf.value as originalValue,
+    cf.value,
     cf.articleId,
     cf.sortOrder
 FROM
@@ -31,7 +31,7 @@ SQL;
 SELECT
     cf.customFieldId,
     cf.name,
-    cf.value as originalValue,
+    cf.value,
     cf.articleId,
     cf.sortOrder
 FROM
@@ -53,7 +53,7 @@ INSERT INTO customField (
     NOW(),
     NOW(),
     :name,
-    :originalValue,
+    :value,
     :articleId,
     :sortOrder
 );
@@ -63,7 +63,7 @@ UPDATE customField
 SET
     dateModified = NOW(),
     name = :name,
-    value = :originalValue,
+    value = :value,
     sortOrder = :sortOrder
 WHERE
     articleId = :articleId
@@ -80,7 +80,6 @@ SQL;
     public $articleId;
     public $name;
     public $value;
-    public $originalValue;
     public $sortOrder = 0;
 
     /**
@@ -177,7 +176,7 @@ SQL;
             $stmt = $db->prepare(self::INSERT_QUERY);
         }
         $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
-        $stmt->bindValue(':originalValue', $this->originalValue, PDO::PARAM_STR);
+        $stmt->bindValue(':value', $this->value, PDO::PARAM_STR);
         $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
         $stmt->bindValue(':sortOrder', $this->sortOrder, PDO::PARAM_INT);
         $stmt->execute();
@@ -192,7 +191,7 @@ SQL;
             $stmt = $db->prepare(self::UPDATE_QUERY);
         }
         $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
-        $stmt->bindValue(':originalValue', $this->originalValue, PDO::PARAM_STR);
+        $stmt->bindValue(':value', $this->value, PDO::PARAM_STR);
         $stmt->bindValue(':sortOrder', $this->sortOrder, PDO::PARAM_INT);
         $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
         $stmt->bindValue(':customFieldId', $this->customFieldId, PDO::PARAM_INT);
@@ -216,22 +215,5 @@ SQL;
         $this->customFieldId = (int) $this->customFieldId;
         $this->articleId = (int) $this->articleId;
         $this->sortOrder = (int) $this->sortOrder;
-        $this->processValue();
-    }
-
-    private function processValue()
-    {
-        if (!isset($this->originalValue)) {
-            return;
-        }
-
-        $value = $this->originalValue;
-
-        // Replace references to other articles with actual article content.
-        $processor = new SubArticle();
-        $value = $processor->transform($value);
-
-        // Update the instance member.
-        $this->value = $value;
     }
 }

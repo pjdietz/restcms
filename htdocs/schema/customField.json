@@ -9,9 +9,9 @@
             "description": "Key for the custom field",
             "required": true
         },
-        "originalValue": {
+        "value": {
             "type": "string",
-            "description": "Editable value for the custom field",
+            "description": "Value for the custom field",
             "required": true
         },
         "sortOrder": {
@@ -20,12 +20,6 @@
             "required": false,
             "default": 0,
             "minimum": 0
-        },
-        "value": {
-            "type": "string",
-            "description": "Processed value for the custom field",
-            "required": false,
-            "readonly": true
         },
         "articleId": {
             "type": "integer",
