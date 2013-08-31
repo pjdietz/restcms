@@ -8,5 +8,5 @@ interface TextProcessorInterface
      * @param string $text The original string
      * @return string Transformed version of the string
      */
-    public function transform($text);
+    public function process($text);
 }

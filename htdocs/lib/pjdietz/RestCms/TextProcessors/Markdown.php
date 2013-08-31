@@ -10,7 +10,7 @@ class Markdown implements TextProcessorInterface
      * @param string $text
      * @return string
      */
-    public function transform($text)
+    public function process($text)
     {
         $markdownParser = new MarkdownParser();
         return $markdownParser->transformMarkdown($text);

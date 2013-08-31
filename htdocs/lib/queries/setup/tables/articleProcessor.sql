@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS articleProcessor (
+    articleProcessorId INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    dateCreated DATETIME NOT NULL DEFAULT '0000-00-00',
+    dateModified DATETIME NOT NULL DEFAULT '0000-00-00',
+    articleId INT UNSIGNED NOT NULL,
+    processorId INT UNSIGNED NOT NULL,
+    sortOrder TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    UNIQUE INDEX idxArticleTag (articleId, processorId)
+)
+ENGINE = MyISAM;

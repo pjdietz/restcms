@@ -10,7 +10,7 @@ class MarkdownExtra implements TextProcessorInterface
      * @param string $text
      * @return string
      */
-    public function transform($text)
+    public function process($text)
     {
         $markdownParser = new MarkdownExtraParser();
         return $markdownParser->transformMarkdown($text);

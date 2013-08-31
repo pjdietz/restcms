@@ -1,3 +1,4 @@
 workspace.xml
 vendor
-htdocs/config/RestCmsConfig/*.php
+htdocs/config/RestCmsConfig/*
+!htdocs/config/RestCmsConfig/*.template

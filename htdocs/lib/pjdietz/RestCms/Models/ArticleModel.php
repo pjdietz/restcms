@@ -12,6 +12,7 @@ use pjdietz\RestCms\Lists\ArticleIdList;
 use pjdietz\RestCms\Lists\TagNameList;
 use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\RestCms\TextProcessors\SubArticle;
+use pjdietz\RestCms\TextProcessors\TextProcessorInterface;
 use pjdietz\RestCms\TextProcessors\TextReplacement;
 use pjdietz\RestCms\Util\Util;
 use RestCmsConfig\DefaultTextProcessor;
@@ -20,6 +21,7 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
     const PATH_TO_SCHEMA = '/schema/article.json';
     const DATE_TIME_FORMAT = 'Y-m-d H:i:s';
+
 
     public $articleId;
     public $currentVersionId;
@@ -37,6 +39,7 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
     public $notes = '';
     public $customFields;
     public $tags;
+    public $processors;
 
     /** @var array List of userIds of users who may contribute to the article. */
     private $contributors;
@@ -670,6 +673,10 @@ SQL;
             $this->tags = TagNameList::init(array('article' => $this->articleId));
         }
 
+        if (!isset($this->processors)) {
+            $this->processors = ProcessorModel::initCollectionForArticle($this->articleId);
+        }
+
         $this->readContributors();
         $this->processContent();
     }
@@ -755,6 +762,12 @@ SQL;
         }
 
         $content = $this->originalContent;
+        foreach ($this->processors as $processor) {
+            /** @var ProcessorModel $processor */
+            $content = $processor->process($content);
+        }
+
+        /*
 
         // Replace references to other articles with actual article content.
         $processor = new SubArticle();
@@ -769,6 +782,8 @@ SQL;
         // Use any user-defined text replacements.
         $processor = new DefaultTextProcessor();
         $content = $processor->transform($content);
+
+        */
 
         $this->content = $content;
     }
