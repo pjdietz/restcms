@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\Models\ArticleModel;
+use pjdietz\RestCms\Util\Util;
 
 class ArticleContentHandler extends RestCmsBaseHandler
 {
@@ -17,9 +18,16 @@ class ArticleContentHandler extends RestCmsBaseHandler
 
         $article = ArticleModel::init($this->args['articleId']);
 
-        $this->response->setStatusCode(200);
-        $this->response->setHeader('Content-Type', $article->contentType);
-        $this->response->setBody($article->content);
+        $query = $this->request->getQuery();
+        if (isset($query['process']) and Util::stringToBool($query['process'])) {
+            $this->response->setStatusCode(200);
+            $this->response->setHeader('Content-Type', $article->contentType);
+            $this->response->setBody($article->content);
+        } else {
+            $this->response->setStatusCode(200);
+            $this->response->setHeader('Content-Type', 'text/plain');
+            $this->response->setBody($article->originalContent);
+        }
     }
 
     protected function put()
@@ -34,10 +42,15 @@ class ArticleContentHandler extends RestCmsBaseHandler
         // Write the current state to the database.
         $article->update();
 
-        // Output the current representation.
-        $this->response->setStatusCode(200);
-        $this->response->setHeader('Content-Type', $article->contentType);
-        $this->response->setBody($article->content);
+        $query = $this->request->getQuery();
+        if (isset($query['process']) and Util::stringToBool($query['process'])) {
+            $this->response->setStatusCode(200);
+            $this->response->setHeader('Content-Type', $article->contentType);
+            $this->response->setBody($article->content);
+        } else {
+            $this->response->setStatusCode(200);
+            $this->response->setHeader('Content-Type', 'text/plain');
+            $this->response->setBody($article->originalContent);
+        }
     }
-
 }

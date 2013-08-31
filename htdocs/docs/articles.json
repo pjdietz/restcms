@@ -293,6 +293,14 @@
                             "required": true,
                             "allowMultiple": false,
                             "paramType": "path"
+                        },
+                        {
+                            "name": "process",
+                            "description": "Respond with the processed version of the content.",
+                            "dataType": "boolean",
+                            "required": false,
+                            "default": false,
+                            "paramType": "query"
                         }
                     ],
                     "errorResponses": [
@@ -322,6 +330,14 @@
                             "required": true,
                             "allowMultiple": false,
                             "paramType": "path"
+                        },
+                        {
+                            "name": "process",
+                            "description": "Respond with the processed version of the content.",
+                            "dataType": "boolean",
+                            "required": false,
+                            "default": false,
+                            "paramType": "query"
                         },
                         {
                             "name": "originalContent",
