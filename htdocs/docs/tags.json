@@ -11,7 +11,17 @@
                 {
                     "httpMethod": "GET",
                     "nickname": "getTags",
-                    "summary": "Read a list of all tags in the CMS"
+                    "summary": "Read a list of all tags in the CMS",
+                    "parameters": [
+                        {
+                            "name": "site",
+                            "description": "Return only tags used on this site.",
+                            "dataType": "int",
+                            "required": false,
+                            "allowMultiple": false,
+                            "paramType": "query"
+                        }
+                    ]
                 }
             ]
         },

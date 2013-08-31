@@ -21,6 +21,7 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
     const PATH_TO_SCHEMA = '/schema/article.json';
     const DATE_TIME_FORMAT = 'Y-m-d H:i:s';
+    const MAX_EXCERPT_LENGTH = 50;
 
     public $articleId;
     public $currentVersionId;
@@ -29,6 +30,7 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
     public $status = 'draft';
     public $title;
     public $slug;
+    public $autoExcerpt = '';
     public $excerpt = '';
     public $content;
     public $originalContent;
@@ -868,11 +870,20 @@ SQL;
         if (!isset($this->originalContent)) {
             return;
         }
+
+        $maxWords = self::MAX_EXCERPT_LENGTH;
+        $words = explode(' ', $this->originalContent, $maxWords + 1);
+        $words = array_slice($words, 0, $maxWords);
+        $excerpt = trim(join(' ', $words));
         $content = $this->originalContent;
+
         foreach ($this->processorModels as $processorModel) {
             /** @var ProcessorModel $processorModel */
+            $excerpt = $processorModel->process($excerpt);
             $content = $processorModel->process($content);
         }
+
+        $this->autoExcerpt = $excerpt;
         $this->content = $content;
     }
 

@@ -2,12 +2,13 @@
 
 namespace pjdietz\RestCms\Models;
 
+use pjdietz\RestCms\RestCmsCommonInterface;
 use stdClass;
 
 /**
  * Base class for models.
  */
-abstract class RestCmsBaseModel extends stdClass
+abstract class RestCmsBaseModel extends stdClass implements RestCmsCommonInterface
 {
     protected function __construct($source = null)
     {

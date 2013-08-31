@@ -11,6 +11,7 @@ class TagModel extends RestCmsBaseModel
 {
     public $tagId;
     public $tagName;
+    public $displayName;
     public $countArticles;
 
     /**
@@ -23,6 +24,7 @@ class TagModel extends RestCmsBaseModel
         if (is_numeric($tagId)) {
             return self::initWithId($tagId);
         }
+        return self::initWithName($tagId);
     }
 
     /**
@@ -36,6 +38,7 @@ class TagModel extends RestCmsBaseModel
 SELECT
     t.tagId,
     t.tagName,
+    t.displayName,
     COUNT(a.articleId) as countArticles
 FROM
     tag t
@@ -68,6 +71,7 @@ SQL;
 SELECT
     t.tagId,
     t.tagName,
+    t.displayName,
     COUNT(a.articleId) as countArticles
 FROM
     tag t
@@ -125,12 +129,17 @@ SQL;
         return self::initWithId($tagId);
     }
 
-    public static function initCollection()
+    public static function initCollection($options = null)
     {
+        if (isset($options['site']) && is_numeric($options['site'])) {
+            return self::initCollectionForSite($options['site']);
+        }
+
         $query = <<<SQL
 SELECT
     t.tagId,
     t.tagName,
+    t.displayName,
     COUNT(a.articleId) as countArticles
 FROM
     tag t
@@ -150,9 +159,43 @@ SQL;
         return $stmt->fetchAll(PDO::FETCH_CLASS, get_called_class());
     }
 
+    public static function initCollectionForSite($siteId)
+    {
+        $query = <<<SQL
+SELECT
+    t.tagId,
+    t.tagName,
+    t.displayName,
+    COUNT(a.articleId) AS countArticle
+FROM
+    tag t
+    JOIN articleTag
+        ON t.tagId = articleTag.tagId
+    JOIN article a
+        ON articleTag.articleId = a.articleId
+WHERE
+    a.siteId = :siteId
+    AND a.statusId = :statusId
+GROUP BY
+    t.tagId
+ORDER BY
+    countArticle DESC,
+    t.tagName
+SQL;
+        $db = Database::getDatabaseConnection();
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':siteId', $siteId, PDO::PARAM_INT);
+        $stmt->bindValue(':statusId', self::STATUS_PUBLISHED, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_CLASS, get_called_class());
+    }
+
     protected function prepareInstance()
     {
         $this->tagId = (int) $this->tagId;
         $this->countArticles = (int) $this->countArticles;
+        if (!($this->displayName)) {
+            $this->displayName = $this->tagName;
+        }
     }
 }

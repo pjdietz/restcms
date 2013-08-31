@@ -15,7 +15,7 @@ class TagCollectionHandler extends RestCmsBaseHandler
     {
         $this->user->assertPrivilege(self::PRIV_READ_ARTICLE);
 
-        $collection = TagModel::initCollection();
+        $collection = TagModel::initCollection($this->request->getQuery());
 
         $this->response->setStatusCode(200);
         $this->response->setHeader('Content-Type', 'application/json');

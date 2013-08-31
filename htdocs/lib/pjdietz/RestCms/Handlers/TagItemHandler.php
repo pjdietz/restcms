@@ -18,7 +18,7 @@ class TagItemHandler extends RestCmsBaseHandler
     {
         $this->user->assertPrivilege(self::PRIV_READ_ARTICLE);
 
-        $tag = TagModel::initWithId($this->args['tagId']);
+        $tag = TagModel::init($this->args['tagId']);
 
         $this->response->setStatusCode(200);
         $this->response->setHeader('Content-Type', 'application/json');

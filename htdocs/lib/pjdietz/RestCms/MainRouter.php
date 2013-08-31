@@ -19,7 +19,7 @@ class MainRouter extends Router
             'customFieldId' => Route::RE_NUM,
             'statusId' => Route::RE_NUM,
             'statusSlug' => Route::RE_SLUG,
-            'tagId' => Route::RE_NUM,
+            'tagId' => Route::RE_SLUG,
             'versionId' => Route::RE_NUM,
             'userId' => Route::RE_NUM
         );
