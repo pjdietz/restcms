@@ -724,25 +724,32 @@ SQL;
 
         // Assign new fields.
         foreach ($toAssign as $name) {
+            $value = $representationFields->{$name};
+            if ($value === "" || $value === null) {
+                continue; // Don't add empty custom fields.
+            }
             if (in_array($name, $cmsNames)) {
                 $field = CustomFieldNameModel::initWithName($name);
             } else {
                 $field = CustomFieldNameModel::createNewField($name);
             }
-            $value = $representationFields->{$name};
             $this->assignCustomField($field->customFieldId, $value);
         }
 
         // Update custom fields.
         foreach ($toUpdate as $name) {
             if ($representationFields->$name !== $assignedFields->$name) {
+                $value = $representationFields->{$name};
                 if (in_array($name, $cmsNames)) {
                     $field = CustomFieldNameModel::initWithName($name);
                 } else {
                     $field = CustomFieldNameModel::createNewField($name);
                 }
-                $value = $representationFields->{$name};
-                $this->updateCustomField($field->customFieldId, $value);
+                if ($value === "" || $value === null) {
+                    $this->unassignCustomField($field->customFieldId);
+                } else {
+                    $this->updateCustomField($field->customFieldId, $value);
+                }
             }
         }
 
@@ -777,7 +784,7 @@ SQL;
         }
         $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
         $stmt->bindValue(':customFieldId', $customFieldId, PDO::PARAM_INT);
-        $stmt->bindValue(':value', $value, PDO::PARAM_STR);
+        $stmt->bindValue(':value', json_encode($value), PDO::PARAM_STR);
         $stmt->execute();
     }
 
@@ -799,7 +806,7 @@ SQL;
         }
         $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
         $stmt->bindValue(':customFieldId', $customFieldId, PDO::PARAM_INT);
-        $stmt->bindValue(':value', $value, PDO::PARAM_STR);
+        $stmt->bindValue(':value', json_encode($value), PDO::PARAM_STR);
         $stmt->execute();
     }
 

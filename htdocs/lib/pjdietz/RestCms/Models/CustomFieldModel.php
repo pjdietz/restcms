@@ -63,5 +63,6 @@ SQL;
         $this->articleId = (int) $this->articleId;
         $this->customFieldId = (int) $this->customFieldId;
         $this->customFieldValueId = (int) $this->customFieldValueId;
+        $this->value = json_decode($this->value);
     }
 }
