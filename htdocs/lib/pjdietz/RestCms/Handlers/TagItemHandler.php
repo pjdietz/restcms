@@ -3,7 +3,6 @@
 namespace pjdietz\RestCms\Handlers;
 
 use pjdietz\RestCms\Models\ArticleModel;
-use pjdietz\RestCms\Models\ContributorModel;
 use pjdietz\RestCms\Models\TagModel;
 use pjdietz\RestCms\Models\UserModel;
 

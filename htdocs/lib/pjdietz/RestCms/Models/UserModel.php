@@ -224,11 +224,11 @@ SQL;
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-        $privs = array();
+        $privileges = array();
         foreach ($results as $result) {
-            $privs[] = (int) $result->userPrivilegeId;
+            $privileges[] = (int) $result->userPrivilegeId;
         }
-        $this->privileges = $privs;
+        $this->privileges = $privileges;
     }
 
 }
