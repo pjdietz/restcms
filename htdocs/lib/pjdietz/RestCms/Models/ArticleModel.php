@@ -495,7 +495,6 @@ SQL;
         // Copy properties that may be modified by a user.
         $properties = array(
             "contentType",
-            "customFields",
             "datePublished",
             "excerpt",
             "notes",
@@ -512,6 +511,12 @@ SQL;
             if (isset($patch->{$property})) {
                 $this->{$property} = $patch->{$property};
             }
+        }
+        if (isset($patch->customFields)) {
+            $this->customFields = (object) array_merge(
+                (array) $this->customFields,
+                (array) $patch->customFields
+            );
         }
         $this->prepareInstance();
     }
@@ -910,7 +915,7 @@ SQL;
     private function updateTagAssignments()
     {
         // Find a list of all tags that exit in the CMS.
-        $cmsTags =  TagNameList::init();
+        $cmsTags = TagNameList::init();
 
         // Find tags currently assigned to this article.
         $assignedTags = TagNameList::init(array('article' => $this->articleId));
