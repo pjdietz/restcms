@@ -12,10 +12,7 @@ use pjdietz\RestCms\Lists\ArticleIdList;
 use pjdietz\RestCms\Lists\TagNameList;
 use pjdietz\RestCms\RestCmsCommonInterface;
 use pjdietz\RestCms\TextProcessors\SubArticle;
-use pjdietz\RestCms\TextProcessors\TextProcessorInterface;
-use pjdietz\RestCms\TextProcessors\TextReplacement;
 use pjdietz\RestCms\Util\Util;
-use RestCmsConfig\DefaultTextProcessor;
 
 class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
 {
@@ -445,16 +442,7 @@ SQL;
         $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
         $stmt->execute();
 
-        // If the instance has custom fields, add them.
-        if ($this->customFields) {
-            foreach ($this->customFields as $customField) {
-                if (!($customField instanceof CustomFieldModel)) {
-                    $customField = CustomFieldModel::initWithObject($customField);
-                }
-                $customField->create($this->articleId);
-            }
-        }
-
+        $this->updateCustomFieldAssignments();
         $this->updateProcessorAssignments();
         $this->updateTagAssignments();
     }
@@ -479,6 +467,7 @@ SQL;
         // Copy properties that may be modified by a user.
         $properties = array(
             "contentType",
+            "customFields",
             "datePublished",
             "excerpt",
             "notes",
@@ -506,6 +495,7 @@ SQL;
         // Copy properties that may be modified by a user.
         $properties = array(
             "contentType",
+            "customFields",
             "datePublished",
             "excerpt",
             "notes",
@@ -636,6 +626,7 @@ SQL;
 
         }
 
+        $this->updateCustomFieldAssignments();
         $this->updateProcessorAssignments();
         $this->updateTagAssignments();
     }
@@ -644,7 +635,7 @@ SQL;
     public function delete()
     {
         // Mark the status for the article as Removed.
-        // Also, obsufcate the slug, so that it won't collide if the user tried to re-use it.
+        // Also, obfuscate the slug, so that it won't collide if the user tried to re-use it.
         $query = <<<SQL
 UPDATE
     article
@@ -678,7 +669,7 @@ SQL;
         $this->dateModified = date(self::DATE_TIME_FORMAT, strtotime($this->dateModified));
 
         if (!isset($this->customFields)) {
-            $this->customFields = CustomFieldModel::initCollection($this->articleId);
+            $this->customFields = CustomFieldModel::initObject($this->articleId);
         }
 
         if (!isset($this->tags)) {
@@ -698,6 +689,131 @@ SQL;
 
         $this->readContributors();
         $this->processContent();
+    }
+
+    private function updateCustomFieldAssignments()
+    {
+        // Find all field names used in the CMS.
+        $cmsFields = CustomFieldNameModel::initCollection();
+        $cmsNames = array();
+        foreach ($cmsFields as $field) {
+            $cmsNames[] = $field->name;
+        }
+
+        // Find all field names stored to this instance.
+        $assignedFields = CustomFieldModel::initObject($this->articleId);
+        $assignedNames = array_keys((array) $assignedFields);
+
+        // Find all field names used in the current representation.
+        $representationFields = $this->customFields;
+        $representationNames = array_keys((array) $representationFields);
+
+        // Find fields the instance has that the current article does not.
+        $toAssign = array_diff($representationNames, $assignedNames);
+
+        // Find fields the current article has that the instance does not.
+        $toRemove = array_diff($assignedNames, $representationNames);
+
+        // Find fields the current article has that the instance also has.
+        $toUpdate = array_intersect($representationNames, $assignedNames);
+
+        // Assign new fields.
+        foreach ($toAssign as $name) {
+            if (in_array($name, $cmsNames)) {
+                $field = CustomFieldNameModel::initWithName($name);
+            } else {
+                $field = CustomFieldNameModel::createNewField($name);
+            }
+            $value = $representationFields->{$name};
+            $this->assignCustomField($field->customFieldId, $value);
+        }
+
+        // Update custom fields.
+        foreach ($toUpdate as $name) {
+            if ($representationFields->$name !== $assignedFields->$name) {
+                if (in_array($name, $cmsNames)) {
+                    $field = CustomFieldNameModel::initWithName($name);
+                } else {
+                    $field = CustomFieldNameModel::createNewField($name);
+                }
+                $value = $representationFields->{$name};
+                $this->updateCustomField($field->customFieldId, $value);
+            }
+        }
+
+        foreach ($toRemove as $name) {
+            $field = CustomFieldNameModel::initWithName($name);
+            $this->unassignCustomField($field->customFieldId);
+        }
+    }
+
+    private function assignCustomField($customFieldId, $value)
+    {
+        $db = Database::getDatabaseConnection();
+
+        static $stmt = null;
+        if ($stmt === null) {
+            $query = <<<SQL
+INSERT INTO customFieldValue (
+    dateCreated,
+    dateModified,
+    articleId,
+    customFieldId,
+    value
+) VALUES (
+    NOW(),
+    NOW(),
+    :articleId,
+    :customFieldId,
+    :value
+);
+SQL;
+            $stmt = $db->prepare($query);
+        }
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':customFieldId', $customFieldId, PDO::PARAM_INT);
+        $stmt->bindValue(':value', $value, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    private function updateCustomField($customFieldId, $value)
+    {
+        $db = Database::getDatabaseConnection();
+        static $stmt = null;
+        if ($stmt === null) {
+            $query = <<<SQL
+UPDATE customFieldValue
+SET
+    dateModified = NOW(),
+    value = :value
+WHERE
+    articleId = :articleId
+    AND customFieldId = :customFieldId;
+SQL;
+            $stmt = $db->prepare($query);
+        }
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':customFieldId', $customFieldId, PDO::PARAM_INT);
+        $stmt->bindValue(':value', $value, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    private function unassignCustomField($customFieldId)
+    {
+        $db = Database::getDatabaseConnection();
+        static $stmt = null;
+        if ($stmt === null) {
+            $query = <<<SQL
+DELETE FROM customFieldValue
+WHERE
+    articleId = :articleId
+    AND customFieldId = :customFieldId;
+SQL;
+            $stmt = $db->prepare($query);
+        }
+        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
+        $stmt->bindValue(':customFieldId', $customFieldId, PDO::PARAM_INT);
+        $stmt->execute();
     }
 
     private function updateProcessorAssignments()

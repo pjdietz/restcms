@@ -2,218 +2,66 @@
 
 namespace pjdietz\RestCms\Models;
 
-use JsonSchema\Validator;
 use PDO;
 use pjdietz\RestCms\Database\Database;
-use pjdietz\RestCms\Exceptions\JsonException;
-use pjdietz\RestCms\Exceptions\ResourceException;
-use pjdietz\RestCms\TextProcessors\SubArticle;
+use stdClass;
 
 class CustomFieldModel extends RestCmsBaseModel
 {
-    const PATH_TO_SCHEMA = '/schema/customField.json';
-    const SELECT_COLLECTION_QUERY = <<<SQL
-SELECT
-    cf.customFieldId,
-    cf.name,
-    cf.value,
-    cf.articleId,
-    cf.sortOrder
-FROM
-    customField cf
-WHERE
-    cf.articleId = :articleId
-ORDER BY
-    cf.sortOrder,
-    cf.name;
-SQL;
-    const SELECT_ITEM_QUERY = <<<SQL
-SELECT
-    cf.customFieldId,
-    cf.name,
-    cf.value,
-    cf.articleId,
-    cf.sortOrder
-FROM
-    customField cf
-WHERE
-    cf.articleId = :articleId
-    AND cf.customFieldId = :customFieldId
-LIMIT 1;
-SQL;
-    const INSERT_QUERY = <<<SQL
-INSERT INTO customField (
-    dateCreated,
-    dateModified,
-    name,
-    value,
-    articleId,
-    sortOrder
-) VALUES (
-    NOW(),
-    NOW(),
-    :name,
-    :value,
-    :articleId,
-    :sortOrder
-);
-SQL;
-    const UPDATE_QUERY = <<<SQL
-UPDATE customField
-SET
-    dateModified = NOW(),
-    name = :name,
-    value = :value,
-    sortOrder = :sortOrder
-WHERE
-    articleId = :articleId
-    AND customFieldId = :customFieldId;
-SQL;
-    const DELETE_QUERY = <<<SQL
-DELETE FROM customField
-WHERE
-    articleId = :articleId
-    AND customFieldId = :customFieldId;
-SQL;
-
-    public $customFieldId;
-    public $articleId;
     public $name;
     public $value;
-    public $sortOrder = 0;
+    public $articleId;
+    public $customFieldId;
+    public $customFieldValueId;
 
     /**
      * @param int $articleId
-     * @param int $customFieldId
-     * @throws ResourceException
-     * @return CustomFieldModel
-     */
-    public static function init($articleId, $customFieldId)
-    {
-        $db = Database::getDatabaseConnection();
-        $stmt = $db->prepare(self::SELECT_ITEM_QUERY);
-        $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
-        $stmt->bindValue(':customFieldId', $customFieldId, PDO::PARAM_INT);
-        $stmt->execute();
-        if ($stmt->rowCount() === 0) {
-            throw new ResourceException(sprintf(
-                    'No custom field with ID %d for article %d',
-                    $customFieldId,
-                    $articleId
-                ),
-                ResourceException::NOT_FOUND
-            );
-        }
-        return $stmt->fetchObject(get_called_class());
-    }
-
-    /**
-     * @param int $articleId
-     * @return array  Array of CustomFieldModel instances.
+     * @return array List of CustomFieldModel instances assigned to the article.
      */
     public static function initCollection($articleId)
     {
+        $query = <<<SQL
+SELECT
+    a.articleId,
+    cf.customFieldId,
+    cfv.customFieldValueId,
+    cf.name,
+    cfv.value
+FROM customFieldValue cfv
+    JOIN customField cf
+        ON cfv.customFieldId = cf.customFieldId
+    JOIN article a
+        ON cfv.articleId = a.articleId
+WHERE
+    a.articleId = :articleId
+ORDER BY
+    cf.name;
+SQL;
         $db = Database::getDatabaseConnection();
-        $stmt = $db->prepare(self::SELECT_COLLECTION_QUERY);
+        $stmt = $db->prepare($query);
         $stmt->bindValue(':articleId', $articleId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_CLASS, get_called_class());
     }
 
     /**
-     * Read and validate a JSON representation into the data member.
-     *
-     * Returns the parsed data, if valid. Otherwise, returns null.
-     *
-     * @param string $jsonString
-     * @throws JsonException
-     * @return ArticleModel
+     * @param $articleId
+     * @return stdClass Key-value pairs assigned to the article.
      */
-    public static function initWithJson($jsonString)
+    public static function initObject($articleId)
     {
-        if (self::validateJson($jsonString, $validator) === false) {
-            throw new JsonException('Unable to decode article', null, null, $validator, self::PATH_TO_SCHEMA);
+        $collection = self::initCollection($articleId);
+        $obj = new stdClass();
+        foreach ($collection as $field) {
+            $obj->{$field->name} = $field->value;
         }
-        return new self(json_decode($jsonString));
-    }
-
-    /**
-     * Create and return a new instance and copy the members from the passed object.
-     *
-     * @param object $obj
-     * @return CustomFieldModel
-     */
-    public static function initWithObject($obj)
-    {
-        return new self($obj);
-    }
-
-    /**
-     * Validate the passed JSON string against the class's schema.
-     *
-     * @param string $json
-     * @param object $validator  JsonSchema validator reference
-     * @return bool
-     */
-    private static function validateJson($json, &$validator)
-    {
-        $schema = file_get_contents($_SERVER['DOCUMENT_ROOT'] . self::PATH_TO_SCHEMA);
-
-        $validator = new Validator();
-        $validator->check(json_decode($json), json_decode($schema));
-
-        return $validator->isValid();
-    }
-
-    public function create($articleId = 0)
-    {
-        if ($articleId !== 0) {
-            $this->articleId = $articleId;
-        }
-        $db = Database::getDatabaseConnection();
-        static $stmt = null;
-        if ($stmt === null) {
-            $stmt = $db->prepare(self::INSERT_QUERY);
-        }
-        $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
-        $stmt->bindValue(':value', $this->value, PDO::PARAM_STR);
-        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
-        $stmt->bindValue(':sortOrder', $this->sortOrder, PDO::PARAM_INT);
-        $stmt->execute();
-        $this->customFieldId = (int) $db->lastInsertId();
-    }
-
-    public function update()
-    {
-        $db = Database::getDatabaseConnection();
-        static $stmt = null;
-        if ($stmt === null) {
-            $stmt = $db->prepare(self::UPDATE_QUERY);
-        }
-        $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
-        $stmt->bindValue(':value', $this->value, PDO::PARAM_STR);
-        $stmt->bindValue(':sortOrder', $this->sortOrder, PDO::PARAM_INT);
-        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
-        $stmt->bindValue(':customFieldId', $this->customFieldId, PDO::PARAM_INT);
-        $stmt->execute();
-    }
-
-    public function delete()
-    {
-        $db = Database::getDatabaseConnection();
-        static $stmt = null;
-        if ($stmt === null) {
-            $stmt = $db->prepare(self::DELETE_QUERY);
-        }
-        $stmt->bindValue(':articleId', $this->articleId, PDO::PARAM_INT);
-        $stmt->bindValue(':customFieldId', $this->customFieldId, PDO::PARAM_INT);
-        $stmt->execute();
+        return $obj;
     }
 
     protected function prepareInstance()
     {
-        $this->customFieldId = (int) $this->customFieldId;
         $this->articleId = (int) $this->articleId;
-        $this->sortOrder = (int) $this->sortOrder;
+        $this->customFieldId = (int) $this->customFieldId;
+        $this->customFieldValueId = (int) $this->customFieldValueId;
     }
 }

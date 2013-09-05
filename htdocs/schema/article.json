@@ -98,44 +98,9 @@
             }
         },
         "customFields": {
-            "type": "array",
+            "type": "object",
             "description": "Custom fields to attach to the article",
-            "required": false,
-            "items": {
-                "type": "object",
-                "required": false,
-                "properties": {
-                    "name": {
-                        "type": "string",
-                        "description": "Key for the custom field",
-                        "required": true
-                    },
-                    "value": {
-                        "type": "string",
-                        "description": "Editable value for the custom field",
-                        "required": true
-                    },
-                    "sortOrder": {
-                        "type": "integer",
-                        "description": "Arbitrary sorting field",
-                        "required": false,
-                        "default": 0,
-                        "minimum": 0
-                    },
-                    "articleId": {
-                        "type": "integer",
-                        "description": "Unique ID of the article this custom fields belongs to",
-                        "required": false,
-                        "readonly": true
-                    },
-                    "customFieldId": {
-                        "type": "integer",
-                        "description": "Unique ID of the customField",
-                        "required": false,
-                        "readonly": true
-                    }
-                }
-            }
+            "required": false
         }
     }
 }

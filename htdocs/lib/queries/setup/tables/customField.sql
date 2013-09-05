@@ -3,9 +3,7 @@ CREATE TABLE IF NOT EXISTS customField (
     dateCreated DATETIME NOT NULL DEFAULT '0000-00-00',
     dateModified DATETIME NOT NULL DEFAULT '0000-00-00',
     name VARCHAR(255) NOT NULL COMMENT '[Required] Key for the custom field.',
-    value VARCHAR(65535) NOT NULL COMMENT '[Required] Value for the custom field.',
-    articleId INT UNSIGNED NOT NULL COMMENT '[Required] Relates a field to an article.',
-    sortOrder SMALLINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Arbitraty sort order for fields within an article.',
-    INDEX idxCustomFieldArticle (articleId)
+    description VARCHAR(255) NOT NULL DEFAULT '' COMMENT 'Notes describing the purpose of the field.',
+    UNIQUE INDEX idxCustomFieldName (name)
 )
 ENGINE = MyISAM;
