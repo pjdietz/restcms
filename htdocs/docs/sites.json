@@ -24,35 +24,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "path": "/sites/{siteId}/paths/{path}",
-            "description": "Site path",
-            "operations": [
-                {
-                    "httpMethod": "GET",
-                    "summary": "Read an article for a given path of a site",
-                    "nickname": "getSitePath",
-                    "parameters": [
-                        {
-                            "name": "siteId",
-                            "description": "ID or slug for the Site",
-                            "dataType": "int|string",
-                            "required": true,
-                            "allowMultiple": false,
-                            "paramType": "path"
-                        },
-                        {
-                            "name": "path",
-                            "description": "Path relative to the site root for the page",
-                            "dataType": "string",
-                            "required": true,
-                            "allowMultiple": false,
-                            "paramType": "path"
-                        }
-                    ]
-                }
-            ]
         }
     ]
 }

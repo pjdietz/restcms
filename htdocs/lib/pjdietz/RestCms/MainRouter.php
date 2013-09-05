@@ -24,12 +24,6 @@ class MainRouter extends Router
             'userId' => Route::RE_NUM
         );
 
-        // /sites/{siteId}/paths/{path}
-        // Path may contain slashes, so build manually instead of as URI template.
-        $this->addRoute(new Route(
-                '/^\/sites\/(?<siteId>[0-9a-zA-Z\-_]+)\/paths\/(?<path>.*)$/',
-                self::HANDLER_NAMESPACE . 'SitePathItemHandler'));
-
         $this->addTemplate('/articles/', 'ArticleCollectionHandler');
         $this->addTemplate('/articles/{articleId}', 'ArticleItemHandler');
         $this->addTemplate('/articles/{articleId}/content', 'ArticleContentHandler');
