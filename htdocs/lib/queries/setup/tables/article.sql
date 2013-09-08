@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS article (
     currentVersionId INT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Link to version record',
     siteId INT UNSIGNED COMMENT '[Optional] Site the article belongs to',
     sitePath VARCHAR(255) COMMENT '[Optional] Published path on a given site for this article',
+    public TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Article should be made discoverable (RSS, search, etc.)',
     UNIQUE INDEX idxArticleSlug (slug),
     UNIQUE INDEX idxSitePath (siteId, sitePath)
 )

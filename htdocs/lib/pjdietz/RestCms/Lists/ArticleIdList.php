@@ -9,6 +9,7 @@ use pjdietz\RestCms\Database\TempTable\SitePathTempTable;
 use pjdietz\RestCms\Database\TempTable\SiteTempTable;
 use pjdietz\RestCms\Database\TempTable\StatusTempTable;
 use pjdietz\RestCms\Database\TempTable\TagTempTable;
+use pjdietz\RestCms\Util\Util;
 
 class ArticleIdList
 {
@@ -61,6 +62,11 @@ JOIN tmpTag
 QUERY;
         }
 
+        $wherePublic = '';
+        if (isset($options['public']) && Util::stringToBool($options['public'])) {
+            $wherePublic = ' AND a.public = 1';
+        }
+
         $limit = '';
         if (isset($options['limit']) && is_numeric($options['limit'])) {
             $offset = 0;
@@ -80,6 +86,8 @@ FROM
 {$tmpSitePathJoin}
 {$tmpStatusJoin}
 {$tmpTagJoin}
+WHERE 1 = 1
+    {$wherePublic}
 ORDER BY
     a.datePublished DESC,
     a.dateModified DESC

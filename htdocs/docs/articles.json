@@ -46,6 +46,14 @@
                             "paramType": "query"
                         },
                         {
+                            "name": "public",
+                            "description": "Only return articles for RSS, search, etc.",
+                            "dataType": "boolean",
+                            "required": false,
+                            "allowMultiple": false,
+                            "paramType": "query"
+                        },
+                        {
                             "name": "site",
                             "description": "Filter by siteId or slug",
                             "dataType": "int|string",

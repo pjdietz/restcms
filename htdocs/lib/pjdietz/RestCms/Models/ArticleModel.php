@@ -35,6 +35,7 @@ class ArticleModel extends RestCmsBaseModel implements RestCmsCommonInterface
     public $siteId;
     public $sitePath = '';
     public $notes = '';
+    public $public;
     public $customFields;
     public $tags;
     public $processors;
@@ -71,6 +72,7 @@ SELECT
     a.dateModified,
     s.statusSlug AS status,
     a.contentType,
+    a.public,
     a.siteId,
     a.sitePath,
     v.title,
@@ -131,6 +133,7 @@ SELECT
     a.dateModified,
     s.statusSlug AS status,
     a.contentType,
+    a.public,
     a.siteId,
     a.sitePath,
     v.title,
@@ -177,6 +180,7 @@ SELECT
     a.dateModified,
     s.statusSlug AS status,
     a.contentType,
+    a.public,
     a.siteId,
     a.sitePath,
     v.title,
@@ -367,6 +371,7 @@ INSERT INTO article (
     datePublished,
     slug,
     contentType,
+    public,
     statusId,
     siteId,
     sitePath
@@ -376,6 +381,7 @@ INSERT INTO article (
     :datePublished,
     :slug,
     :contentType,
+    :public,
     :statusId,
     :siteId,
     :sitePath
@@ -386,6 +392,7 @@ SQL;
         $stmt->bindValue(':datePublished', $this->datePublished, PDO::PARAM_STR);
         $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
         $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
+        $stmt->bindValue(':public', ($this->public ? 1 : 0), PDO::PARAM_INT);
         $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
         $stmt->bindValue(':siteId', $this->siteId, PDO::PARAM_INT);
         $stmt->bindValue(':sitePath', $this->sitePath, PDO::PARAM_STR);
@@ -473,6 +480,7 @@ SQL;
             "notes",
             "originalContent",
             "processors",
+            "public",
             "siteId",
             "sitePath",
             "slug",
@@ -500,6 +508,7 @@ SQL;
             "notes",
             "originalContent",
             "processors",
+            "public",
             "siteId",
             "sitePath",
             "slug",
@@ -587,6 +596,7 @@ SQL;
         if ($this->contentType != $current->contentType
             || $this->currentVersionId != $current->currentVersionId
             || $this->datePublished != $current->datePublished
+            || $this->public != $current->public
             || $this->slug != $current->slug
             || $this->status != $current->status
             || $this->siteId != $current->siteId
@@ -601,6 +611,7 @@ SET
     datePublished = :datePublished,
     slug = :slug,
     contentType = :contentType,
+    public = :public,
     statusId = :statusId,
     siteId = :siteId,
     sitePath = :sitePath,
@@ -613,6 +624,7 @@ SQL;
             $stmt->bindValue(':datePublished', $this->datePublished, PDO::PARAM_STR);
             $stmt->bindValue(':slug', $this->slug, PDO::PARAM_STR);
             $stmt->bindValue(':contentType', $this->contentType, PDO::PARAM_STR);
+            $stmt->bindValue(':public', ($this->public ? 1 : 0), PDO::PARAM_INT);
             $stmt->bindValue(':statusId', $statusId, PDO::PARAM_INT);
             $stmt->bindValue(':siteId', $this->siteId, PDO::PARAM_INT);
             $stmt->bindValue(':sitePath', $this->sitePath, PDO::PARAM_STR);
@@ -672,6 +684,7 @@ SQL;
         $this->siteId = (int) $this->siteId;
         $this->datePublished = date(self::DATE_TIME_FORMAT, strtotime($this->datePublished));
         $this->dateModified = date(self::DATE_TIME_FORMAT, strtotime($this->dateModified));
+        $this->public = (bool) $this->public;
 
         if (!isset($this->customFields)) {
             $this->customFields = CustomFieldModel::initObject($this->articleId);

@@ -37,6 +37,11 @@
                 "required": false
             }
         },
+        "public": {
+            "type": "boolean",
+            "description": "The article is appropriate for searching, RSS, etc.",
+            "required": false
+        },
         "siteId": {
             "type": "integer",
             "description": "Unique ID of site the article belongs to.",
