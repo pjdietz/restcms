@@ -15,10 +15,8 @@ class MainRouter extends Router
         parent::__construct();
 
         $this->templateVariables = array(
-            'articleId' => Route::RE_NUM,
-            'customFieldId' => Route::RE_NUM,
-            'statusId' => Route::RE_NUM,
-            'statusSlug' => Route::RE_SLUG,
+            'articleId' => Route::RE_SLUG,
+            'statusId' => Route::RE_SLUG,
             'tagId' => Route::RE_SLUG,
             'versionId' => Route::RE_NUM,
             'userId' => Route::RE_NUM

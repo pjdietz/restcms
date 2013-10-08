@@ -12,6 +12,21 @@ class StatusModel extends RestCmsBaseModel
     public $statusId;
 
     /**
+     * Read a status from the database by ID or slug.
+     *
+     * @param int|string $statusId
+     * @return StatusModel
+     * @throws ResourceException
+     */
+    public static function init($statusId)
+    {
+        if (is_numeric($statusId)) {
+            return self::initWithId($statusId);
+        }
+        return self::initWithSlug($statusId);
+    }
+
+    /**
      * @param $statusId
      * @return StatusModel
      * @throws ResourceException
