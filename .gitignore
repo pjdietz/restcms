@@ -1,4 +1,5 @@
 workspace.xml
-vendor
-htdocs/config/RestCmsConfig/*
-!htdocs/config/RestCmsConfig/*.template
+vendor/
+report/
+config/RestCmsConfig/*
+!config/RestCmsConfig/*.template

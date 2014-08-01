@@ -13,9 +13,13 @@
         "justinrainbow/json-schema": "1.2.*",
         "dflydev/markdown": "1.0.*@dev"
     },
+    "require-dev": {
+        "fzaninotto/faker": "1.5.*@dev",
+        "phpunit/phpunit": "4.1.*"
+    },
     "autoload": {
         "psr-0": {
-            "pjdietz\\RestCms": "lib/",
+            "pjdietz\\RestCms": "src/",
             "RestCmsConfig": "config/"
         }
     }
