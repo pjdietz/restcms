@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-        bootstrap="vendor/autoload.php"
+        bootstrap="test/bootstrap.php"
         colors="true"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
@@ -10,9 +10,15 @@
         syntaxCheck="false"
         verbose="true"
         >
+    <php>
+        <var name="DB_DSN" value="mysql:host=localhost;dbname=restcms"/>
+        <var name="DB_USERNAME" value="test"/>
+        <var name="DB_PASSWORD" value="test"/>
+        <var name="DB_SCHEMA" value="restcms"/>
+    </php>
     <testsuites>
         <testsuite name="RestCms Test Suite">
-            <directory>./test/</directory>
+            <directory>./test/tests/</directory>
         </testsuite>
     </testsuites>
     <filter>
