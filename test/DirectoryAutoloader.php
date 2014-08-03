@@ -26,20 +26,23 @@ class DirectoryAutoloader
      */
     public static function registerDirectory($path, $namespace = "", $appendDirectoryToNamespace = false)
     {
-        // Ensure the namespace ihas a trailing delimiter or is empty.
+        // Ensure the namespace has a trailing delimiter or is empty.
         if ($namespace && substr($namespace, -1) !== "\\") {
-            $namespace .=  "\\";
+            $namespace .= "\\";
         }
 
         // Iterate over the items in the path provided.
         foreach (new DirectoryIterator($path) as $file) {
+            /** @var DirectoryIterator $file */
             if ($file->isDir() && !$file->isLink() && !$file->isDot()) {
                 // Directory
                 // Optionally append the directory name to the namespace and recurse.
                 if ($appendDirectoryToNamespace) {
-                    $namespace .= $file->getFilename() . "\\";
+                    $childNamespace = $namespace . $file->getFilename() . "\\";
+                } else {
+                    $childNamespace = $namespace;
                 }
-                self::registerDirectory($file->getPathname(), $namespace);
+                self::registerDirectory($file->getPathname(), $childNamespace, $appendDirectoryToNamespace);
             } elseif (substr($file->getFilename(), -4) === '.php') {
                 // PHP File.
                 $className = substr($file->getFilename(), 0, -4);

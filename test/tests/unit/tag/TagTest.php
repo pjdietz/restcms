@@ -7,7 +7,7 @@ use pjdietz\RestCms\Tag\Tag;
 class TagTest extends DatabaseTestCase
 {
     /**
-     * @dataProvider validTagProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\TagProvider::validTagProvider
      */
     public function testReadTagById($id, $slug)
     {
@@ -17,7 +17,7 @@ class TagTest extends DatabaseTestCase
     }
 
     /**
-     * @dataProvider validTagProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\TagProvider::validTagProvider
      */
     public function testReadTagBySlug($id, $slug)
     {
@@ -26,16 +26,8 @@ class TagTest extends DatabaseTestCase
         $this->assertEquals($id, $tag->tagId);
     }
 
-    public function validTagProvider()
-    {
-        return [
-            [1, "cats"],
-            [2, "rest"]
-        ];
-    }
-
     /**
-     * @dataProvider invalidTagProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\TagProvider::invalidTagProvider
      * @expectedException \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
      */
     public function testReadMissingTag($id)
@@ -43,12 +35,4 @@ class TagTest extends DatabaseTestCase
         $db = $this->getConnection()->getConnection();
         Tag::init($id, $db);
     }
-
-    public function invalidTagProvider()
-    {
-        return [
-            [4], ["birds"]
-        ];
-    }
-
 }

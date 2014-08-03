@@ -7,7 +7,7 @@ use pjdietz\RestCms\Status\Status;
 class StatusTest extends DatabaseTestCase
 {
     /**
-     * @dataProvider validStatusProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\StatusProvider::validStatusProvider
      */
     public function testReadStatusById($id, $slug)
     {
@@ -17,7 +17,7 @@ class StatusTest extends DatabaseTestCase
     }
 
     /**
-     * @dataProvider validStatusProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\StatusProvider::validStatusProvider
      */
     public function testReadStatusBySlug($id, $slug)
     {
@@ -26,18 +26,8 @@ class StatusTest extends DatabaseTestCase
         $this->assertEquals($id, $status->statusId);
     }
 
-    public function validStatusProvider()
-    {
-        return [
-            [1, "draft"],
-            [2, "published"],
-            [3, "pending"],
-            [4, "removed"]
-        ];
-    }
-
     /**
-     * @dataProvider invalidStatusProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\StatusProvider::invalidStatusProvider
      * @expectedException \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
      */
     public function testReadMissingStatus($id)
@@ -45,12 +35,4 @@ class StatusTest extends DatabaseTestCase
         $db = $this->getConnection()->getConnection();
         Status::init($id, $db);
     }
-
-    public function invalidStatusProvider()
-    {
-        return [
-            [6], ["birds"]
-        ];
-    }
-
 }

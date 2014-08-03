@@ -15,10 +15,19 @@
         <var name="DB_USERNAME" value="test"/>
         <var name="DB_PASSWORD" value="test"/>
         <var name="DB_SCHEMA" value="restcms"/>
+        <var name="HTTP_PROTOCOL" value="http" />
+        <var name="HTTP_HOSTNAME" value="localhost" />
+        <var name="HTTP_PORT" value="8080" />
+        <var name="HTTP_CREATE" value="true" />
     </php>
     <testsuites>
-        <testsuite name="RestCms Test Suite">
-            <directory>./test/tests/</directory>
+        <testsuite name="http">
+            <directory>./test/tests/http/</directory>
+        </testsuite>
+    </testsuites>
+    <testsuites>
+        <testsuite name="unit">
+            <directory>./test/tests/unit/</directory>
         </testsuite>
     </testsuites>
     <filter>

@@ -7,7 +7,7 @@ use pjdietz\RestCms\Site\Site;
 class SiteTest extends DatabaseTestCase
 {
     /**
-     * @dataProvider validSiteProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\SiteProvider::validSiteProvider
      */
     public function testReadSiteById($id, $slug)
     {
@@ -17,7 +17,7 @@ class SiteTest extends DatabaseTestCase
     }
 
     /**
-     * @dataProvider validSiteProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\SiteProvider::validSiteProvider
      */
     public function testReadSiteBySlug($id, $slug)
     {
@@ -26,29 +26,14 @@ class SiteTest extends DatabaseTestCase
         $this->assertEquals($id, $site->siteId);
     }
 
-    public function validSiteProvider()
-    {
-        return [
-            [1, "cats"],
-            [2, "dogs"]
-        ];
-    }
-
     /**
-     * @dataProvider invalidSiteProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\SiteProvider::invalidSiteProvider
      * @expectedException \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
      */
     public function testReadMissingSite($id)
     {
         $db = $this->getConnection()->getConnection();
         Site::init($id, $db);
-    }
-
-    public function invalidSiteProvider()
-    {
-        return [
-            [3], ["birds"]
-        ];
     }
 
     /**
@@ -68,5 +53,4 @@ class SiteTest extends DatabaseTestCase
             [2, "/",         "http://dogs.localhost/"]
         ];
     }
-
 }
