@@ -1,0 +1,15 @@
+site:
+  -
+    siteId: 1
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    slug: cats
+    hostname: cats.localhost
+    protocol: http
+  -
+    siteId: 2
+    dateCreated: "2014-08-02 00:00:00"
+    dateModified: "2014-08-02 00:00:00"
+    slug: dogs
+    hostname: dogs.localhost
+    protocol: http

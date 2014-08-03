@@ -1,6 +1,10 @@
 <?php
 
-if (!@include_once('vendor/autoload.php')) {
+use pjdietz\RestCms\Configuration;
+use pjdietz\RestCms\Router;
+use pjdietz\WellRESTed\Request;
+
+if (!@include_once(__DIR__ . "/../vendor/autoload.php")) {
     header('Content-type: text/html');
     print <<<HTML
 <!DOCTYPE html>
@@ -19,7 +23,8 @@ HTML;
     exit;
 }
 
-$router = new \pjdietz\RestCms\MainRouter();
-$response = $router->getResponse();
+$router = new Router();
+$configuration = new Configuration();
+$response = $router->getResponse(Request::getRequest(), array("configuration" => $configuration));
 $response->respond();
 exit;

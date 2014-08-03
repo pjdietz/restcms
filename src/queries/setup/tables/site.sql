@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS site (
     UNIQUE INDEX idxArticleSlug (slug),
     UNIQUE INDEX idxHostname (hostname)
 )
-ENGINE = MyISAM;
+ENGINE = InnoDB;

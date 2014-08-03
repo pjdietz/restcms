@@ -32,6 +32,6 @@ abstract class DatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
      */
     public function getDataSet()
     {
-        return $this->createFlatXMLDataSet(__DIR__ . "/../fixtures/sample.xml");
+        return new \PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/../fixtures/fixtures.yml");
     }
 }

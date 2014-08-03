@@ -203,12 +203,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pjdietz/wellrested.git",
-                "reference": "512897effdde98abe517572c6fdca770e03f02ea"
+                "reference": "8f4953c6836f26252634a6ea7c1d532b923dad62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pjdietz/wellrested/zipball/512897effdde98abe517572c6fdca770e03f02ea",
-                "reference": "512897effdde98abe517572c6fdca770e03f02ea",
+                "url": "https://api.github.com/repos/pjdietz/wellrested/zipball/8f4953c6836f26252634a6ea7c1d532b923dad62",
+                "reference": "8f4953c6836f26252634a6ea7c1d532b923dad62",
                 "shasum": ""
             },
             "require": {
@@ -247,7 +247,7 @@
                 "rest",
                 "restful"
             ],
-            "time": "2014-07-28 16:43:29"
+            "time": "2014-08-02 21:47:01"
         }
     ],
     "packages-dev": [
