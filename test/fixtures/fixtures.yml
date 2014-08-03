@@ -14,6 +14,32 @@ site:
     hostname: dogs.localhost
     protocol: http
 
+status:
+  -
+    statusId: 1
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    slug: draft
+    name: Draft
+  -
+    statusId: 2
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    slug: published
+    name: Published
+  -
+    statusId: 3
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    slug: pending
+    name: Pending Review
+  -
+    statusId: 4
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    slug: removed
+    name: Removed
+
 tag:
   -
     tagId: 1
