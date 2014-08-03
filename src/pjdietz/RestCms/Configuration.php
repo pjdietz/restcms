@@ -25,7 +25,8 @@ class Configuration
         static $classes = null;
         if ($classes === null) {
             $classes = array(
-                "Site" => __NAMESPACE__ . "\\Site\\Site"
+                "Site" => __NAMESPACE__ . "\\Site\\Site",
+                "Tag"  => __NAMESPACE__ . "\\Tag\\Tag"
             );
         }
 

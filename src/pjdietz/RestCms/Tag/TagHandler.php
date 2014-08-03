@@ -1,10 +1,10 @@
 <?php
 
-namespace pjdietz\RestCms\Site;
+namespace pjdietz\RestCms\Tag;
 
 use pjdietz\RestCms\Handler;
 
-class SiteHandler extends Handler
+class TagHandler extends Handler
 {
     protected $db;
 
@@ -15,14 +15,14 @@ class SiteHandler extends Handler
 
     protected function get()
     {
-        $modelClass = $this->configuration->getClass("Site");
+        $modelClass = $this->configuration->getClass("Tag");
         $db = $this->configuration->getDatabaseConnection();
 
-        /** @var \pjdietz\RestCms\Site\Site $siteModelClass */
-        $site = $modelClass::init($this->args['siteId'], $db);
+        /** @var \pjdietz\RestCms\Tag\Tag $modelClass */
+        $tag = $modelClass::init($this->args['tagId'], $db);
 
         $this->response->setStatusCode(200);
         $this->response->setHeader('Content-Type', 'application/json');
-        $this->response->setBody(json_encode($site));
+        $this->response->setBody(json_encode($tag));
     }
 }

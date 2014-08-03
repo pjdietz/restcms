@@ -13,3 +13,23 @@ site:
     slug: dogs
     hostname: dogs.localhost
     protocol: http
+
+tag:
+  -
+    tagId: 1
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    slug: cats
+    name: Cats
+  -
+    tagId: 2
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    slug: rest
+    name: REST
+  -
+    tagId: 3
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    slug: api
+    name: APIs

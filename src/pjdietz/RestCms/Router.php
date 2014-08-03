@@ -13,7 +13,8 @@ class Router extends \pjdietz\WellRESTed\Router
     {
         parent::__construct();
         $this->addRoutes(array(
-               new TemplateRoute("/sites/{siteId}", __NAMESPACE__ . "\\Site\\SiteHandler")
+               new TemplateRoute("/sites/{siteId}", __NAMESPACE__ . "\\Site\\SiteHandler"),
+               new TemplateRoute("/tags/{tagId}",   __NAMESPACE__ . "\\Tag\\TagHandler")
             ));
     }
 }
