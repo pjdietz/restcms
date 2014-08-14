@@ -1,3 +1,23 @@
+article:
+  -
+    articleId: 1
+    slug: cats
+    contentType: text/html
+    statusId: 1
+    currentVersionId: 1
+    siteId: 1
+    sitePath: /cats/
+    public: 1
+  -
+    articleId: 2
+    slug: dogs
+    contentType: text/html
+    statusId: 1
+    currentVersionId: 2
+    siteId: 1
+    sitePath: /dogs/
+    public: 1
+
 site:
   -
     siteId: 1

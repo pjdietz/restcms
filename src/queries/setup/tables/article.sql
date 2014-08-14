@@ -13,4 +13,4 @@ CREATE TABLE IF NOT EXISTS article (
     UNIQUE INDEX idxArticleSlug (slug),
     UNIQUE INDEX idxSitePath (siteId, sitePath)
 )
-ENGINE = MyISAM;
+ENGINE = InnoDB;
