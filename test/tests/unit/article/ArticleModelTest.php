@@ -4,7 +4,7 @@ namespace pjdietz\RestCms\Test;
 
 use pjdietz\RestCms\Article\Article;
 
-class ArticleModelTest extends DatabaseTestCase
+class ArticleModelTest extends TestCase
 {
     /**
      * @dataProvider representationAndIdProvider
