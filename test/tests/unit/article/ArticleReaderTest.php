@@ -2,9 +2,10 @@
 
 namespace pjdietz\RestCms\Test;
 
-use pjdietz\RestCms\Article\Article;
+use pjdietz\RestCms\Article\ArticleReader;
+use stdClass;
 
-class ArticleTest extends DatabaseTestCase
+class ArticleReaderTest extends DatabaseTestCase
 {
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validIdProvider
@@ -12,7 +13,9 @@ class ArticleTest extends DatabaseTestCase
     public function testReadById($id, $slug)
     {
         $db = $this->getConnection()->getConnection();
-        $article = Article::init($id, $db);
+        $reader = new ArticleReader();
+        /** @var stdClass $article */
+        $article = $reader->read($id, $db);
         $this->assertEquals($slug, $article->slug);
     }
 
@@ -22,7 +25,9 @@ class ArticleTest extends DatabaseTestCase
     public function testReadBySlug($id, $slug)
     {
         $db = $this->getConnection()->getConnection();
-        $article = Article::init($slug, $db);
+        $reader = new ArticleReader();
+        /** @var stdClass $article */
+        $article = $reader->read($slug, $db);
         $this->assertEquals($id, $article->articleId);
     }
 
@@ -33,6 +38,8 @@ class ArticleTest extends DatabaseTestCase
     public function testReadMissingSite($id)
     {
         $db = $this->getConnection()->getConnection();
-        Article::init($id, $db);
+        $reader = new ArticleReader();
+        /** @var stdClass $article */
+        $reader->read($id, $db);
     }
 }
