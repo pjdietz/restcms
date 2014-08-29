@@ -2,6 +2,7 @@
 
 namespace pjdietz\RestCms;
 
+use pjdietz\WellRESTed\Interfaces\RequestInterface;
 use pjdietz\WellRESTed\Routes\TemplateRoute;
 
 /**
@@ -9,13 +10,25 @@ use pjdietz\WellRESTed\Routes\TemplateRoute;
  */
 class Router extends \pjdietz\WellRESTed\Router
 {
-    public function __construct()
+    private $config;
+
+    public function __construct($config)
     {
         parent::__construct();
+        $this->config = $config;
         $this->addRoutes(
             array(
-                new TemplateRoute("/articles/{articleId}", __NAMESPACE__ . "\\Article\\ArticleHandler"),
+                new TemplateRoute("/articles/{articleId}", $config["ArticleHandler"])
             )
         );
+    }
+
+    public function getResponse(RequestInterface $request, array $args = null)
+    {
+        $arguments = array("configuration" => $this->config);
+        if ($args) {
+            $arguments = array_merge($arguments, $args);
+        }
+        return parent::getResponse($request, $arguments);
     }
 }

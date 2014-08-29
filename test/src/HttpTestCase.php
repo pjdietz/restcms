@@ -36,17 +36,16 @@ ini_set("html_errors", 0);
 
 require_once("$autoloadPath");
 
-\$router = new Router();
 \$config = new Configuration();
 \$config["DB_DSN"] = "$dbDsn";
 \$config["DB_USERNAME"] = "$dbUsername";
 \$config["DB_PASSWORD"] = "$dbPassword";
 
-\$response = \$router->getResponse(Request::getRequest(), array("configuration" => \$config));
+\$router = new Router(\$config);
+
+\$response = \$router->getResponse(Request::getRequest());
 \$response->respond();
 PHP;
-
-
             self::$server = new StringShamServer($GLOBALS["HTTP_HOSTNAME"], $GLOBALS["HTTP_PORT"], $router);
         }
     }
