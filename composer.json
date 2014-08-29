@@ -1,13 +1,6 @@
 {
     "name":"pjdietz/restcms",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/pjdietz/CliApp"
-        }
-    ],
     "require": {
-        "pjdietz/cliapp": "dev-master",
         "pjdietz/wellrested": "dev-master",
         "michelf/php-markdown": "1.3.*@dev",
         "justinrainbow/json-schema": "1.2.*",

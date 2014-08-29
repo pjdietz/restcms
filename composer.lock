@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "73f57ddb6165ace301645d22eb62b2ed",
+    "hash": "ff377a9b4f417dde43827623afc27536",
     "packages": [
         {
             "name": "dflydev/markdown",
@@ -216,32 +216,6 @@
                 "dependency injection"
             ],
             "time": "2014-07-24 09:48:15"
-        },
-        {
-            "name": "pjdietz/cliapp",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/pjdietz/CliApp.git",
-                "reference": "7518b048e222e2f0167edc96e88067c1efe63776"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/pjdietz/CliApp/zipball/7518b048e222e2f0167edc96e88067c1efe63776",
-                "reference": "7518b048e222e2f0167edc96e88067c1efe63776",
-                "shasum": ""
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "pjdietz\\CliApp": "src/"
-                }
-            },
-            "support": {
-                "source": "https://github.com/pjdietz/CliApp/tree/master",
-                "issues": "https://github.com/pjdietz/CliApp/issues"
-            },
-            "time": "2013-02-06 00:18:42"
         },
         {
             "name": "pjdietz/wellrested",
@@ -1150,7 +1124,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "pjdietz/cliapp": 20,
         "pjdietz/wellrested": 20,
         "michelf/php-markdown": 20,
         "dflydev/markdown": 20,
