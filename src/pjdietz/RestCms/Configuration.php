@@ -2,37 +2,63 @@
 
 namespace pjdietz\RestCms;
 
+use ArrayAccess;
+use BadMethodCallException;
+use InvalidArgumentException;
 use PDO;
 
-class Configuration
+class Configuration implements ArrayAccess
 {
-    const DB_DSN = "mysql:host=localhost;dbname=restcms";
-    const DB_USERNAME = "test";
-    const DB_PASSWORD = "test";
-    const DB_SCHEMA = "restcms";
+    /** @var array */
+    private $properties;
 
+    public function __construct(array $properties)
+    {
+        $defaults = [
+            "Class::Article" => __NAMESPACE__ . "\\Article\\Article",
+            "Class::ArticleReader" => __NAMESPACE__ . "\\Article\\ArticleReader"
+        ];
+
+        $this->properties = array_merge($defaults, $properties);
+    }
+
+    public function getClass($className)
+    {
+
+    }
+
+    /**
+     * @return PDO
+     * @throws InvalidArgumentException
+     */
     public function getDatabaseConnection()
     {
-        static $pdo = null;
-        if ($pdo === null) {
-            $pdo = new PDO(self::DB_DSN, self::DB_USERNAME, self::DB_PASSWORD);
-        }
-        return $pdo;
+
     }
 
-    public function getClass($name)
+    public function get($instance)
     {
-        static $classes = null;
-        if ($classes === null) {
-            $classes = array(
-                "Site" => __NAMESPACE__ . "\\Site\\Site",
-                "Status" => __NAMESPACE__ . "\\Status\\Status",
-                "Tag" => __NAMESPACE__ . "\\Tag\\Tag"
-            );
-        }
 
-        if (isset($classes[$name])) {
-            return $classes[$name];
-        }
     }
+
+    public function offsetExists($offset)
+    {
+        return isset($this->properties[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->offsetExists($offset) ? $this->properties[$offset] : null;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        throw new BadMethodCallException("Array access of class " . get_class($this) . " is read-only.");
+    }
+
+    public function offsetUnset($offset)
+    {
+        throw new BadMethodCallException("Array access of class " . get_class($this) . " is read-only.");
+    }
+
 }
