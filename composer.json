@@ -11,7 +11,8 @@
         "pjdietz/wellrested": "dev-master",
         "michelf/php-markdown": "1.3.*@dev",
         "justinrainbow/json-schema": "1.2.*",
-        "dflydev/markdown": "1.0.*@dev"
+        "dflydev/markdown": "1.0.*@dev",
+        "pimple/pimple": "~3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "1.5.*@dev",
