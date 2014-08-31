@@ -21,8 +21,8 @@
         <var name="HTTP_CREATE" value="true" />
     </php>
     <testsuites>
-        <testsuite name="http">
-            <directory>./test/tests/http/</directory>
+        <testsuite name="behavior">
+            <directory>./test/tests/behavior/</directory>
         </testsuite>
     </testsuites>
     <testsuites>

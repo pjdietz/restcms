@@ -1,81 +1,19 @@
-article:
+content:
   -
-    articleId: 1
-    slug: cats
-    contentType: text/html
-    statusId: 1
-    currentVersionId: 1
-    siteId: 1
-    sitePath: /cats/
-    public: 1
-  -
-    articleId: 2
-    slug: dogs
-    contentType: text/html
-    statusId: 1
-    currentVersionId: 2
-    siteId: 1
-    sitePath: /dogs/
-    public: 1
-
-site:
-  -
-    siteId: 1
+    contentId: 1
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
-    slug: cats
-    hostname: cats.localhost
-    protocol: http
-  -
-    siteId: 2
-    dateCreated: "2014-08-02 00:00:00"
-    dateModified: "2014-08-02 00:00:00"
-    slug: dogs
-    hostname: dogs.localhost
-    protocol: http
-
-status:
-  -
-    statusId: 1
-    dateCreated: "2014-08-01 00:00:00"
-    dateModified: "2014-08-01 00:00:00"
-    slug: draft
-    name: Draft
-  -
-    statusId: 2
-    dateCreated: "2014-08-01 00:00:00"
-    dateModified: "2014-08-01 00:00:00"
-    slug: published
-    name: Published
-  -
-    statusId: 3
-    dateCreated: "2014-08-01 00:00:00"
-    dateModified: "2014-08-01 00:00:00"
-    slug: pending
-    name: Pending Review
-  -
-    statusId: 4
-    dateCreated: "2014-08-01 00:00:00"
-    dateModified: "2014-08-01 00:00:00"
-    slug: removed
-    name: Removed
-
-tag:
-  -
-    tagId: 1
-    dateCreated: "2014-08-01 00:00:00"
-    dateModified: "2014-08-01 00:00:00"
+    datePublished: "2014-08-01 00:00:00"
     slug: cats
     name: Cats
+    path: /cats
+    contentType: text/html
   -
-    tagId: 2
+    contentId: 2
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
-    slug: rest
-    name: REST
-  -
-    tagId: 3
-    dateCreated: "2014-08-01 00:00:00"
-    dateModified: "2014-08-01 00:00:00"
-    slug: api
-    name: APIs
+    datePublished: "2014-08-01 00:00:00"
+    slug: dogs
+    name: Dogs
+    path: /dogs
+    contentType: text/html
