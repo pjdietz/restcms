@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms\Test;
 
 use pjdietz\RestCms\Model;
+use pjdietz\RestCms\Test\TestCases\TestCase;
 
 class ModelTest extends TestCase
 {

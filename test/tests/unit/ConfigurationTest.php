@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms\Test;
 
 use pjdietz\RestCms\Configuration;
+use pjdietz\RestCms\Test\TestCases\TestCase;
 
 class ConfigurationTest extends TestCase
 {

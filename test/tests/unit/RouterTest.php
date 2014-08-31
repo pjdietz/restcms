@@ -5,6 +5,7 @@ namespace pjdietz\RestCms\Test;
 use pjdietz\RestCms\Configuration;
 use pjdietz\RestCms\Handler;
 use pjdietz\RestCms\Router;
+use pjdietz\RestCms\Test\TestCases\TestCase;
 use pjdietz\WellRESTed\Routes\StaticRoute;
 
 class RouterTest extends TestCase
