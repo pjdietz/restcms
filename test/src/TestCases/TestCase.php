@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\RestCms\Test;
+namespace pjdietz\RestCms\Test\TestCases;
 
 use PHPUnit_Framework_TestCase;
 

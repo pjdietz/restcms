@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\RestCms\Test;
+namespace pjdietz\RestCms\Test\TestCases;
 
 use PDO;
 use PHPUnit_Extensions_Database_TestCase;
@@ -32,6 +32,6 @@ abstract class DatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
      */
     public function getDataSet()
     {
-        return new \PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/../fixtures/fixtures.yml");
+        return new \PHPUnit_Extensions_Database_DataSet_YamlDataSet(__DIR__ . "/../../fixtures/fixtures.yml");
     }
 }

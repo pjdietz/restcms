@@ -1,15 +1,12 @@
 <?php
 
-namespace pjdietz\RestCms\Test;
+namespace pjdietz\RestCms\Test\TestCases;
 
-use PHPUnit_Framework_TestCase;
 use pjdietz\ShamServer\ShamServer;
 use pjdietz\ShamServer\StringShamServer;
 use pjdietz\WellRESTed\Request;
-use StringShamServerTest;
-use pjdietz\RestCms\Configuration;
 
-abstract class HttpTestCase extends DatabaseTestCase
+abstract class HttpTestCase extends TestCase
 {
     /** @var ShamServer */
     protected static $server;

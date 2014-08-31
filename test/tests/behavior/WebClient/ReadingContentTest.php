@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms\Test;
 
 use pjdietz\RestCms\Content\ContentReader;
+use pjdietz\RestCms\Test\TestCases\DatabaseTestCase;
 
 class ReadingContentTest extends DatabaseTestCase
 {
