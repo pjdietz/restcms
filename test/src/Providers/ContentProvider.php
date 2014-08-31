@@ -18,4 +18,14 @@ class ContentProvider
             ["/birds"]
         ];
     }
+
+    public function validPathAndLocaleProvider()
+    {
+        return [
+            ["/cats", null, null],
+            ["/cats", "es", "es"],
+            ["/cats", "fr,de,es", "de"],
+            ["/dogs", "fr,de", null],
+        ];
+    }
 }
