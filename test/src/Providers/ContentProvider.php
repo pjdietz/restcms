@@ -4,6 +4,21 @@ namespace pjdietz\RestCms\Test\Providers;
 
 class ContentProvider
 {
+    public function validIdProvider()
+    {
+        return [
+            [1, "cats"],
+            [4, "dogs"]
+        ];
+    }
+
+    public function invalidIdProvider()
+    {
+        return [
+            [400], ["birds"]
+        ];
+    }
+
     public function validPathProvider()
     {
         return [

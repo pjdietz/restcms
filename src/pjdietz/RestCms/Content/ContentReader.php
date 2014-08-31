@@ -22,6 +22,72 @@ class ContentReader
     }
 
     /**
+     * Read a content from the database by ID or slug.
+     *
+     * @param PDO $db Database connection
+     * @param int|string $id contentId or slug for the resource
+     * @throws \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
+     * @return mixed
+     */
+    public function read(PDO $db, $id)
+    {
+        if (is_numeric($id)) {
+            return $this->readWithId($db, $id);
+        }
+        return $this->readWithSlug($db, $id);
+    }
+
+    /**
+     * Read a content from the database by ID.
+     *
+     * @param PDO $db Database connection
+     * @param int $id contentId or slug for the resource
+     * @throws \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
+     * @return mixed
+     */
+    public function readWithId(PDO $db, $id)
+    {
+        $query = $this->getQueryStem();
+        $query .= <<<QUERY
+WHERE
+    c.contentId = :contentId
+LIMIT 1;
+QUERY;
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':contentId', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            throw new NotFoundException();
+        }
+        return $stmt->fetchObject($this->modelClass);
+    }
+
+    /**
+     * Read a content from the database by Slug.
+     *
+     * @param PDO $db Database connection
+     * @param string $slug contentId or slug for the resource
+     * @throws \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
+     * @return mixed
+     */
+    public function readWithSlug(PDO $db, $slug)
+    {
+        $query = $this->getQueryStem();
+        $query .= <<<QUERY
+WHERE
+    c.slug = :slug
+LIMIT 1;
+QUERY;
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':slug', $slug, PDO::PARAM_STR);
+        $stmt->execute();
+        if ($stmt->rowCount() === 0) {
+            throw new NotFoundException();
+        }
+        return $stmt->fetchObject($this->modelClass);
+    }
+
+    /**
      * Return the best matching content given a path and optional locale
      *
      * @param PDO $db Database connection
@@ -38,21 +104,7 @@ class ContentReader
             $locales = array();
         }
 
-        $query = <<<QUERY
-SELECT
-    c.contentId,
-    c.dateCreated,
-    c.dateModified,
-    c.datePublished,
-    c.slug,
-    c.name,
-    c.path,
-    c.contentType,
-    l.slug AS locale
-FROM content c
-    LEFT JOIN locale l
-        ON c.localeId = l.localeId
-QUERY;
+        $query = $this->getQueryStem();
 
         $where = array();
         $where[] = " path = :path ";
@@ -112,6 +164,26 @@ QUERY;
     private function dropTmpLocaleSort(PDO $db)
     {
         $db->exec("DROP TEMPORARY TABLE IF EXISTS tmpLocaleSort;");
+    }
+
+    private function getQueryStem()
+    {
+        return <<<QUERY
+SELECT
+    c.contentId,
+    c.dateCreated,
+    c.dateModified,
+    c.datePublished,
+    c.slug,
+    c.name,
+    c.path,
+    c.contentType,
+    l.slug AS locale
+FROM content c
+    LEFT JOIN locale l
+        ON c.localeId = l.localeId
+
+QUERY;
     }
 
 }
