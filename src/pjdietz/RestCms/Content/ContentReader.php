@@ -30,10 +30,13 @@ class ContentReader
      * @throws \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
      * @return object
      */
-    public function readWithPath(PDO $db, $path, $locale = null)
+    public function readWithPath(PDO $db, $path, $locale = "")
     {
         $locales = explode(",", $locale);
         $locales = array_map("trim", $locales);
+        if (count($locales) === 1 && $locales[0] === "") {
+            $locales = array();
+        }
 
         $query = <<<QUERY
 SELECT
