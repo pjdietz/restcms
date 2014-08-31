@@ -4,7 +4,6 @@ namespace pjdietz\RestCms\Test\Unit\Content;
 
 use PDO;
 use pjdietz\RestCms\Content\ContentHandler;
-use pjdietz\RestCms\Content\ContentPathHandler;
 use pjdietz\RestCms\Test\Mocks\PDOMock;
 use pjdietz\RestCms\Test\TestCases\TestCase;
 use stdClass;

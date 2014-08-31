@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\RestCms\Test\Http;;
+namespace pjdietz\RestCms\Test\Behavior\WebClient\Content\Item;
 
 use pjdietz\RestCms\Test\TestCases\HttpTestCase;
 use pjdietz\WellRESTed\Client;
