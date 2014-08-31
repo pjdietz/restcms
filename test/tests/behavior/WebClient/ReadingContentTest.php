@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\RestCms\Test;
+namespace pjdietz\RestCms\Test\Behavior\WebClient;
 
 use pjdietz\RestCms\Content\ContentReader;
 use pjdietz\RestCms\Test\TestCases\DatabaseTestCase;

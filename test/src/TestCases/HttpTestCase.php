@@ -16,7 +16,7 @@ abstract class HttpTestCase extends TestCase
         parent::setUpBeforeClass();
         if ($GLOBALS["HTTP_CREATE"] == "true") {
 
-            $autoloadPath = __DIR__ . "/../../vendor/autoload.php";
+            $autoloadPath = __DIR__ . "/../../../vendor/autoload.php";
             $dbDsn = $GLOBALS["DB_DSN"];
             $dbUsername = $GLOBALS["DB_USERNAME"];
             $dbPassword = $GLOBALS["DB_PASSWORD"];
@@ -28,8 +28,8 @@ use pjdietz\RestCms\Configuration;
 use pjdietz\RestCms\Router;
 use pjdietz\WellRESTed\Request;
 
-//ini_set("display_errors", 0);
-ini_set("html_errors", 0);
+ini_set("display_errors", 0);
+//ini_set("html_errors", 0);
 
 require_once("$autoloadPath");
 

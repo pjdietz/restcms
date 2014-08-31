@@ -3,6 +3,7 @@
 namespace pjdietz\RestCms;
 
 use pjdietz\WellRESTed\Interfaces\RequestInterface;
+use pjdietz\WellRESTed\Routes\RegexRoute;
 use pjdietz\WellRESTed\Routes\TemplateRoute;
 
 /**
@@ -18,7 +19,7 @@ class Router extends \pjdietz\WellRESTed\Router
         $this->config = $config;
         $this->addRoutes(
             array(
-                new TemplateRoute("/articles/{articleId}", $config["ArticleHandler"])
+                new RegexRoute("~/paths/(?<path>.*)~", $config["ContentPathHandler"])
             )
         );
     }

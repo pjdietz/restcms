@@ -30,6 +30,11 @@
             <directory>./test/tests/unit/</directory>
         </testsuite>
     </testsuites>
+    <testsuites>
+        <testsuite name="http">
+            <directory>./test/tests/http/</directory>
+        </testsuite>
+    </testsuites>
     <filter>
         <whitelist>
             <directory suffix=".php">./src/</directory>

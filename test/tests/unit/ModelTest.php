@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\RestCms\Test;
+namespace pjdietz\RestCms\Test\Unit;
 
 use pjdietz\RestCms\Model;
 use pjdietz\RestCms\Test\TestCases\TestCase;

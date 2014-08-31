@@ -1,16 +1,16 @@
 <?php
 
-namespace pjdietz\RestCms\Test;
+namespace pjdietz\RestCms\Test\Unit;
 
 use pjdietz\RestCms\Configuration;
 use pjdietz\RestCms\Test\TestCases\TestCase;
 
 class ConfigurationTest extends TestCase
 {
-    public function testGetArticleReader()
+    public function testGetContentReader()
     {
         $conf = new Configuration();
-        $reader = $conf["articleReader"];
+        $reader = $conf["contentReader"];
         $this->assertNotNull($reader);
     }
 
