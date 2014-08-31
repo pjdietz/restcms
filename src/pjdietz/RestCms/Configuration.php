@@ -12,6 +12,7 @@ class Configuration extends Container
        parent::__construct();
 
        // Classes
+       $this["ContentHandler"] = __NAMESPACE__ . "\\Content\\ContentHandler";
        $this["ContentPathHandler"] = __NAMESPACE__ . "\\Content\\ContentPathHandler";
        $this["ContentReader"] = __NAMESPACE__ . "\\Content\\ContentReader";
 

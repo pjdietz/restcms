@@ -36,7 +36,7 @@ class ReadingContentTest extends DatabaseTestCase
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::invalidIdProvider
      * @expectedException \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
      */
-    public function testReadMissingSite($id)
+    public function testFailToReadMissingId($id)
     {
         $db = $this->getConnection()->getConnection();
         $reader = new ContentReader("stdClass");

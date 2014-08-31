@@ -19,6 +19,7 @@ class Router extends \pjdietz\WellRESTed\Router
         $this->config = $config;
         $this->addRoutes(
             array(
+                new TemplateRoute("/contents/{contentId}", $config["ContentHandler"]),
                 new RegexRoute("~/paths/(?<path>.*)~", $config["ContentPathHandler"])
             )
         );
