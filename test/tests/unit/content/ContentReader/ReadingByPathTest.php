@@ -1,16 +1,16 @@
 <?php
 
-namespace pjdietz\RestCms\Test\Behavior\WebClient\Content\Item;
+namespace pjdietz\RestCms\Test\Content;
 
 use pjdietz\RestCms\Content\ContentReader;
 use pjdietz\RestCms\Test\TestCases\DatabaseTestCase;
 
-class ReadingContentTest extends DatabaseTestCase
+class ReadingByPathTest extends DatabaseTestCase
 {
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathProvider
      */
-    public function testReadByPath($path)
+    public function testFindsContentGivenValidPath($path)
     {
         $db = $this->getConnection()->getConnection();
         $reader = new ContentReader("stdClass");
@@ -22,7 +22,7 @@ class ReadingContentTest extends DatabaseTestCase
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::invalidPathProvider
      * @expectedException \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
      */
-    public function testFailToReadByPath($path)
+    public function testThrowsExceptionGivenInvalidPath($path)
     {
         $db = $this->getConnection()->getConnection();
         $reader = new ContentReader("stdClass");
@@ -33,7 +33,7 @@ class ReadingContentTest extends DatabaseTestCase
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathAndLocaleProvider
      */
-    public function testReadByPathAndLocale($path, $locale, $expectedLocale)
+    public function testFindsBestMatchingContentForPathAndLocale($path, $locale, $expectedLocale)
     {
         $db = $this->getConnection()->getConnection();
         $reader = new ContentReader("stdClass");

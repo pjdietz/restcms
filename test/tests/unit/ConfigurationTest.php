@@ -7,14 +7,14 @@ use pjdietz\RestCms\Test\TestCases\TestCase;
 
 class ConfigurationTest extends TestCase
 {
-    public function testGetContentReader()
+    public function testProvidesContentReader()
     {
         $conf = new Configuration();
         $reader = $conf["contentReader"];
         $this->assertNotNull($reader);
     }
 
-    public function testGetDatabaseConnection()
+    public function testProvidesDatabaseConnection()
     {
         $conf = new Configuration();
         $conf["DB_DSN"] = $GLOBALS["DB_DSN"];

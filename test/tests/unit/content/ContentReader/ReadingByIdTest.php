@@ -1,17 +1,17 @@
 <?php
 
-namespace pjdietz\RestCms\Test\Behavior\Editor\Content\Item;
+namespace pjdietz\RestCms\Test\Content;
 
 use pjdietz\RestCms\Content\ContentReader;
 use pjdietz\RestCms\Test\TestCases\DatabaseTestCase;
 use stdClass;
 
-class ReadingContentTest extends DatabaseTestCase
+class ReadingByIdTest extends DatabaseTestCase
 {
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
      */
-    public function testReadById($id, $slug)
+    public function testFindsContentGivenValidId($id, $slug)
     {
         $db = $this->getConnection()->getConnection();
         $reader = new ContentReader("stdClass");
@@ -23,7 +23,7 @@ class ReadingContentTest extends DatabaseTestCase
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
      */
-    public function testReadBySlug($id, $slug)
+    public function testFindsContentGivenValidSlug($id, $slug)
     {
         $db = $this->getConnection()->getConnection();
         $reader = new ContentReader("stdClass");
@@ -36,7 +36,7 @@ class ReadingContentTest extends DatabaseTestCase
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::invalidIdProvider
      * @expectedException \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
      */
-    public function testFailToReadMissingId($id)
+    public function testThrowsExceptionsGivenInvalidId($id)
     {
         $db = $this->getConnection()->getConnection();
         $reader = new ContentReader("stdClass");

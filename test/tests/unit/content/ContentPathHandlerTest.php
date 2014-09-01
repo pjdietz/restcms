@@ -10,7 +10,7 @@ use stdClass;
 
 class ContentPathHandlerTest extends TestCase
 {
-    public function testRespondToOptionsRequest()
+    public function testRespondsToOptionsRequest()
     {
         $mockRequest = $this->getMock("\\pjdietz\\WellRESTed\\Interfaces\\RequestInterface");
         $mockRequest->expects($this->any())
@@ -25,7 +25,7 @@ class ContentPathHandlerTest extends TestCase
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathAndLocaleProvider
      */
-    public function testRespondForPath($path, $locale, $expectedLocale)
+    public function testRespondsToGetRequest($path, $locale, $expectedLocale)
     {
         $mockConfig = [
             "db" => new PDOMock(),
@@ -59,7 +59,7 @@ class ContentPathHandlerTest extends TestCase
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathAndLocaleProvider
      */
-    public function testRespondWithContentOnlyForPath($path, $locale, $expectedLocale)
+    public function testRespondsToGetRequestForContentOnly($path, $locale, $expectedLocale)
     {
         $query = array(
             "content" => 1

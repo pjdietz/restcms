@@ -1,16 +1,16 @@
 <?php
 
-namespace pjdietz\RestCms\Test\Behavior\Editor\Content\Item;
+namespace pjdietz\RestCms\Test\Http\Content;
 
 use pjdietz\RestCms\Test\TestCases\HttpTestCase;
 use pjdietz\WellRESTed\Client;
 
-class RequestContentTest extends HttpTestCase
+class RequestContentByIdTest extends HttpTestCase
 {
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
      */
-    public function testRequestById($id, $slug)
+    public function testRespondsWithContentGivenValidId($id, $slug)
     {
         $rqst = $this->getRequest();
         $rqst->setPath("/contents/" . $id);
@@ -24,7 +24,7 @@ class RequestContentTest extends HttpTestCase
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
      */
-    public function testRequestBySlug($id, $slug)
+    public function testRespondsWithContentGivenValidSlug($id, $slug)
     {
         $rqst = $this->getRequest();
         $rqst->setPath("/contents/" . $slug);
@@ -38,7 +38,7 @@ class RequestContentTest extends HttpTestCase
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::invalidIdProvider
      */
-    public function testFailToRequestMissingId($id)
+    public function testResponds404ForInvalidId($id)
     {
         $rqst = $this->getRequest();
         $rqst->setPath("/contents/" . $id);

@@ -10,7 +10,7 @@ use stdClass;
 
 class ContentHandlerTest extends TestCase
 {
-    public function testRespondToOptionsRequest()
+    public function testRespondsToOptionsRequest()
     {
         $mockRequest = $this->getMock("\\pjdietz\\WellRESTed\\Interfaces\\RequestInterface");
         $mockRequest->expects($this->any())
@@ -25,7 +25,7 @@ class ContentHandlerTest extends TestCase
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
      */
-    public function testRespondForPath($id, $slug)
+    public function testRespondsToGetRequestGivenId($id, $slug)
     {
         $mockConfig = [
             "db" => new PDOMock(),
