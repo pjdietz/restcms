@@ -55,6 +55,39 @@ class ContentPathHandlerTest extends TestCase
         $body = json_decode($resp->getBody());
         $this->assertEquals($path, $body->path);
     }
+
+    /**
+     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathAndLocaleProvider
+     */
+    public function testRespondWithContentOnlyForPath($path, $locale, $expectedLocale)
+    {
+        $query = array(
+            "content" => 1
+        );
+        if ($locale) {
+            $query["locale"] = $locale;
+        }
+
+        $mockConfig = [
+            "db" => new PDOMock(),
+            "contentReader" => new ContentPathHandlerTestContentReader()
+        ];
+
+        $mockRequest = $this->getMock("\\pjdietz\\WellRESTed\\Interfaces\\RequestInterface");
+        $mockRequest->expects($this->any())
+            ->method("getMethod")
+            ->will($this->returnValue("GET"));
+        $mockRequest->expects($this->any())
+            ->method("getQuery")
+            ->will($this->returnValue($query));
+
+        $handler = new ContentPathHandler();
+        $resp = $handler->getResponse($mockRequest, [
+                "path" => $path,
+                "configuration" => $mockConfig
+            ]);
+        $this->assertEquals($path, $resp->getBody());
+    }
 }
 
 class ContentPathHandlerTestContentReader
@@ -63,7 +96,10 @@ class ContentPathHandlerTestContentReader
     {
         $content = new stdClass();
         $content->path = $path;
+        $content->content = $path;
+        $content->contentType = "text/html";
         return $content;
     }
 }
+
 

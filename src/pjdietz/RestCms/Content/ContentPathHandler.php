@@ -26,8 +26,15 @@ class ContentPathHandler extends Handler
         $reader = $this->configuration["contentReader"];
         $content = $reader->readWithPath($db, $path, $locale);
 
-        $this->response->setStatusCode(200);
-        $this->response->setHeader("Content-type", "application/json");
-        $this->response->setBody(json_encode($content));
+        if (isset($query["content"])) {
+            $this->response->setStatusCode(200);
+            $this->response->setHeader("Content-type", $content->contentType);
+            $this->response->setBody($content->content);
+        } else {
+            $this->response->setStatusCode(200);
+            $this->response->setHeader("Content-type", "application/json");
+            $this->response->setBody(json_encode($content));
+        }
+
     }
 }

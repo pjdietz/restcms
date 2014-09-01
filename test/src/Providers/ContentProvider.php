@@ -37,10 +37,10 @@ class ContentProvider
     public function validPathAndLocaleProvider()
     {
         return [
-            ["/cats", null, null],
-            ["/cats", "es", "es"],
-            ["/cats", "fr,de,es", "de"],
-            ["/dogs", "fr,de", null],
+            ["/cats", "", null, "Cats"],
+            ["/cats", "es", "es", "Gatos"],
+            ["/cats", "fr,de,es", "de", "Katzen"],
+            ["/dogs", "fr,de", null, "Dogs"],
         ];
     }
 }

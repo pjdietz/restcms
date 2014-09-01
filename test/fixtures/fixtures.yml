@@ -8,6 +8,7 @@ content:
     name: Cats
     path: /cats
     contentType: text/html
+    versionId: 1
     localeId: 0
   -
     contentId: 2
@@ -18,6 +19,7 @@ content:
     name: Cats
     path: /cats
     contentType: text/html
+    versionId: 2
     localeId: 1
   -
     contentId: 3
@@ -28,6 +30,7 @@ content:
     name: Cats
     path: /cats
     contentType: text/html
+    versionId: 3
     localeId: 2
   -
     contentId: 4
@@ -38,6 +41,7 @@ content:
     name: Dogs
     path: /dogs
     contentType: text/html
+    versionId: 4
     localeId: 0
   -
     contentId: 5
@@ -48,6 +52,7 @@ content:
     name: Dogs
     path: /dogs
     contentType: text/html
+    versionId: 5
     localeId: 1
 
 locale:
@@ -59,3 +64,35 @@ locale:
     localeId: 2
     slug: de
     name: "German"
+
+version:
+  -
+    versionId: 1
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    content: Cats
+    contentId: 1
+  -
+    versionId: 2
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    content: Gatos
+    contentId: 2
+  -
+    versionId: 3
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    content: Katzen
+    contentId: 3
+  -
+    versionId: 4
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    content: Dogs
+    contentId: 4
+  -
+    versionId: 5
+    dateCreated: "2014-08-01 00:00:00"
+    dateModified: "2014-08-01 00:00:00"
+    content: Perros
+    contentId: 5

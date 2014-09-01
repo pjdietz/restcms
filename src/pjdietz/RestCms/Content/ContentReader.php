@@ -178,8 +178,11 @@ SELECT
     c.name,
     c.path,
     c.contentType,
-    l.slug AS locale
+    l.slug AS locale,
+    v.content
 FROM content c
+    JOIN version v
+        ON c.versionId = v.versionId
     LEFT JOIN locale l
         ON c.localeId = l.localeId
 
