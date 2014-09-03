@@ -1,11 +1,11 @@
 <?php
 
-namespace pjdietz\RestCms\Test\Http\Path;
+namespace pjdietz\RestCms\Test\Http\Article;
 
 use pjdietz\RestCms\Test\TestCases\HttpTestCase;
 use pjdietz\WellRESTed\Client;
 
-class RequestContentByPathTest extends HttpTestCase
+class RequestArticleByPathTest extends HttpTestCase
 {
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathProvider
@@ -13,10 +13,11 @@ class RequestContentByPathTest extends HttpTestCase
     public function testRespondsWithContentGivenValidPath($path)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/paths/" . $path);
+        $rqst->setPath("/articles/by-path/" . $path);
         $rqst->setMethod("GET");
         $client = new Client();
         $resp = $client->request($rqst);
+        print $resp->getBody();
         $this->assertEquals(200, $resp->getStatusCode());
     }
 
@@ -26,7 +27,7 @@ class RequestContentByPathTest extends HttpTestCase
     public function testRespondsWithBestMatchingContentGivenPathAndLocale($path, $locale, $expectedLocale, $expectedBody)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/paths/" . $path);
+        $rqst->setPath("/articles/by-path/" . $path);
         if ($locale) {
             $rqst->setQuery(array("locale" => $locale));
         }
@@ -43,7 +44,7 @@ class RequestContentByPathTest extends HttpTestCase
     public function testRespondsWithContentOnlyGivenContentQueryParameter($path, $locale, $expectedLocale, $expectedBody)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/paths/" . $path);
+        $rqst->setPath("/articles/by-path/" . $path);
         $query = array(
             "content" => "1"
         );
@@ -63,7 +64,7 @@ class RequestContentByPathTest extends HttpTestCase
     public function testResponds404GivenInvalidPath($path)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/paths/" . $path);
+        $rqst->setPath("/article/by-path/" . $path);
         $rqst->setMethod("GET");
         $client = new Client();
         $resp = $client->request($rqst);

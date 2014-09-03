@@ -1,10 +1,10 @@
 <?php
 
-namespace pjdietz\RestCms\Content;
+namespace pjdietz\RestCms\Article;
 
 use pjdietz\RestCms\Handler;
 
-class ContentHandler extends Handler
+class ArticleHandler extends Handler
 {
     protected function getAllowedMethods()
     {
@@ -13,10 +13,10 @@ class ContentHandler extends Handler
 
     protected function get()
     {
-        $id = $this->args["contentId"];
+        $id = $this->args["articleId"];
         $db = $this->configuration["db"];
-        /** @var ContentReader $reader */
-        $reader = $this->configuration["contentReader"];
+        /** @var ArticleReader $reader */
+        $reader = $this->configuration["articleReader"];
         $content = $reader->read($db, $id);
 
         $this->response->setStatusCode(200);

@@ -1,10 +1,10 @@
 <?php
 
-namespace pjdietz\RestCms\Content;
+namespace pjdietz\RestCms\Article;
 
 use pjdietz\RestCms\Handler;
 
-class ContentPathHandler extends Handler
+class ArticleByPathHandler extends Handler
 {
     protected function getAllowedMethods()
     {
@@ -22,8 +22,8 @@ class ContentPathHandler extends Handler
             $locale = $query["locale"];
         }
 
-        /** @var \pjdietz\RestCms\Content\ContentReader $reader */
-        $reader = $this->configuration["contentReader"];
+        /** @var \pjdietz\RestCms\Article\ArticleReader $reader */
+        $reader = $this->configuration["articleReader"];
         $content = $reader->readWithPath($db, $path, $locale);
 
         if (isset($query["content"])) {

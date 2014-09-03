@@ -1,8 +1,8 @@
 <?php
 
-namespace pjdietz\RestCms\Test\Content;
+namespace pjdietz\RestCms\Test\Article\ArticleReader;
 
-use pjdietz\RestCms\Content\ContentReader;
+use pjdietz\RestCms\Article\ArticleReader;
 use pjdietz\RestCms\Test\TestCases\DatabaseTestCase;
 use stdClass;
 
@@ -14,7 +14,7 @@ class ReadingByIdTest extends DatabaseTestCase
     public function testFindsContentGivenValidId($id, $slug)
     {
         $db = $this->getConnection()->getConnection();
-        $reader = new ContentReader("stdClass");
+        $reader = new ArticleReader("stdClass");
         /** @var stdClass $content */
         $content = $reader->read($db, $id);
         $this->assertEquals($slug, $content->slug);
@@ -26,7 +26,7 @@ class ReadingByIdTest extends DatabaseTestCase
     public function testFindsContentGivenValidSlug($id, $slug)
     {
         $db = $this->getConnection()->getConnection();
-        $reader = new ContentReader("stdClass");
+        $reader = new ArticleReader("stdClass");
         /** @var stdClass $article */
         $content = $reader->read($db, $slug);
         $this->assertEquals($id, $content->contentId);
@@ -39,7 +39,7 @@ class ReadingByIdTest extends DatabaseTestCase
     public function testThrowsExceptionsGivenInvalidId($id)
     {
         $db = $this->getConnection()->getConnection();
-        $reader = new ContentReader("stdClass");
+        $reader = new ArticleReader("stdClass");
         /** @var stdClass $article */
         $reader->read($db, $id);
     }

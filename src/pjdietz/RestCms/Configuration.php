@@ -12,14 +12,16 @@ class Configuration extends Container
        parent::__construct();
 
        // Classes
-       $this["ContentHandler"] = __NAMESPACE__ . "\\Content\\ContentHandler";
-       $this["ContentPathHandler"] = __NAMESPACE__ . "\\Content\\ContentPathHandler";
-       $this["ContentReader"] = __NAMESPACE__ . "\\Content\\ContentReader";
+       $this["Article"] = "\\stdClass";
+       $this["ArticleHandler"] = __NAMESPACE__ . "\\Article\\ArticleHandler";
+       $this["ArticleByPathHandler"] = __NAMESPACE__ . "\\Article\\ArticleByPathHandler";
+       $this["ArticleReader"] = __NAMESPACE__ . "\\Article\\ArticleReader";
 
        // Factories
-       $this["contentReader"] = function ($c) {
-           $contentReaderClass = $c["ContentReader"];
-           return new $contentReaderClass("stdClass");
+       $this["articleReader"] = function ($c) {
+           $articleReaderClass = $c["ArticleReader"];
+           $articleClass = $c["Article"];
+           return new $articleReaderClass($articleClass);
        };
 
        $this["db"] = function ($c) {

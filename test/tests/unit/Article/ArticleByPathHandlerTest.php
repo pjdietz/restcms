@@ -1,14 +1,14 @@
 <?php
 
-namespace pjdietz\RestCms\Test\Unit\Content;
+namespace pjdietz\RestCms\Test\Unit\Article;
 
 use PDO;
-use pjdietz\RestCms\Content\ContentPathHandler;
+use pjdietz\RestCms\Article\ArticleByPathHandler;
 use pjdietz\RestCms\Test\Mocks\PDOMock;
 use pjdietz\RestCms\Test\TestCases\TestCase;
 use stdClass;
 
-class ContentPathHandlerTest extends TestCase
+class ArticleByPathHandlerTest extends TestCase
 {
     public function testRespondsToOptionsRequest()
     {
@@ -17,7 +17,7 @@ class ContentPathHandlerTest extends TestCase
             ->method("getMethod")
             ->will($this->returnValue("OPTIONS"));
 
-        $handler = new ContentPathHandler();
+        $handler = new ArticleByPathHandler();
         $resp = $handler->getResponse($mockRequest);
         $this->assertNotNull($resp);
     }
@@ -29,7 +29,7 @@ class ContentPathHandlerTest extends TestCase
     {
         $mockConfig = [
             "db" => new PDOMock(),
-            "contentReader" => new ContentPathHandlerTestContentReader()
+            "articleReader" => new ContentPathHandlerTestContentReader()
         ];
 
         $mockRequest = $this->getMock("\\pjdietz\\WellRESTed\\Interfaces\\RequestInterface");
@@ -47,7 +47,7 @@ class ContentPathHandlerTest extends TestCase
                 ->will($this->returnValue(array()));
         }
 
-        $handler = new ContentPathHandler();
+        $handler = new ArticleByPathHandler();
         $resp = $handler->getResponse($mockRequest, [
                 "path" => $path,
                 "configuration" => $mockConfig
@@ -70,7 +70,7 @@ class ContentPathHandlerTest extends TestCase
 
         $mockConfig = [
             "db" => new PDOMock(),
-            "contentReader" => new ContentPathHandlerTestContentReader()
+            "articleReader" => new ContentPathHandlerTestContentReader()
         ];
 
         $mockRequest = $this->getMock("\\pjdietz\\WellRESTed\\Interfaces\\RequestInterface");
@@ -81,7 +81,7 @@ class ContentPathHandlerTest extends TestCase
             ->method("getQuery")
             ->will($this->returnValue($query));
 
-        $handler = new ContentPathHandler();
+        $handler = new ArticleByPathHandler();
         $resp = $handler->getResponse($mockRequest, [
                 "path" => $path,
                 "configuration" => $mockConfig

@@ -1,6 +1,6 @@
 <?php
 
-namespace pjdietz\RestCms\Content;
+namespace pjdietz\RestCms\Article;
 
 use PDO;
 use pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException;
@@ -8,7 +8,7 @@ use pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException;
 /**
  * Reads Contents stored in the CMS.
  */
-class ContentReader
+class ArticleReader
 {
     /** @var string Fully qualified name of the class to use as the model */
     private $modelClass;

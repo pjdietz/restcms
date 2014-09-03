@@ -1,11 +1,11 @@
 <?php
 
-namespace pjdietz\RestCms\Test\Http\Content;
+namespace pjdietz\RestCms\Test\Http\Article;
 
 use pjdietz\RestCms\Test\TestCases\HttpTestCase;
 use pjdietz\WellRESTed\Client;
 
-class RequestContentByIdTest extends HttpTestCase
+class RequestArticletByIdTest extends HttpTestCase
 {
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
@@ -13,7 +13,7 @@ class RequestContentByIdTest extends HttpTestCase
     public function testRespondsWithContentGivenValidId($id, $slug)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/contents/" . $id);
+        $rqst->setPath("/articles/" . $id);
         $rqst->setMethod("GET");
         $client = new Client();
         $resp = $client->request($rqst);
@@ -27,7 +27,7 @@ class RequestContentByIdTest extends HttpTestCase
     public function testRespondsWithContentGivenValidSlug($id, $slug)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/contents/" . $slug);
+        $rqst->setPath("/articles/" . $slug);
         $rqst->setMethod("GET");
         $client = new Client();
         $resp = $client->request($rqst);
@@ -41,7 +41,7 @@ class RequestContentByIdTest extends HttpTestCase
     public function testResponds404ForInvalidId($id)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/contents/" . $id);
+        $rqst->setPath("/articles/" . $id);
         $rqst->setMethod("GET");
         $client = new Client();
         $resp = $client->request($rqst);

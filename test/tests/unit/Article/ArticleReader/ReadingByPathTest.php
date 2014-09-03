@@ -1,8 +1,8 @@
 <?php
 
-namespace pjdietz\RestCms\Test\Content;
+namespace pjdietz\RestCms\Test\Article\ArticleReader;
 
-use pjdietz\RestCms\Content\ContentReader;
+use pjdietz\RestCms\Article\ArticleReader;
 use pjdietz\RestCms\Test\TestCases\DatabaseTestCase;
 
 class ReadingByPathTest extends DatabaseTestCase
@@ -13,7 +13,7 @@ class ReadingByPathTest extends DatabaseTestCase
     public function testFindsContentGivenValidPath($path)
     {
         $db = $this->getConnection()->getConnection();
-        $reader = new ContentReader("stdClass");
+        $reader = new ArticleReader("stdClass");
         $content = $reader->readWithPath($db, $path);
         $this->assertEquals($path, $content->path);
     }
@@ -25,7 +25,7 @@ class ReadingByPathTest extends DatabaseTestCase
     public function testThrowsExceptionGivenInvalidPath($path)
     {
         $db = $this->getConnection()->getConnection();
-        $reader = new ContentReader("stdClass");
+        $reader = new ArticleReader("stdClass");
         $content = $reader->readWithPath($db, $path);
         $this->assertEmpty($content);
     }
@@ -36,7 +36,7 @@ class ReadingByPathTest extends DatabaseTestCase
     public function testFindsBestMatchingContentForPathAndLocale($path, $locale, $expectedLocale)
     {
         $db = $this->getConnection()->getConnection();
-        $reader = new ContentReader("stdClass");
+        $reader = new ArticleReader("stdClass");
         $content = $reader->readWithPath($db, $path, $locale);
         $this->assertEquals($expectedLocale, $content->locale);
     }

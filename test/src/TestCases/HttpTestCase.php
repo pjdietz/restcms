@@ -28,8 +28,8 @@ use pjdietz\RestCms\Configuration;
 use pjdietz\RestCms\Router;
 use pjdietz\WellRESTed\Request;
 
-ini_set("display_errors", 0);
-//ini_set("html_errors", 0);
+//ini_set("display_errors", 0);
+ini_set("html_errors", 0);
 
 require_once("$autoloadPath");
 
@@ -39,9 +39,9 @@ require_once("$autoloadPath");
 \$config["DB_PASSWORD"] = "$dbPassword";
 
 \$router = new Router(\$config);
-
-\$response = \$router->getResponse(Request::getRequest());
-\$response->respond();
+\$router->respond();
+//\$response = \$router->getResponse(Request::getRequest());
+//\$response->respond();
 PHP;
             self::$server = new StringShamServer($GLOBALS["HTTP_HOSTNAME"], $GLOBALS["HTTP_PORT"], $router);
         }

@@ -7,10 +7,10 @@ use pjdietz\RestCms\Test\TestCases\TestCase;
 
 class ConfigurationTest extends TestCase
 {
-    public function testProvidesContentReader()
+    public function testProvidesArticleReader()
     {
         $conf = new Configuration();
-        $reader = $conf["contentReader"];
+        $reader = $conf["articleReader"];
         $this->assertNotNull($reader);
     }
 
