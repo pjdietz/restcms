@@ -17,7 +17,6 @@ class RequestArticleByPathTest extends HttpTestCase
         $rqst->setMethod("GET");
         $client = new Client();
         $resp = $client->request($rqst);
-        print $resp->getBody();
         $this->assertEquals(200, $resp->getStatusCode());
     }
 

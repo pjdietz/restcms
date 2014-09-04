@@ -28,8 +28,8 @@ use pjdietz\RestCms\Configuration;
 use pjdietz\RestCms\Router;
 use pjdietz\WellRESTed\Request;
 
-//ini_set("display_errors", 0);
-ini_set("html_errors", 0);
+ini_set("display_errors", 0);
+//ini_set("html_errors", 0);
 
 require_once("$autoloadPath");
 
