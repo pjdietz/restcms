@@ -1,6 +1,6 @@
-content:
+article:
   -
-    contentId: 1
+    articleId: 1
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     datePublished: "2014-08-01 00:00:00"
@@ -11,7 +11,7 @@ content:
     versionId: 1
     localeId: 0
   -
-    contentId: 2
+    articleId: 2
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     datePublished: "2014-08-01 00:00:00"
@@ -22,7 +22,7 @@ content:
     versionId: 2
     localeId: 1
   -
-    contentId: 3
+    articleId: 3
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     datePublished: "2014-08-01 00:00:00"
@@ -33,7 +33,7 @@ content:
     versionId: 3
     localeId: 2
   -
-    contentId: 4
+    articleId: 4
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     datePublished: "2014-08-01 00:00:00"
@@ -44,7 +44,7 @@ content:
     versionId: 4
     localeId: 0
   -
-    contentId: 5
+    articleId: 5
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     datePublished: "2014-08-01 00:00:00"
@@ -71,28 +71,28 @@ version:
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     content: Cats
-    contentId: 1
+    articleId: 1
   -
     versionId: 2
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     content: Gatos
-    contentId: 2
+    articleId: 2
   -
     versionId: 3
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     content: Katzen
-    contentId: 3
+    articleId: 3
   -
     versionId: 4
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     content: Dogs
-    contentId: 4
+    articleId: 4
   -
     versionId: 5
     dateCreated: "2014-08-01 00:00:00"
     dateModified: "2014-08-01 00:00:00"
     content: Perros
-    contentId: 5
+    articleId: 5

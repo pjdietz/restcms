@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS version (
     dateCreated DATETIME NOT NULL DEFAULT '0000-00-00',
     dateModified DATETIME NOT NULL DEFAULT '0000-00-00',
     content TEXT COMMENT 'Full text content',
-    contentId INT UNSIGNED NOT NULL,
-    INDEX idxVersionContentId (contentId)
+    articleId INT UNSIGNED NOT NULL,
+    INDEX idxVersionContentId (articleId)
 )
 ENGINE = InnoDB;

@@ -29,7 +29,7 @@ class ReadingByIdTest extends DatabaseTestCase
         $reader = new ArticleReader("stdClass");
         /** @var stdClass $article */
         $content = $reader->read($db, $slug);
-        $this->assertEquals($id, $content->contentId);
+        $this->assertEquals($id, $content->articleId);
     }
 
     /**

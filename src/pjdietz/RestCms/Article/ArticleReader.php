@@ -50,11 +50,11 @@ class ArticleReader
         $query = $this->getQueryStem();
         $query .= <<<QUERY
 WHERE
-    c.contentId = :contentId
+    a.articleId = :articleId
 LIMIT 1;
 QUERY;
         $stmt = $db->prepare($query);
-        $stmt->bindValue(':contentId', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':articleId', $id, PDO::PARAM_INT);
         $stmt->execute();
         if ($stmt->rowCount() === 0) {
             throw new NotFoundException();
@@ -75,7 +75,7 @@ QUERY;
         $query = $this->getQueryStem();
         $query .= <<<QUERY
 WHERE
-    c.slug = :slug
+    a.slug = :slug
 LIMIT 1;
 QUERY;
         $stmt = $db->prepare($query);
@@ -118,7 +118,7 @@ QUERY;
             $order[] = "tls.sortOrder DESC";
         } else {
             // Only match records with the default locale.
-            $where[] = " c.localeId = 0 ";
+            $where[] = " a.localeId = 0 ";
         }
 
         if ($where) {
@@ -170,21 +170,21 @@ QUERY;
     {
         return <<<QUERY
 SELECT
-    c.contentId,
-    c.dateCreated,
-    c.dateModified,
-    c.datePublished,
-    c.slug,
-    c.name,
-    c.path,
-    c.contentType,
+    a.articleId,
+    a.dateCreated,
+    a.dateModified,
+    a.datePublished,
+    a.slug,
+    a.name,
+    a.path,
+    a.contentType,
     l.slug AS locale,
     v.content
-FROM content c
+FROM article a
     JOIN version v
-        ON c.versionId = v.versionId
+        ON a.versionId = v.versionId
     LEFT JOIN locale l
-        ON c.localeId = l.localeId
+        ON a.localeId = l.localeId
 
 QUERY;
     }
