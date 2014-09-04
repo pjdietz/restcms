@@ -8,7 +8,7 @@ use pjdietz\RestCms\Test\TestCases\DatabaseTestCase;
 class ReadingByPathTest extends DatabaseTestCase
 {
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validPathProvider
      */
     public function testFindsContentGivenValidPath($path)
     {
@@ -19,7 +19,7 @@ class ReadingByPathTest extends DatabaseTestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::invalidPathProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::invalidPathProvider
      * @expectedException \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
      */
     public function testThrowsExceptionGivenInvalidPath($path)
@@ -31,7 +31,7 @@ class ReadingByPathTest extends DatabaseTestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathAndLocaleProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validPathAndLocaleProvider
      */
     public function testFindsBestMatchingContentForPathAndLocale($path, $locale, $expectedLocale)
     {

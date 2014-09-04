@@ -8,7 +8,7 @@ use pjdietz\WellRESTed\Client;
 class RequestArticleRawByPathTest extends HttpTestCase
 {
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validPathProvider
      */
     public function testRespondsWithContentGivenValidPath($path)
     {
@@ -21,7 +21,7 @@ class RequestArticleRawByPathTest extends HttpTestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathAndLocaleProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validPathAndLocaleProvider
      */
     public function testRespondsWithBestMatchingContentGivenPathAndLocale($path, $locale, $expectedLocale, $expectedBody)
     {
@@ -41,7 +41,7 @@ class RequestArticleRawByPathTest extends HttpTestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::invalidPathProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::invalidPathProvider
      */
     public function testResponds404GivenInvalidPath($path)
     {

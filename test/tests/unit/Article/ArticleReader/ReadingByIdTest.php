@@ -9,7 +9,7 @@ use stdClass;
 class ReadingByIdTest extends DatabaseTestCase
 {
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validIdProvider
      */
     public function testFindsContentGivenValidId($id, $slug)
     {
@@ -21,7 +21,7 @@ class ReadingByIdTest extends DatabaseTestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validIdProvider
      */
     public function testFindsContentGivenValidSlug($id, $slug)
     {
@@ -33,7 +33,7 @@ class ReadingByIdTest extends DatabaseTestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::invalidIdProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::invalidIdProvider
      * @expectedException \pjdietz\WellRESTed\Exceptions\HttpExceptions\NotFoundException
      */
     public function testThrowsExceptionsGivenInvalidId($id)

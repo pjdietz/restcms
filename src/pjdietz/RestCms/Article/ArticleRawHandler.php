@@ -4,7 +4,7 @@ namespace pjdietz\RestCms\Article;
 
 use pjdietz\RestCms\Handler;
 
-class ArticleHandler extends Handler
+class ArticleRawHandler extends Handler
 {
     protected function getAllowedMethods()
     {
@@ -20,7 +20,7 @@ class ArticleHandler extends Handler
         $article = $reader->read($db, $id);
 
         $this->response->setStatusCode(200);
-        $this->response->setHeader("Content-type", "application/json");
-        $this->response->setBody(json_encode($article));
+        $this->response->setHeader("Content-type", $article->contentType);
+        $this->response->setBody($article->content);
     }
 }

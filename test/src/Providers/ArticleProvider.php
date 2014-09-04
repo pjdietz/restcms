@@ -2,7 +2,7 @@
 
 namespace pjdietz\RestCms\Test\Providers;
 
-class ContentProvider
+class ArticleProvider
 {
     public function validIdProvider()
     {

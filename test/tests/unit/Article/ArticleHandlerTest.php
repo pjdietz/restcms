@@ -23,13 +23,13 @@ class ArticleHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validIdProvider
      */
     public function testRespondsToGetRequestGivenId($id, $slug)
     {
         $mockConfig = [
             "db" => new PDOMock(),
-            "articleReader" => new ContentHandlerTestContentReader()
+            "articleReader" => new ArticleHandlerTestArticleReader()
         ];
 
         $mockRequest = $this->getMock("\\pjdietz\\WellRESTed\\Interfaces\\RequestInterface");
@@ -43,16 +43,16 @@ class ArticleHandlerTest extends TestCase
                 "configuration" => $mockConfig
             ]);
         $content = json_decode($resp->getBody());
-        $this->assertEquals($id, $content->contentId);
+        $this->assertEquals($id, $content->articleId);
     }
 }
 
-class ContentHandlerTestContentReader
+class ArticleHandlerTestArticleReader
 {
     public function read(PDO $db, $id)
     {
         $content = new stdClass();
-        $content->contentId = $id;
+        $content->articleId = $id;
         return $content;
     }
 }

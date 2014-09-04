@@ -23,7 +23,7 @@ class ArticleRawByPathHandlerTest extends TestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathAndLocaleProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validPathAndLocaleProvider
      */
     public function testRespondsToGetRequest($path, $locale, $expectedLocale)
     {

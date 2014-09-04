@@ -8,7 +8,7 @@ use pjdietz\WellRESTed\Client;
 class RequestArticletByIdTest extends HttpTestCase
 {
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validIdProvider
      */
     public function testRespondsWithContentGivenValidId($id, $slug)
     {
@@ -22,7 +22,7 @@ class RequestArticletByIdTest extends HttpTestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validIdProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::validIdProvider
      */
     public function testRespondsWithContentGivenValidSlug($id, $slug)
     {
@@ -36,7 +36,7 @@ class RequestArticletByIdTest extends HttpTestCase
     }
 
     /**
-     * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::invalidIdProvider
+     * @dataProvider pjdietz\RestCms\Test\Providers\ArticleProvider::invalidIdProvider
      */
     public function testResponds404ForInvalidId($id)
     {

@@ -24,10 +24,10 @@ class ArticleByPathHandler extends Handler
 
         /** @var \pjdietz\RestCms\Article\ArticleReader $reader */
         $reader = $this->configuration["articleReader"];
-        $content = $reader->readWithPath($db, $path, $locale);
+        $article = $reader->readWithPath($db, $path, $locale);
 
         $this->response->setStatusCode(200);
         $this->response->setHeader("Content-type", "application/json");
-        $this->response->setBody(json_encode($content));
+        $this->response->setBody(json_encode($article));
     }
 }
