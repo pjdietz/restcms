@@ -3,12 +3,12 @@
 namespace pjdietz\RestCms\Test\Unit\Article;
 
 use PDO;
-use pjdietz\RestCms\Article\ArticleByPathHandler;
+use pjdietz\RestCms\Article\ArticleRawByPathHandler;
 use pjdietz\RestCms\Test\Mocks\PDOMock;
 use pjdietz\RestCms\Test\TestCases\TestCase;
 use stdClass;
 
-class ArticleByPathHandlerTest extends TestCase
+class ArticleRawByPathHandlerTest extends TestCase
 {
     public function testRespondsToOptionsRequest()
     {
@@ -17,7 +17,7 @@ class ArticleByPathHandlerTest extends TestCase
             ->method("getMethod")
             ->will($this->returnValue("OPTIONS"));
 
-        $handler = new ArticleByPathHandler();
+        $handler = new ArticleRawByPathHandler();
         $resp = $handler->getResponse($mockRequest);
         $this->assertNotNull($resp);
     }
@@ -27,37 +27,36 @@ class ArticleByPathHandlerTest extends TestCase
      */
     public function testRespondsToGetRequest($path, $locale, $expectedLocale)
     {
+        $query = array(
+            "content" => 1
+        );
+        if ($locale) {
+            $query["locale"] = $locale;
+        }
+
         $mockConfig = [
             "db" => new PDOMock(),
-            "articleReader" => new ArticleByPathHandlerTestArticleReader()
+            "articleReader" => new ArticleRawByPathHandlerTestArticleReader()
         ];
 
         $mockRequest = $this->getMock("\\pjdietz\\WellRESTed\\Interfaces\\RequestInterface");
         $mockRequest->expects($this->any())
             ->method("getMethod")
             ->will($this->returnValue("GET"));
+        $mockRequest->expects($this->any())
+            ->method("getQuery")
+            ->will($this->returnValue($query));
 
-        if ($locale) {
-            $mockRequest->expects($this->any())
-                ->method("getQuery")
-                ->will($this->returnValue(array("locale" => $locale)));
-        } else {
-            $mockRequest->expects($this->any())
-                ->method("getQuery")
-                ->will($this->returnValue(array()));
-        }
-
-        $handler = new ArticleByPathHandler();
+        $handler = new ArticleRawByPathHandler();
         $resp = $handler->getResponse($mockRequest, [
                 "path" => $path,
                 "configuration" => $mockConfig
             ]);
-        $body = json_decode($resp->getBody());
-        $this->assertEquals($path, $body->path);
+        $this->assertEquals($path, $resp->getBody());
     }
 }
 
-class ArticleByPathHandlerTestArticleReader
+class ArticleRawByPathHandlerTestArticleReader
 {
     public function readWithPath(PDO $db, $path)
     {

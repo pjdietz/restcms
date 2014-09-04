@@ -15,6 +15,7 @@ class Configuration extends Container
        $this["Article"] = "\\stdClass";
        $this["ArticleHandler"] = __NAMESPACE__ . "\\Article\\ArticleHandler";
        $this["ArticleByPathHandler"] = __NAMESPACE__ . "\\Article\\ArticleByPathHandler";
+       $this["ArticleRawByPathHandler"] = __NAMESPACE__ . "\\Article\\ArticleRawByPathHandler";
        $this["ArticleReader"] = __NAMESPACE__ . "\\Article\\ArticleReader";
 
        // Factories

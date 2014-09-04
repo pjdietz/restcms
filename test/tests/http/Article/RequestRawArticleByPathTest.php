@@ -5,7 +5,7 @@ namespace pjdietz\RestCms\Test\Http\Article;
 use pjdietz\RestCms\Test\TestCases\HttpTestCase;
 use pjdietz\WellRESTed\Client;
 
-class RequestArticleByPathTest extends HttpTestCase
+class RequestArticleRawByPathTest extends HttpTestCase
 {
     /**
      * @dataProvider pjdietz\RestCms\Test\Providers\ContentProvider::validPathProvider
@@ -13,7 +13,7 @@ class RequestArticleByPathTest extends HttpTestCase
     public function testRespondsWithContentGivenValidPath($path)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/articles/by-path/" . $path);
+        $rqst->setPath("/articles/raw/by-path/" . $path);
         $rqst->setMethod("GET");
         $client = new Client();
         $resp = $client->request($rqst);
@@ -27,15 +27,18 @@ class RequestArticleByPathTest extends HttpTestCase
     public function testRespondsWithBestMatchingContentGivenPathAndLocale($path, $locale, $expectedLocale, $expectedBody)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/articles/by-path/" . $path);
+        $rqst->setPath("/articles/raw/by-path/" . $path);
+        $query = array(
+            "content" => "1"
+        );
         if ($locale) {
-            $rqst->setQuery(array("locale" => $locale));
+            $query["locale"] = $locale;
         }
+        $rqst->setQuery($query);
         $rqst->setMethod("GET");
         $client = new Client();
         $resp = $client->request($rqst);
-        $content = json_decode($resp->getBody());
-        $this->assertEquals($expectedLocale, $content->locale);
+        $this->assertEquals($expectedBody, $resp->getBody());
     }
 
     /**
@@ -44,7 +47,7 @@ class RequestArticleByPathTest extends HttpTestCase
     public function testResponds404GivenInvalidPath($path)
     {
         $rqst = $this->getRequest();
-        $rqst->setPath("/article/by-path/" . $path);
+        $rqst->setPath("/article/raw/by-path/" . $path);
         $rqst->setMethod("GET");
         $client = new Client();
         $resp = $client->request($rqst);

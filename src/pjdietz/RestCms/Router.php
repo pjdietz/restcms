@@ -20,7 +20,8 @@ class Router extends \pjdietz\WellRESTed\Router
         $this->addRoutes(
             array(
                 new TemplateRoute("/articles/{articleId}", $config["ArticleHandler"]),
-                new RegexRoute("~/articles/by-path/(?<path>.*)~", $config["ArticleByPathHandler"])
+                new RegexRoute("~/articles/by-path/(?<path>.*)~", $config["ArticleByPathHandler"]),
+                new RegexRoute("~/articles/raw/by-path/(?<path>.*)~", $config["ArticleRawByPathHandler"])
             )
         );
     }
